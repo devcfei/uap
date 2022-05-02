@@ -1,0 +1,10 @@
+#ifndef _UAP_UUID_H_
+#define _UAP_UUID_H_
+
+
+// {2348AFFC-D679-4D71-8808-004BF86757BB}
+DEFINE_UUID(IID_IATTRIBUTES,
+	0x2348affc, 0xd679, 0x4d71, 0x88, 0x8, 0x0, 0x4b, 0xf8, 0x67, 0x57, 0xbb);
+
+
+#endif //_UAP_UUID_H_

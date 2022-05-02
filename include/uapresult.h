@@ -17,6 +17,9 @@ enum Result
     R_INVALID_PARAMETERS=100,
     R_NOT_IMPLEMENTED,
     R_ERROR_LOAD_LIBRARY,
+    R_FILE_NOT_EXIST,
+    R_NO_SUCH_INTERFACE,
+    R_NO_MEMORY,
 };
 
 // Global functions
