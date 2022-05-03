@@ -11,18 +11,14 @@
 #include <uapunknown.h>
 #include <uapattributes.h>
 
-
-
 namespace uap
 {
 
-// Global functions
-Result uapInitialize();
+    // Global functions
+    Result uapInitialize();
 
-Result uapGetInterface(const Uuid& uuid, IUnknown **ppiUnknown);
+    Result uapGetInterface(const Uuid &uuid, IUnknown **ppiUnknown);
 
 };
-
-
 
 #endif //_UAP_H_

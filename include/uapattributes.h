@@ -12,9 +12,10 @@ namespace uap
     class IAttributes : public IUnknown
     {
     public:
+        virtual const Uuid& uuidof()=0;
         virtual Ulong addRef() = 0;
         virtual Ulong release() = 0;
-        virtual Result queryInterface() = 0;
+        virtual Result queryInterface(const uap::Uuid &,void **) = 0;
 
         //
         virtual Result setUint(Ulong key, Uint value) = 0;

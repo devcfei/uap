@@ -179,15 +179,16 @@ extern "C" DLL_EXPORTS Result uapbeVPrint(Char *pszFormat, va_list vaList)
     Result r = R_OK;
     HRESULT hr;
 
-    TCHAR szMessageBuffer[16380] = {0};
+    CHAR szMessageBuffer[16380] = {0};
     hr = StringCchVPrintfA(szMessageBuffer, 16380, pszFormat, vaList);
-
     if (FAILED(hr))
     {
+		TRACE("StringCchVPrintfA failed\n");
         r = R_ERROR;
         return r;
     }
-    OutputDebugString(szMessageBuffer);
+
+    OutputDebugStringA(szMessageBuffer);
 
     return r;
 }
@@ -196,6 +197,9 @@ extern "C" DLL_EXPORTS Result uapbeGetInterface(const uap::Uuid &uuid, uap::IUnk
 {
     Result r = R_NO_SUCH_INTERFACE;
     uap::IUnknown *pi;
+
+	// TODO: 
+	//	check if uuid in uapbe already, otherwise check the components
 
     if(UidIsEqual(uuid, IID_IATTRIBUTES))
     {

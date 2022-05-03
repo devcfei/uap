@@ -42,7 +42,7 @@ namespace uap
     {
         Result r = R_OK;
 
-        TRACE(_T("uapInitialize\n"));
+        TRACE("uapInitialize\n");
 
 #if defined(_MSC_VER)
         r = uapInitializeWindows();

@@ -4,8 +4,9 @@
 // Demonstrate some basic assertions.
 TEST(Log, Type)
 {
+    uap::Result r = uap::R_OK;
     // Expect equality.
-    uap::Result r = uap::logPrint("%d\n",1);
+    r = uap::logPrint("test log: %d\n",1);
     EXPECT_EQ(r, uap::R_OK);
 
 }

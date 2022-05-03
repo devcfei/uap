@@ -2,16 +2,29 @@
 
 namespace uap
 {
+    const Uuid& CAttributesImpl::uuidof()
+    {
+        return uuid_;
+    }
 
     Ulong CAttributesImpl::addRef()
     {
-        return 0;
+        TRACE("CAttributesImpl::addRef\n");
+
+        return InterlockedIncrement(&refcount_);
     }
     Ulong CAttributesImpl::release()
     {
-        return 0;
+        TRACE("CAttributesImpl::release\n");
+
+        Ulong ref = InterlockedDecrement(&refcount_);
+        if (!ref)
+        {
+            delete this;
+        }
+        return ref;
     }
-    Result CAttributesImpl::queryInterface()
+    Result CAttributesImpl::queryInterface(const uap::Uuid &, void **)
     {
         return R_OK;
     }

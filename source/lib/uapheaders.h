@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <strsafe.h>
 #include <tchar.h>
+#include <stdarg.h>
 
 #elif defined(__linux__)
 
