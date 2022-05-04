@@ -20,6 +20,7 @@ enum Result
     R_FILE_NOT_EXIST,
     R_NO_SUCH_INTERFACE,
     R_NO_MEMORY,
+    R_BUFFER_TOO_SMALL,
 };
 
 // Global functions

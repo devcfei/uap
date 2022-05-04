@@ -3,3 +3,4 @@ project(uap-source)
 
 add_subdirectory(lib)
 add_subdirectory(demo)
+add_subdirectory(imageengine)

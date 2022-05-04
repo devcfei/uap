@@ -1,10 +1,18 @@
 #ifndef _UAPBE_H_
 #define _UAPBE_H_
 
+// windows
 #include <windows.h>
 #include <strsafe.h>
 #include <tchar.h>
+
+// stdc
 #include <stdarg.h>
+
+// stl
+#include <vector>
+
+// uap
 #include <uap.h>
 #include "uapbedefs.h"
 #include "uapbeattributesimpl.h"

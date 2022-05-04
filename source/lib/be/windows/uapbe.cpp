@@ -4,7 +4,7 @@ using namespace uap;
 
 struct uapbeComponents
 {
-    Uuid uidComponent;
+    const Uuid uidComponent;
     TCHAR path[MAX_PATH];	// Component file(DLL) path
 	HMODULE hDll;			// Handle to the DLL
 };
@@ -12,9 +12,11 @@ struct uapbeComponents
 
 struct uapbeGlobals
 {
-    
+    std::vector<uapbeComponents> vecComp;
 };
 
+
+static uapbeGlobals Global;
 
 static int GetModuleFilePath(LPCTSTR lpszModuleFile, int size, LPTSTR lpszPath)
 {
@@ -59,6 +61,83 @@ static BOOL IsDll(LPCTSTR lpszName)
     return bDll;
 }
 
+
+static Result uapbeRegisterInterface(LPCTSTR szFileName)
+{
+    Result r = R_ERROR;
+
+	TRACE("uapbeRegisterInterface - %s\n", szFileName);
+
+
+	HMODULE hDll = LoadLibrary(szFileName);
+	if (hDll)
+	{					
+		PFN_compRegisterInterface pfn = (PFN_compRegisterInterface)GetProcAddress(hDll, "compRegisterInterface");
+		if (pfn == NULL)
+		{
+
+
+			TRACE("compRegisterInterface not found! - %s\n", szFileName);
+
+			FreeLibrary(hDll);
+			r = R_NO_SUCH_INTERFACE;
+			return r;
+		}
+
+		TRACE("compRegisterInterface found! - %p\n", pfn);
+
+
+		Ulong count=0;
+		Uuid* paUuid=NULL;
+
+		r = pfn(paUuid,&count);
+
+		TRACE("compRegisterInterface step 1 ,returned! r = %d, count =%d\n", r, count);
+		if(!UAP_SUCCESS(r))
+		{
+			if(count>0)
+				paUuid = new Uuid[count];
+		}
+
+		if(paUuid)
+		{
+			r = pfn(paUuid,&count);
+		}
+
+		TRACE("compRegisterInterface step 2, returned! r = %d\n", r);
+		if(!UAP_SUCCESS(r))
+		{
+			return r;
+		}
+
+		for (Ulong i = 0; i < count; ++i)
+		{
+			uapbeComponents comp = {paUuid[i], _T(""), hDll};
+
+			StringCchCopy(comp.path, MAX_PATH, szFileName);
+
+			Global.vecComp.push_back(comp);
+		}
+
+		// PFN_compGetInterface pfn = (PFN_compGetInterface)GetProcAddress(hDll, "compGetInterface");
+		// if (pfn == NULL)
+		// {
+		// 	FreeLibrary(hDll);
+		// 	continue;
+		// }
+
+		r = R_OK;
+
+	}
+	else
+	{
+		// for a library damaged, just ignore and output a warning mesage 
+		r = R_FILE_NOT_EXIST;
+		TRACE("WARN: LoadLibrary failed! %s\n", szFileName);
+	}
+	return r;
+}
+
 static Result uapbeEnumerateComponent()
 {
     Result r = R_OK;
@@ -88,17 +167,17 @@ static Result uapbeEnumerateComponent()
 	{
 		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			TRACE("  %s   <DIR>\n", ffd.cFileName);
+			TRACE("%s   <DIR>\n", ffd.cFileName);
 		}
 		else
 		{
 			filesize.LowPart = ffd.nFileSizeLow;
 			filesize.HighPart = ffd.nFileSizeHigh;
-			TRACE("  %s   %ld bytes\n", ffd.cFileName, filesize.QuadPart);
+			TRACE("%s   %ld bytes\n", ffd.cFileName, filesize.QuadPart);
 
             if(lstrcmp(ffd.cFileName,_T("uapbe.dll"))==0)
             {
-                // for a DLL which is uapbe.dll, just continue
+                // for a DLL which is uapbe.dll, ignore and continue
                 continue;
             }
 
@@ -106,49 +185,7 @@ static Result uapbeEnumerateComponent()
 
 			if (IsDll(ffd.cFileName))
 			{
-				HMODULE hDll = LoadLibrary(ffd.cFileName);
-				if (hDll)
-				{					
-					// PFN_RegisterNxComponent pfn = (PFN_RegisterNxComponent)GetProcAddress(hDll, "RegisterNxComponent");
-					// if (pfn == NULL)
-					// {
-					// 	FreeLibrary(hDll);// free dll if not a nx component
-					// 	continue;
-					// }
-
-					// // for DLL which is a nx component, register				
-					// NXUID* uids = NULL;
-					// int size=0;
-					// nr = pfn(NULL,&size);
-					// if (size)
-					// {
-					// 	uids = new NXUID[size];
-					// 	nr = pfn(uids, &size);
-					// }
-					
-
-					// if (uids)
-					// {
-					// 	for (int i = 0; i < size; ++i)
-					// 	{
-					// 		NxComponentInfo info;
-
-					// 		info.uid = uids[i];
-					// 		lstrcpy(info.path, ffd.cFileName);
-
-					// 		info.hDll = hDll;	// save DLL handle
-					// 		TRACE("Registered interface! %s\n", ffd.cFileName);
-
-					// 		GlobalNxComponentInfo.push_back(info);
-					// 	}
-					// }
-				}
-
-				else
-				{
-					// for a library damaged, just ignore and output a warning mesage 
-					TRACE("WARN: LoadLibrary failed! %s\n", ffd.cFileName);
-				}
+				r = uapbeRegisterInterface(ffd.cFileName);
 			}
 
 		}
@@ -214,6 +251,34 @@ extern "C" DLL_EXPORTS Result uapbeGetInterface(const uap::Uuid &uuid, uap::IUnk
             r = R_NO_MEMORY;
         }
     }
+
+	// if not uapbe interface, find in component
+	if(!UAP_SUCCESS(r))
+	{
+		TRACE("not uapbe interface, find in component\n");
+
+		for( auto it :  Global.vecComp )
+		{
+
+			TRACE("DLL(%s)-%p\n", it.path,it.hDll);
+			PFN_compGetInterface pfn = (PFN_compGetInterface)GetProcAddress(it.hDll, "compGetInterface");
+			if(pfn)
+			{
+				TRACE("found compGetInterface\n");
+
+				r = pfn(uuid,(void**)ppiUnknown);
+				if(UAP_SUCCESS(r))
+				{
+					TRACE("compGetInterface returned! r = %d\n", r);
+
+					break;// break if find the interface!
+				}
+
+			}
+	
+		}
+
+	}
 
 
 
