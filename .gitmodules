@@ -1,0 +1,4 @@
+[submodule "source/uiengine/be/imguibe/imgui"]
+	path = source/uiengine/be/imguibe/imgui
+	url = https://github.com/devcfei/imgui.git
+	branch = docking
