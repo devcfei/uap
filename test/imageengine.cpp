@@ -21,7 +21,9 @@ TEST(imageengine, Interface)
     EXPECT_EQ(r, uap::R_OK);
 
 
-    r = spImageEngine->initialize();
+    r = spImageEngine->initialize(sp.get());
     EXPECT_EQ(r, uap::R_OK);
+
+
 
 }

@@ -16,7 +16,7 @@ TEST(uiengine, Interface)
 
 
     uap::sptr<uap::IUiEngine> spUiEngine;
-    r = sp->createInterface(IID_IMAGEENGINE, (void**)&spUiEngine);    
+    r = sp->createInterface(IID_UIENGINE, (void**)&spUiEngine);    
     EXPECT_EQ(r, uap::R_OK);
 
 

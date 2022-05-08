@@ -24,16 +24,34 @@ namespace uap
         }
         return ref;
     }
-    Result ImageEngineImpl::queryInterface(const uap::Uuid &, void **)
+    Result ImageEngineImpl::queryInterface(const Uuid &, void **)
     {
         return R_OK;
     }
 
     //
-    Result ImageEngineImpl::initialize()
+    Result ImageEngineImpl::initialize(IApp* piApp)
     {
+        Result r;
         TRACE("ImageEngineImpl::initialize\n");
-        return R_OK;
+        TRACE("refcount_=%d\n",this->refcount_);
+        TRACE("piApp=%p\n",piApp);
+
+        spApp_ = piApp;
+
+
+        uap::sptr<uap::IAttributes> spAttributes;
+        r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+        if(!UAP_SUCCESS(r))
+        {
+            return r;
+        }
+
+        uap::Uint val =36;
+        spAttributes->setUint(0,val);
+        spAttributes->getUint(0,val);
+
+        return r;
     }
 
 

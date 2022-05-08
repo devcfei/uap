@@ -57,17 +57,19 @@ namespace uap
 
     Ulong AppImpl::addRef()
     {
-        TRACE("AppImpl::addRef\n");
+        TRACE("AppImpl::addRef- refcount=%d\n",refcount_);
 
         return InterlockedIncrement(&refcount_);
     }
     Ulong AppImpl::release()
     {
-        TRACE("AppImpl::release\n");
+        TRACE("AppImpl::release - refcount=%d\n",refcount_);
 
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
         {
+            TRACE("delete AppImpl()\n");
+
             delete this;
         }
         return ref;
@@ -101,6 +103,7 @@ namespace uap
         // create the interfaces
         if(UidIsEqual(rUuid, IID_IATTRIBUTES))
         {
+
             pi = new CAttributesImpl();
             if(pi)
             {

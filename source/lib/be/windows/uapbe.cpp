@@ -14,6 +14,7 @@ extern "C" DLL_EXPORTS Result uapbeAppInitialize(IApp** ppiApp)
     Result r = R_NO_MEMORY;
 	IApp* piApp;
 
+    TRACE("new AppImpl()\n");
 	piApp = new AppImpl();
 
 	if(piApp)

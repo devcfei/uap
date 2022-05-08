@@ -37,7 +37,7 @@ namespace uap
         sptr(T *lp)
         {
             ptr_ = lp;
-            if (ptr_ != NULL)
+            if (ptr_ != nullptr)
                 ptr_->addRef();
         }
         ~sptr() throw()
@@ -70,6 +70,31 @@ namespace uap
         {
             releasep();
             return &ptr_;
+        }
+
+        // copy constructors
+
+        sptr &operator=(T *other) throw()
+        {
+            if (ptr_ != other)
+            {
+                sptr(other).Swap(*this);
+            }
+            return *this;
+        }
+
+        void Swap(sptr &&r) throw()
+        {
+            T *tmp = ptr_;
+            ptr_ = r.ptr_;
+            r.ptr_ = tmp;
+        }
+
+        void Swap(sptr &r) throw()
+        {
+            T *tmp = ptr_;
+            ptr_ = r.ptr_;
+            r.ptr_ = tmp;
         }
 
     protected:

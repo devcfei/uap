@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "cmake -S . -B build; cmake --build build; ",
+            "command": "cmake -S . -B build; cmake --build build; cmake --install build --config Debug",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
