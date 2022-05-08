@@ -8,7 +8,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/install/Debug/bin/uaptest.exe",
+            "program": "${workspaceFolder}/install/Debug/bin/demo.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

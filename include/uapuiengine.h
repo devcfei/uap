@@ -20,6 +20,7 @@ namespace uap
 
         // IUiEngine
         virtual Result initialize()=0;
+        virtual Result run()=0;
 
     }; // @class IAttributes
 

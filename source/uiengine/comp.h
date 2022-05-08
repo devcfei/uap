@@ -8,8 +8,22 @@
 
 // Windows specical
 #include <windows.h>
+#include <tchar.h>
 
+// WRL
+#include <wrl\client.h>
+using namespace Microsoft::WRL;
 
+// Direct3D9
+
+#include <d3d9.h>
+
+//imgui
+#include <imgui.h>
+#include <imgui_impl_dx9.h>
+#include <imgui_impl_win32.h>
+
+// UiEngine
 #include "uiengineimpl.h"
 
 

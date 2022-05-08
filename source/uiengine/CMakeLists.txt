@@ -7,6 +7,7 @@ aux_source_directory(${PROJECT_SOURCE_DIR} SRCS)
 
 # imgui include
 include_directories(${PROJECT_SOURCE_DIR}/be/imguibe/imgui)
+include_directories(${PROJECT_SOURCE_DIR}/be/imguibe/imgui/backends)
 
 # imgui
 aux_source_directory(${PROJECT_SOURCE_DIR}/be/imguibe/imgui SRCS)
@@ -19,7 +20,7 @@ add_library(uiengine SHARED ${SRCS}
 )
 
 target_compile_definitions(uiengine PRIVATE UAP_UIENGINE_EXPORTS)
-target_link_libraries(uiengine uap)
+target_link_libraries(uiengine uap d3d9)
 
 # backends
 

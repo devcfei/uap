@@ -21,6 +21,7 @@ enum Result
     R_NO_SUCH_INTERFACE,
     R_NO_MEMORY,
     R_BUFFER_TOO_SMALL,
+    R_INTERNEL_FAILURE
 };
 
 // Global functions

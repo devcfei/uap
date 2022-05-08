@@ -13,3 +13,4 @@ _deps
 # default build output folder
 build
 install
+*.ini
