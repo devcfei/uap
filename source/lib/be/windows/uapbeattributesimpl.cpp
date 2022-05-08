@@ -32,7 +32,7 @@ namespace uap
     //
     Result CAttributesImpl::setUint(Ulong key, Uint value)
     {
-        TRACE("CAttributesImpl::setUint\n");
+        TRACE("CAttributesImpl::setUint - value=%d\n", value);
         return R_OK;
     }
     Result CAttributesImpl::getUint(Ulong key, Uint &value)

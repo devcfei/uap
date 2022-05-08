@@ -15,9 +15,12 @@
 // uap
 #include <uap.h>
 #include "uapbedefs.h"
+#include "uapbeappimpl.h"
 #include "uapbeattributesimpl.h"
 
+
 using namespace uap;
+
 
 #ifdef UAPBE_EXPORTS
 #define DLL_EXPORTS _declspec(dllexport)
@@ -28,9 +31,10 @@ using namespace uap;
 // Internel functions
 Result TraceMessage(LPCTSTR pszFormat, ...);
 
+
 // Export functions
 extern "C" DLL_EXPORTS Result uapbeInitialize();
+extern "C" DLL_EXPORTS Result uapbeAppInitialize(IApp** ppiApp);
 extern "C" DLL_EXPORTS Result uapbeVPrint(Char *pszFormat, va_list vaList);
-extern "C" DLL_EXPORTS Result uapbeGetInterface(const uap::Uuid &uuid, uap::IUnknown **ppiUnknown);
 
 #endif //_UAPBE_H_

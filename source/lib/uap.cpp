@@ -17,12 +17,12 @@ namespace uap
         {
 
             global_Pfn.pfn_beInitialize = (PFN_beInitialize)GetProcAddress(hDll, "uapbeInitialize");
+            global_Pfn.pfn_beAppInitialize = (PFN_beAppInitialize)GetProcAddress(hDll, "uapbeAppInitialize");            
             global_Pfn.pfn_vPrint = (PFN_vPrint)GetProcAddress(hDll, "uapbeVPrint");
-            global_Pfn.pfn_GetInterface = (PFN_GetInterface)GetProcAddress(hDll, "uapbeGetInterface");
 
             TRACE("uapbeInitialize address: %p\n", global_Pfn.pfn_beInitialize);
+            TRACE("uapbeAppInitialize address: %p\n", global_Pfn.pfn_beAppInitialize);
             TRACE("uapbeVPrint address: %p\n", global_Pfn.pfn_vPrint);
-            TRACE("uapbeGetInterface address: %p\n", global_Pfn.pfn_GetInterface);
 
 
             r = global_Pfn.pfn_beInitialize();
@@ -57,12 +57,11 @@ namespace uap
         return r;
     }
 
-    
-    Result uapGetInterface(const Uuid &uuid, IUnknown **ppiUnknown)
+    Result uapAppInitialize(IApp** ppiApp)
     {
         Result r = R_OK;
-        ASSERT(global_Pfn.pfn_GetInterface);
-        r = global_Pfn.pfn_GetInterface(uuid, ppiUnknown);
+        ASSERT(global_Pfn.pfn_beAppInitialize);
+        r = global_Pfn.pfn_beAppInitialize(ppiApp);
         return r;
     }
 

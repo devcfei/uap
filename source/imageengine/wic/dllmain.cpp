@@ -20,7 +20,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
         uap::Result r = uap::uapInitialize();
         TRACE("dllmain process attach!\n");
-
     }
 
     return TRUE;

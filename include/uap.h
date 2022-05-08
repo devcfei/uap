@@ -10,6 +10,7 @@
 // Component
 #include <uapunknown.h>
 #include <uapattributes.h>
+#include <uapapp.h>
 
 
 namespace uap
@@ -18,12 +19,13 @@ namespace uap
     // Global functions
     Result uapInitialize();
 
-    Result uapGetInterface(const Uuid &uuid, IUnknown **ppiUnknown);
+    Result uapAppInitialize(IApp** ppiApp);
 
 
     // Component functions
     typedef Result (*PFN_compRegisterInterface)(const Uuid *iidArr, Ulong* count);
     typedef Result (*PFN_compGetInterface)(const Uuid& iid, void** ppv);
+
 
 };
 

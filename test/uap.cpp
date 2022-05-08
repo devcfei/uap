@@ -6,18 +6,20 @@
 TEST(uap, IAttributes)
 {
     uap::Result r;
-    //Expect equality.
+    uap::sptr<uap::IApp> sp;
+
+    r = uap::uapAppInitialize((uap::IApp**)&sp);
+    EXPECT_EQ(r, uap::R_OK);
+
+
     uap::IAttributes *piAttributes;
-    r = uap::uapGetInterface(IID_IATTRIBUTES, (uap::IUnknown**)&piAttributes);
+    r = sp->createInterface(IID_IATTRIBUTES, (void**)&piAttributes);    
     EXPECT_EQ(r, uap::R_OK);
 
     uap::Uint val =10;
     piAttributes->setUint(0,val);
     piAttributes->getUint(0,val);
-
     piAttributes->release();
-
-
 
 }
 
@@ -25,10 +27,18 @@ TEST(uap, IAttributes)
 TEST(uap, IAttributes_sptr)
 {
     uap::Result r;
+    uap::sptr<uap::IApp> sp;
 
-    uap::sptr<uap::IAttributes> sp;
-    r = uap::uapGetInterface(IID_IATTRIBUTES, (uap::IUnknown**)sp.getaddrof());
-    
+    r = uap::uapAppInitialize((uap::IApp**)&sp);
     EXPECT_EQ(r, uap::R_OK);
+
+    uap::sptr<uap::IAttributes> spAttributes;
+    r = sp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    EXPECT_EQ(r, uap::R_OK);
+
+    uap::Uint val =20;
+    spAttributes->setUint(0,val);
+    spAttributes->getUint(0,val);
+
 
 }

@@ -7,14 +7,21 @@
 
 TEST(imageengine, Interface)
 {
+
     uap::Result r;
 
-    uap::sptr<uap::IImageEngine> sp;
+    uap::sptr<uap::IApp> sp;
 
-    r = uap::uapGetInterface(IID_IMAGEENGINE, (uap::IUnknown**)&sp);
+    r = uap::uapAppInitialize((uap::IApp**)&sp);
     EXPECT_EQ(r, uap::R_OK);
 
-    r = sp->initialize();
+
+    uap::sptr<uap::IImageEngine> spImageEngine;
+    r = sp->createInterface(IID_IMAGEENGINE, (void**)&spImageEngine);    
+    EXPECT_EQ(r, uap::R_OK);
+
+
+    r = spImageEngine->initialize();
     EXPECT_EQ(r, uap::R_OK);
 
 }
