@@ -17,6 +17,7 @@
 #include "uapbedefs.h"
 #include "uapbeappimpl.h"
 #include "uapbeattributesimpl.h"
+#include "uaplogtraceimpl.h"
 
 
 using namespace uap;

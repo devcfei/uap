@@ -100,11 +100,24 @@ namespace uap
         TRACE("AppImpl::createInterface\n");
 
 
-        // create the interfaces
+        // create the interfaces implemented by uapbe
         if(UidIsEqual(rUuid, IID_IATTRIBUTES))
         {
 
             pi = new CAttributesImpl();
+            if(pi)
+            {
+                *ppv = (void**)pi;
+                r = R_OK;
+            }
+            else        
+            {
+                r = R_NO_MEMORY;
+            }
+        }
+        else if(UidIsEqual(rUuid, IID_LOGTRACE))
+        {
+            pi = new LogTraceImpl();
             if(pi)
             {
                 *ppv = (void**)pi;

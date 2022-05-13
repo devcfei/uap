@@ -41,7 +41,6 @@ namespace uap
         Result r = R_OK;
         TRACE("UiEngineImpl::initialize\n");
 
-
         r = initializeWindow();
         if(!UAP_SUCCESS(r))
         {

@@ -10,6 +10,7 @@
 // Component
 #include <uapunknown.h>
 #include <uapattributes.h>
+#include <uaplogtrace.h>
 #include <uapapp.h>
 
 
