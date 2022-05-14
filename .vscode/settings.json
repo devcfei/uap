@@ -22,6 +22,7 @@
         "xmemory": "cpp",
         "xstring": "cpp",
         "vector": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "utility": "cpp"
     }
 }

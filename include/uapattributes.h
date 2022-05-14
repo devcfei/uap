@@ -15,11 +15,26 @@ namespace uap
         virtual const Uuid& uuidof()=0;
         virtual Ulong addRef() = 0;
         virtual Ulong release() = 0;
-        virtual Result queryInterface(const uap::Uuid &,void **) = 0;
+        virtual Result queryInterface(const Uuid &,void **) = 0;
 
-        //
-        virtual Result setUint(Ulong key, Uint value) = 0;
-        virtual Result getUint(Ulong key, Uint &value) = 0;
+        // IAttributes
+        virtual Result setUint(const Uuid & key, Uint value) = 0;
+        virtual Result getUint(const Uuid & key, Uint &value) = 0;
+
+        virtual Result setUlong(const Uuid & key, Ulong value) = 0;
+        virtual Result getUlong(const Uuid & key, Ulong &value) = 0;
+
+        virtual Result setUuid(const Uuid & key, Uuid value) = 0;
+        virtual Result getUuid(const Uuid & key, Uuid &value) = 0;
+
+        virtual Result setBlob(const Uuid & key, const Uchar* buff, Ulong bufSize) = 0;
+        virtual Result getBlob(const Uuid & key, Uchar* buff, Ulong bufSize, Ulong* actualSize) = 0;
+
+        virtual Result deleteKey(const Uuid & key) = 0;
+        virtual Result deleteAllKeys() = 0;
+
+
+
     }; // @class IAttributes
 
 }; // @namespace uap

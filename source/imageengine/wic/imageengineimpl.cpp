@@ -48,8 +48,8 @@ namespace uap
         }
 
         uap::Uint val =36;
-        spAttributes->setUint(0,val);
-        spAttributes->getUint(0,val);
+        spAttributes->setUint(UUID_NULL,val);
+        spAttributes->getUint(UUID_NULL,val);
 
         return r;
     }

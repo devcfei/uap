@@ -11,6 +11,7 @@
 
 // stl
 #include <vector>
+#include <map>
 
 // uap
 #include <uap.h>

@@ -4,6 +4,11 @@
 namespace uap
 {
 
+    inline bool operator<(const Uuid& lhs, const Uuid& rhs)
+    {
+        return (memcmp(&lhs, &rhs, sizeof(Uuid)) > 0 ? true : false);
+    }
+
     class AttributesImpl : public IAttributes
     {
     public:
@@ -14,14 +19,51 @@ namespace uap
         virtual const Uuid& uuidof();
         virtual Ulong addRef();
         virtual Ulong release();
-        virtual Result queryInterface(const uap::Uuid &,void **);
+        virtual Result queryInterface(const Uuid &,void **);
 
-        //
-        virtual Result setUint(Ulong key, Uint value) ;
-        virtual Result getUint(Ulong key, Uint &value) ;
+        // IAttributes
+        virtual Result setUint(const Uuid & key, Uint value);
+        virtual Result getUint(const Uuid & key, Uint &value);
+
+        virtual Result setUlong(const Uuid & key, Ulong value);
+        virtual Result getUlong(const Uuid & key, Ulong &value);
+
+        virtual Result setUuid(const Uuid & key, Uuid value);
+        virtual Result getUuid(const Uuid & key, Uuid &value);
+
+        virtual Result setBlob(const Uuid & key, const Uchar* buff, Ulong bufSize);
+        virtual Result getBlob(const Uuid & key, Uchar* buff, Ulong bufSize, Ulong* actualSize);
+
+        virtual Result deleteKey(const Uuid & key);
+        virtual Result deleteAllKeys();
     private:
         const Uuid uuid_= IID_IATTRIBUTES;
         Ulong refcount_;
+
+        enum KeyType
+        {
+            KT_UINT,
+            KT_ULONG,
+            KT_UUID,
+            KT_BLOB,
+        };
+        struct KeyValue
+        {
+            KeyType vt;
+            union
+            {
+                Uint ui;
+                Ulong ul;
+                Uuid uuid;
+                struct Blob
+                {
+                    Uchar *pbuf;
+                    Ulong size;
+                } blob;
+            };
+        };
+
+        std::map<Uuid, KeyValue> map_;
     };
 
 };

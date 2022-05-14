@@ -30,7 +30,7 @@ namespace uap
         return R_OK;
     }
 
-    Result LogTraceImpl::initialize(CHAR* name, Ulong defaultLevel)
+    Result LogTraceImpl::initialize(Char* name, Ulong defaultLevel)
     {
         Result r = R_OK;
 
