@@ -9,10 +9,10 @@ extern "C" DLL_EXPORTS Result uapbeInitialize()
 }
 
 
-extern "C" DLL_EXPORTS Result uapbeAppInitialize(IApp** ppiApp)
+extern "C" DLL_EXPORTS Result uapbeCreateApplication(IApplication** ppiApp)
 {
     Result r = R_NO_MEMORY;
-	IApp* piApp;
+	IApplication* piApp;
 
     TRACE("new AppImpl()\n");
 	piApp = new AppImpl();

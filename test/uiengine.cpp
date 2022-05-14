@@ -9,9 +9,9 @@ TEST(uiengine, Interface)
 {
     uap::Result r;
 
-    uap::sptr<uap::IApp> sp;
+    uap::sptr<uap::IApplication> sp;
 
-    r = uap::uapAppInitialize((uap::IApp**)&sp);
+    r = uap::uapCreateApplication((uap::IApplication**)&sp);
     EXPECT_EQ(r, uap::R_OK);
 
 

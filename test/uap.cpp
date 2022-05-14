@@ -6,9 +6,9 @@
 TEST(uap, IAttributes)
 {
     uap::Result r;
-    uap::sptr<uap::IApp> sp;
+    uap::sptr<uap::IApplication> sp;
 
-    r = uap::uapAppInitialize((uap::IApp**)&sp);
+    r = uap::uapCreateApplication((uap::IApplication**)&sp);
     EXPECT_EQ(r, uap::R_OK);
 
 
@@ -27,9 +27,9 @@ TEST(uap, IAttributes)
 TEST(uap, IAttributes_sptr)
 {
     uap::Result r;
-    uap::sptr<uap::IApp> sp;
+    uap::sptr<uap::IApplication> sp;
 
-    r = uap::uapAppInitialize((uap::IApp**)&sp);
+    r = uap::uapCreateApplication((uap::IApplication**)&sp);
     EXPECT_EQ(r, uap::R_OK);
 
     uap::sptr<uap::IAttributes> spAttributes;

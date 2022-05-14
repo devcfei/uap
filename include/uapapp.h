@@ -8,7 +8,7 @@
 namespace uap
 {
 
-    class IApp : public IUnknown
+    class IApplication : public IUnknown
     {
     public:
         virtual const Uuid &uuidof() = 0;
@@ -16,11 +16,11 @@ namespace uap
         virtual Ulong release() = 0;
         virtual Result queryInterface(const uap::Uuid &, void **) = 0;
 
-        // IApp
+        // IApplication
         virtual Result initialize() = 0;
         virtual Result createInterface(const uap::Uuid & rUuid, void **ppv) = 0;
 
-    }; // @class IApp
+    }; // @class IApplication
 
 }; // @namespace uap
 

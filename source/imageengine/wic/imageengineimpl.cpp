@@ -30,7 +30,7 @@ namespace uap
     }
 
     //
-    Result ImageEngineImpl::initialize(IApp* piApp)
+    Result ImageEngineImpl::initialize(IApplication* piApp)
     {
         Result r;
         TRACE("ImageEngineImpl::initialize\n");

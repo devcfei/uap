@@ -4,10 +4,10 @@
 namespace uap
 {
 
-    class CAttributesImpl : public IAttributes
+    class AttributesImpl : public IAttributes
     {
     public:
-        CAttributesImpl()
+        AttributesImpl()
             : refcount_(1)
         {
         }

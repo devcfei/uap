@@ -20,7 +20,7 @@ namespace uap
     // Global functions
     Result uapInitialize();
 
-    Result uapAppInitialize(IApp** ppiApp);
+    Result uapCreateApplication(IApplication** ppiApp);
 
 
     // Component functions

@@ -104,7 +104,7 @@ namespace uap
         if(UidIsEqual(rUuid, IID_IATTRIBUTES))
         {
 
-            pi = new CAttributesImpl();
+            pi = new AttributesImpl();
             if(pi)
             {
                 *ppv = (void**)pi;

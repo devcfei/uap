@@ -17,9 +17,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Result r = uapInitialize();
 
-    sptr<IApp> spApp; 
+    sptr<IApplication> spApp; 
 
-    r = uapAppInitialize((IApp**)&spApp);
+    r = uapCreateApplication((IApplication**)&spApp);
 
     if(!UAP_SUCCESS(r))
     {

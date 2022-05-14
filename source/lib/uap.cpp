@@ -17,11 +17,11 @@ namespace uap
         {
 
             global_Pfn.pfn_beInitialize = (PFN_beInitialize)GetProcAddress(hDll, "uapbeInitialize");
-            global_Pfn.pfn_beAppInitialize = (PFN_beAppInitialize)GetProcAddress(hDll, "uapbeAppInitialize");            
+            global_Pfn.pfn_beAppInitialize = (PFN_beAppInitialize)GetProcAddress(hDll, "uapbeCreateApplication");            
             global_Pfn.pfn_vPrint = (PFN_vPrint)GetProcAddress(hDll, "uapbeVPrint");
 
             TRACE("uapbeInitialize address: %p\n", global_Pfn.pfn_beInitialize);
-            TRACE("uapbeAppInitialize address: %p\n", global_Pfn.pfn_beAppInitialize);
+            TRACE("uapbeCreateApplication address: %p\n", global_Pfn.pfn_beAppInitialize);
             TRACE("uapbeVPrint address: %p\n", global_Pfn.pfn_vPrint);
 
 
@@ -57,7 +57,7 @@ namespace uap
         return r;
     }
 
-    Result uapAppInitialize(IApp** ppiApp)
+    Result uapCreateApplication(IApplication** ppiApp)
     {
         Result r = R_OK;
         ASSERT(global_Pfn.pfn_beAppInitialize);

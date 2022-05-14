@@ -19,7 +19,7 @@ namespace uap
         virtual Result queryInterface(const uap::Uuid &,void **) = 0;
 
         // IImageEngine
-        virtual Result initialize(IApp* piApp)=0;
+        virtual Result initialize(IApplication* piApp)=0;
 
     }; // @class IAttributes
 

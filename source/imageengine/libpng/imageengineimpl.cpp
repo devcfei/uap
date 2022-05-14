@@ -16,7 +16,7 @@ namespace uap
     }
     Ulong ImageEngineImpl::release()
     {
-        TRACE("CAttributesImpl::release\n");
+        TRACE("AttributesImpl::release\n");
 
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)

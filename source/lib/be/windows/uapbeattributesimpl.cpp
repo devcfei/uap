@@ -2,20 +2,20 @@
 
 namespace uap
 {
-    const Uuid& CAttributesImpl::uuidof()
+    const Uuid& AttributesImpl::uuidof()
     {
         return uuid_;
     }
 
-    Ulong CAttributesImpl::addRef()
+    Ulong AttributesImpl::addRef()
     {
-        TRACE("CAttributesImpl::addRef\n");
+        TRACE("AttributesImpl::addRef\n");
 
         return InterlockedIncrement(&refcount_);
     }
-    Ulong CAttributesImpl::release()
+    Ulong AttributesImpl::release()
     {
-        TRACE("CAttributesImpl::release\n");
+        TRACE("AttributesImpl::release\n");
 
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
@@ -24,20 +24,20 @@ namespace uap
         }
         return ref;
     }
-    Result CAttributesImpl::queryInterface(const uap::Uuid &, void **)
+    Result AttributesImpl::queryInterface(const uap::Uuid &, void **)
     {
         return R_OK;
     }
 
     //
-    Result CAttributesImpl::setUint(Ulong key, Uint value)
+    Result AttributesImpl::setUint(Ulong key, Uint value)
     {
-        TRACE("CAttributesImpl::setUint - value=%d\n", value);
+        TRACE("AttributesImpl::setUint - value=%d\n", value);
         return R_OK;
     }
-    Result CAttributesImpl::getUint(Ulong key, Uint &value)
+    Result AttributesImpl::getUint(Ulong key, Uint &value)
     {
-        TRACE("CAttributesImpl::getUint\n");
+        TRACE("AttributesImpl::getUint\n");
         return R_OK;
     }
 

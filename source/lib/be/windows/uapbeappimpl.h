@@ -4,7 +4,7 @@
 namespace uap
 {
 
-    class AppImpl : public IApp
+    class AppImpl : public IApplication
     {
     public:
         AppImpl()

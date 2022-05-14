@@ -15,7 +15,7 @@ The C++ APIs are are always interface based. They should be get by uapGetInterfa
 API | Description
 ----|----
 uapInitialize | Initialize the UAP 
-uapAppInitialize | Initialize the uap::IApp interface
+uapCreateApplication | Initialize the uap::IApplication interface
 logPrint | print log
 
 ### C++ APIs(Interfaces)

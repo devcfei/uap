@@ -18,12 +18,12 @@ namespace uap
         virtual Result queryInterface(const uap::Uuid &,void **);
 
         // IImageEngine
-        virtual Result initialize(IApp* piApp);
+        virtual Result initialize(IApplication* piApp);
     private:
         const Uuid uuid_= IID_IMAGEENGINE;
         Ulong refcount_;
 
-        sptr<IApp> spApp_;
+        sptr<IApplication> spApp_;
     };
 
 };
