@@ -7,13 +7,18 @@ TEST(App, initialize)
 {
     uap::Result r;
 
-    uap::sptr<uap::IApplication> sp;
+    uap::sptr<uap::IApplication> spApp;
 
-    r = uap::uapCreateApplication((uap::IApplication**)&sp);
-
+    r = uap::uapCreateApplication((uap::IApplication**)&spApp);
     EXPECT_EQ(r, uap::R_OK);
 
-    r = sp->initialize();
+
+    uap::sptr<uap::IAttributes> spAttributes;
+    r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    EXPECT_EQ(r, uap::R_OK);
+
+
+    r = spApp->initialize(spAttributes.get());
     EXPECT_EQ(r, uap::R_OK);
 
 }
@@ -23,24 +28,28 @@ TEST(App, createInterface)
 {
     uap::Result r;
 
-    uap::sptr<uap::IApplication> sp;
+    uap::sptr<uap::IApplication> spApp;
 
-    r = uap::uapCreateApplication((uap::IApplication**)&sp);
+    r = uap::uapCreateApplication((uap::IApplication**)&spApp);
     EXPECT_EQ(r, uap::R_OK);
 
     // uapbe interfaces
     uap::sptr<uap::IAttributes> spAttributes;
-    r = sp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    EXPECT_EQ(r, uap::R_OK);
+
+
+    r = spApp->initialize(spAttributes.get());
     EXPECT_EQ(r, uap::R_OK);
 
 
     // component interfaces
     uap::sptr<uap::IImageEngine> spImageEngine;
-    r = sp->createInterface(IID_IMAGEENGINE, (void**)&spImageEngine);    
+    r = spApp->createInterface(IID_IMAGEENGINE, (void**)&spImageEngine);    
     EXPECT_EQ(r, uap::R_OK);
 
     uap::sptr<uap::IUiEngine> spUiEngine;
-    r = sp->createInterface(IID_UIENGINE, (void**)&spUiEngine);    
+    r = spApp->createInterface(IID_UIENGINE, (void**)&spUiEngine);    
     EXPECT_EQ(r, uap::R_OK);
 
 }

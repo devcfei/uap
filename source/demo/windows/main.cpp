@@ -28,6 +28,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
 
+    sptr<IAttributes> spAttributes;
+    r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);
+    if(!UAP_SUCCESS(r))
+    {
+        ret = -1;
+        ExitProcess(1);
+    }
+
+    r = spApp->initialize(spAttributes.get());
+    if(!UAP_SUCCESS(r))
+    {
+        ret = -1;
+        ExitProcess(1);
+    }
+
     sptr<IUiEngine> spUiEngine;
     r = spApp->createInterface(IID_UIENGINE,(void**)&spUiEngine);
     if(!UAP_SUCCESS(r))

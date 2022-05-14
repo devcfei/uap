@@ -19,12 +19,8 @@ extern "C" DLL_EXPORTS Result uapbeCreateApplication(IApplication** ppiApp)
 
 	if(piApp)
 	{
-		r = piApp->initialize();
-		if(UAP_SUCCESS(r))
-		{
-
-			*ppiApp = piApp;
-		}
+        *ppiApp = piApp;
+        r = R_OK;		
 	}
 
 	return r;

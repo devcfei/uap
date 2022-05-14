@@ -7,13 +7,13 @@ namespace uap
     // Global functions
 
     typedef Result (*PFN_beInitialize)();
-    typedef Result (*PFN_beAppInitialize)(IApplication **ppiApp);
+    typedef Result (*PFN_beCreateApplication)(IApplication **ppiApp);
     typedef Result (*PFN_vPrint)(Char *format, va_list vaList);
 
     struct uapPfn
     {
         PFN_beInitialize pfn_beInitialize;
-        PFN_beAppInitialize pfn_beAppInitialize;
+        PFN_beCreateApplication pfn_beCreateApplication;
         PFN_vPrint pfn_vPrint;
     };
 

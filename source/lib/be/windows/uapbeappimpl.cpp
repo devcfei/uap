@@ -80,7 +80,7 @@ namespace uap
     }
 
 
-    Result AppImpl::initialize()
+    Result AppImpl::initialize(IAttributes* piAttributes)
     {
         Result r = R_OK;
         TRACE("AppImpl::initialize\n");

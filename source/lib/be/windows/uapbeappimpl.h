@@ -17,7 +17,7 @@ namespace uap
         virtual Result queryInterface(const uap::Uuid &,void **);
 
         //
-        virtual Result initialize();
+        virtual Result initialize(IAttributes* piAttributes);
         virtual Result createInterface(const uap::Uuid & rUuid, void **ppv);
 
     private:
