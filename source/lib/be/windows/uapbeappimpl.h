@@ -3,12 +3,12 @@
 
 namespace uap
 {
-
-    class AppImpl : public IApplication
+    class AppImpl : public IApplication, IFileLogger
     {
     public:
         AppImpl()
             : refcount_(1)
+            , initFlags_(APP_INIT_COMPONENT_ENALBE)
         {
         }
         virtual const Uuid& uuidof();
@@ -16,9 +16,13 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const uap::Uuid &,void **);
 
-        //
+        // IApplication
         virtual Result initialize(IAttributes* piAttributes);
         virtual Result createInterface(const uap::Uuid & rUuid, void **ppv);
+
+        // IFileLogger
+        virtual Result initialize(Char* filename);
+        virtual Result saveMessage(Char* message);
 
     private:
         const Uuid uuid_= IDD_IAPP;
@@ -38,6 +42,11 @@ namespace uap
 
         Result enumComponent();
         Result registerInterface(LPCTSTR szFileName);
+
+        // application init flags
+        Uint initFlags_;
+
+        std::ofstream logFile_;
 
     };
 

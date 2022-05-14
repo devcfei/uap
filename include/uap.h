@@ -10,8 +10,8 @@
 // Component
 #include <uapunknown.h>
 #include <uapattributes.h>
-#include <uaplogtrace.h>
 #include <uapapp.h>
+#include <uaplogtrace.h>
 
 
 namespace uap

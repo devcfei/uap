@@ -12,6 +12,7 @@
 // stl
 #include <vector>
 #include <map>
+#include <fstream>
 
 // uap
 #include <uap.h>

@@ -10,6 +10,7 @@ namespace uap
         LogTraceImpl()
             : refcount_(1)
         {
+            logAttributes_.ul=0;
         }
         virtual const Uuid& uuidof();
         virtual Ulong addRef();
@@ -17,14 +18,18 @@ namespace uap
         virtual Result queryInterface(const uap::Uuid &,void **);
 
         // ILogTrace
-        virtual Result initialize(Char* name, Ulong defaultLevel);
+        virtual Result initialize(IApplication* piApp, Char* name, IAttributes* piAttributes);
         virtual Result output(Ulong level, Char* format, ...);
     private:
         const Uuid uuid_= IID_LOGTRACE;
         Ulong refcount_;
 
-        Ulong defaultLevel_;
+
+        // set in initialization
+        sptr<IApplication> spApp_;
         CHAR name_[256];
+        LogAttributes logAttributes_;
+
     };
 
 };

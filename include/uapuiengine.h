@@ -19,10 +19,15 @@ namespace uap
         virtual Result queryInterface(const uap::Uuid &,void **) = 0;
 
         // IUiEngine
-        virtual Result initialize()=0;
+        virtual Result initialize(IApplication* piApp, IAttributes* piAttributes)=0;
         virtual Result run()=0;
 
     }; // @class IAttributes
+
+
+    // UI engine initialize attributes
+
+
 
 }; // @namespace uap
 

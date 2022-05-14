@@ -18,7 +18,7 @@ namespace uap
         virtual Result queryInterface(const uap::Uuid &,void **);
 
         // IUiEngine
-        virtual Result initialize();
+        virtual Result initialize(IApplication* piApp, IAttributes* piAttributes);
         virtual Result run();
 
     private:
@@ -26,6 +26,7 @@ namespace uap
         Ulong refcount_;
 
         Result initializeWindow();
+        Result initializeBackEnd();
         Result reset();
 
         // Win32
@@ -42,6 +43,9 @@ namespace uap
         Result d3d9DestoryDevice();
 
 
+        // log attributes
+        LogAttributes logAttributes_;
+        sptr<ILogTrace> spLogTrace_;
 
     };
 

@@ -23,6 +23,7 @@
         "xstring": "cpp",
         "vector": "cpp",
         "map": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "iosfwd": "cpp"
     }
 }

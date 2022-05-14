@@ -36,54 +36,39 @@ namespace uap
         return R_OK;
     }
 
-    Result UiEngineImpl::initialize()
+    Result UiEngineImpl::initialize(IApplication* piApp, IAttributes* piAttributes)
     {
         Result r = R_OK;
-        TRACE("UiEngineImpl::initialize\n");
 
-        r = initializeWindow();
+        sptr<IApplication> spApp = piApp;
+        sptr<IAttributes> spAttr = piAttributes;
+        spAttr->getUlong(UUID_LOGTRACE_ATTRIBUTES,logAttributes_.ul);
+
+        // initialize the log trace
+        r = spApp->createInterface(IID_LOGTRACE,(void**)&spLogTrace_);
         if(!UAP_SUCCESS(r))
         {
-            TRACE("initializeWindow failed! r = 0x%8.8x\n",r);
+            TRACE("createInterface failed! r = 0x%8.8x\n",r);
             return r;
         }
 
+        r = spLogTrace_->initialize(spApp.get(), "uiengine.dll", spAttr.get());
+        
+        LOG("UiEngineImpl::initialize\n");
 
-        // Setup Dear ImGui context
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO &io = ImGui::GetIO();
-        (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
-        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
-        // io.ConfigViewportsNoAutoMerge = true;
-        // io.ConfigViewportsNoTaskBarIcon = true;
+        r = initializeWindow();
+        VERIFY(r, "initializeWindow")
 
-        // Setup Dear ImGui style
-        ImGui::StyleColorsDark();
-        // ImGui::StyleColorsClassic();
+        r = initializeBackEnd();
+        VERIFY(r,"initializeBackEnd")
 
-        // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-        ImGuiStyle &style = ImGui::GetStyle();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            style.WindowRounding = 0.0f;
-            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-        }
-
-        // Setup Platform/Renderer backends
-        ImGui_ImplWin32_Init(hWnd_);
-        ImGui_ImplDX9_Init(d3d9Device_.Get());
-
-        return R_OK;
+        return r;
     }
 
 
     Result UiEngineImpl::run()
     {
-        TRACE("UiEngineImpl::run\n");
+        LOG("UiEngineImpl::run\n");
 
         ImGuiIO &io = ImGui::GetIO();
 
@@ -195,7 +180,7 @@ namespace uap
     Result UiEngineImpl::initializeWindow()
     {
         Result r = R_OK;
-        TRACE("UiEngineImpl::initializeWindow\n");
+        LOG("UiEngineImpl::initializeWindow\n");
 
         WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, 
             GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("ImGui Example"), NULL };
@@ -205,7 +190,7 @@ namespace uap
         hWnd_ = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX9 Example"), 
             WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, (LPVOID)this);
 
-        TRACE("UiEngineImpl instance, this=0x%p",this);
+        LOG("UiEngineImpl instance, this=0x%p\n",this);
 
         // Initialize Direct3D
         r = d3d9CreateDevice(hWnd_);
@@ -223,6 +208,41 @@ namespace uap
         return r;
     }
 
+    Result UiEngineImpl::initializeBackEnd()
+    {
+        Result r = R_OK;
+
+
+        // Setup Dear ImGui context
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO &io = ImGui::GetIO();
+        (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
+        // io.ConfigViewportsNoAutoMerge = true;
+        // io.ConfigViewportsNoTaskBarIcon = true;
+
+        // Setup Dear ImGui style
+        ImGui::StyleColorsDark();
+        // ImGui::StyleColorsClassic();
+
+        // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+        ImGuiStyle &style = ImGui::GetStyle();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            style.WindowRounding = 0.0f;
+            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+        }
+
+        // Setup Platform/Renderer backends
+        ImGui_ImplWin32_Init(hWnd_);
+        ImGui_ImplDX9_Init(d3d9Device_.Get());
+
+        return r;
+    }
     
     Result UiEngineImpl::reset()
     {
@@ -241,10 +261,10 @@ namespace uap
         Result r = R_OK;
         if ((d3d9_ = Direct3DCreate9(D3D_SDK_VERSION)) == NULL)
         {
-            TRACE("Direct3DCreate9 failed!\n");
             r= R_INTERNEL_FAILURE;
-            return r;
         }
+
+        VERIFY(r, "Direct3DCreate9");
 
         // Create the D3DDevice
         ZeroMemory(&d3dpp_, sizeof(d3dpp_));
@@ -258,10 +278,10 @@ namespace uap
         if (d3d9_->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
                                 D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp_, &d3d9Device_) < 0)
         {
-            TRACE("CreateDevice failed!\n");
             r = R_INTERNEL_FAILURE;
-            return r;
         }
+
+        VERIFY(r, "IDirect3D9::CreateDevice");
         
         return r;
     }

@@ -43,6 +43,28 @@ using namespace Microsoft::WRL;
 #define ASSERT(_expr_)
 #endif
 
+
+#define RESULT_CHECK(r, _message_) \
+        if(!UAP_SUCCESS(r)) \
+        { \
+            TRACE( _message_ ## " failed! r = 0x%8.8x\n",r); \
+            return r; \
+        } 
+
+#define VERIFY(r, _message_) \
+        if(!UAP_SUCCESS(r)) \
+        { \
+            spLogTrace_->output(LT_ERROR, _message_ ## " failed! r = 0x%8.8x\n",r); \
+            return r; \
+        } 
+
+#define LOG(_message_, ...) \
+            spLogTrace_->output(LT_VERBOSE, _message_, __VA_ARGS__ ); 
+
+#define WARN(_message_, ...) \
+            spLogTrace_->output(LT_ERROR, _message_, __VA_ARGS__ ); 
+
+
 namespace uap
 {
     extern "C" DLL_EXPORTS Result compGetInterface(const Uuid &iid, void **ppv);

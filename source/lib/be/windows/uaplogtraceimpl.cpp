@@ -30,13 +30,17 @@ namespace uap
         return R_OK;
     }
 
-    Result LogTraceImpl::initialize(Char* name, Ulong defaultLevel)
+    Result LogTraceImpl::initialize(IApplication* piApp, Char* name, IAttributes* piAttributes)
     {
         Result r = R_OK;
 
-        defaultLevel_ = defaultLevel;
+        spApp_ = piApp;
 
         StringCchCopyA(name_, 256, name);
+
+        sptr<IAttributes> spAttr = piAttributes;
+        r = spAttr->getUlong(UUID_LOGTRACE_ATTRIBUTES,logAttributes_.ul);
+
 
         return r;
     }
@@ -46,16 +50,39 @@ namespace uap
     {
         Result r = R_OK;
 
-        if(level<=defaultLevel_)
+        #define MBUF_LEN  16380      
+
+        if(level<=logAttributes_.s.defaultLevel)
         {
             HRESULT hr;
-            CHAR szMessageBuffer[16380] = {0};
+            const CHAR *szLevelTag[LT_MAX] =
+            {
+                "[FATAL] ",
+                "[ERROR] ",
+                "[WARN] ",
+                "[OK] ",     // INFO show OK
+                "[OK] ",     // VEBOSE show OK
+            };
+            CHAR szMessageBuffer[MBUF_LEN] = {0};
+
+            // check if level tag enabled
+            if(logAttributes_.s.enableLevelTag)
+            {
+                hr = StringCchCatA(szMessageBuffer,MBUF_LEN, szLevelTag[level]);
+            }
+
+            // always have a name
+            hr = StringCchCatA(szMessageBuffer,MBUF_LEN, name_);
+            hr = StringCchCatA(szMessageBuffer,MBUF_LEN, "!");
+
+
+            // start the format message
+            size_t len;
+            hr = StringCchLengthA(szMessageBuffer,MBUF_LEN,&len);
 
             va_list args;
-            va_start(args, format);  
-
-            hr = StringCchVPrintfA(szMessageBuffer, 16380, format, args);
-
+            va_start(args, format);
+            hr = StringCchVPrintfA(szMessageBuffer+len, MBUF_LEN, format, args);
             va_end(args);
 
             if (FAILED(hr))
@@ -65,7 +92,21 @@ namespace uap
                 return r;
             }
 
-            OutputDebugStringA(szMessageBuffer);
+            // check if debug trace needed
+            if(logAttributes_.s.enableDebugTrace)
+                OutputDebugStringA(szMessageBuffer);
+
+            // check if debug application log needed
+            if(logAttributes_.s.enableAppLogTrace)
+            {
+                sptr<IFileLogger> spFileLogger;
+                r = spApp_->queryInterface(IID_FILELOGGER, (void**)&spFileLogger);
+                if(UAP_SUCCESS(r))
+                {
+                    spFileLogger->saveMessage(szMessageBuffer);
+                }
+            }
+      
         }
 
         return r;

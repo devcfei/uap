@@ -70,13 +70,35 @@ namespace uap
         {
             TRACE("delete AppImpl()\n");
 
+            logFile_.close();
+
             delete this;
         }
         return ref;
     }
-    Result AppImpl::queryInterface(const uap::Uuid &, void **)
+    Result AppImpl::queryInterface(const uap::Uuid & rUuid, void ** ppv)
     {
-        return R_OK;
+        Result r = R_NO_SUCH_INTERFACE;
+        // create the interfaces implemented by uapbe
+        if(UidIsEqual(rUuid, IDD_IAPP))
+        {
+            IApplication *pi = static_cast<IApplication*>(this);
+            pi->addRef();
+
+            *((IApplication**)ppv)=pi;            
+            r = R_OK;
+        }
+        else if(UidIsEqual(rUuid, IID_FILELOGGER))
+        {
+            IFileLogger *pi = static_cast<IFileLogger*>(this);
+            pi->addRef();
+
+            *((IFileLogger**)ppv)=pi;            
+            r = R_OK;
+        }
+
+
+        return r;
     }
 
 
@@ -85,8 +107,22 @@ namespace uap
         Result r = R_OK;
         TRACE("AppImpl::initialize\n");
 
-        // build the interfaces database
-        r =  enumComponent();
+        sptr<IAttributes> spAttr = piAttributes;
+
+        spAttr->getUint(UUID_APP_INIT_FLAGS,initFlags_);
+        if(initFlags_ & APP_INIT_LOGTRACE_ENALBE)
+        {
+            TRACE("enabled application log trace\n");
+            //
+            initialize("app.log");
+
+        }
+
+        if(initFlags_ & APP_INIT_COMPONENT_ENALBE)
+        {
+            // build the interfaces database
+            r =  enumComponent();
+        }
 
 
         return r;
@@ -162,7 +198,23 @@ namespace uap
     }
 
 
+    Result AppImpl::initialize(Char* filename)
+    {
+        Result r = R_OK;
 
+        logFile_.open(filename);
+
+        return r;
+    }
+
+    Result AppImpl::saveMessage(Char* message)
+    {
+        Result r = R_OK;
+
+        logFile_<<message;
+
+        return r;
+    }
 
     Result AppImpl::enumComponent()
     {
