@@ -24,6 +24,7 @@
         "vector": "cpp",
         "map": "cpp",
         "utility": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "fstream": "cpp"
     }
 }

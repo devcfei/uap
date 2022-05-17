@@ -6,6 +6,8 @@ namespace uap
 {
 
     class UiEngineImpl : public IUiEngine
+        , public IUiLayout
+        , public IUiMenuBar
     {
     public:
         UiEngineImpl()
@@ -19,7 +21,14 @@ namespace uap
 
         // IUiEngine
         virtual Result initialize(IApplication* piApp, IAttributes* piAttributes);
+        virtual Result startup();
         virtual Result run();
+
+        // IUiLayout
+        virtual Result initializeLayout(IAttributes* piAttributes);
+        // IUiMenuBar
+        virtual Result initializeMenuBar(IAttributes* piAttributes);
+        
 
     private:
         const Uuid uuid_= IID_IMAGEENGINE;
@@ -30,7 +39,7 @@ namespace uap
         Result reset();
 
         // Win32
-        WNDCLASSEX wc_; 
+        WNDCLASSEX wc_;
         HWND hWnd_;
         static LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -43,9 +52,14 @@ namespace uap
         Result d3d9DestoryDevice();
 
 
-        // log attributes
+        // set when initialize
+        sptr<IApplication> spApp_ ;
+        sptr<IAttributes> spAppAttributes_ ;
         LogAttributes logAttributes_;
         sptr<ILogTrace> spLogTrace_;
+
+        // layout attributes
+        sptr<IAttributes> spLayoutAttributes_ ;
 
     };
 

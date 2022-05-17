@@ -31,30 +31,68 @@ namespace uap
         }
         return ref;
     }
-    Result UiEngineImpl::queryInterface(const uap::Uuid &, void **)
+    Result UiEngineImpl::queryInterface(const uap::Uuid & rUuid, void ** ppv)
     {
-        return R_OK;
+        Result r = R_NO_SUCH_INTERFACE;
+        // create the interfaces implemented by uapbe
+        if(UidIsEqual(rUuid, IID_UIENGINE))
+        {
+            IUiEngine *pi = static_cast<IUiEngine*>(this);
+            pi->addRef();
+
+            *((IUiEngine**)ppv)=pi;            
+            r = R_OK;
+        }
+        else if(UidIsEqual(rUuid, IID_IUILAYOUT))
+        {
+            IUiLayout *pi = static_cast<IUiLayout*>(this);
+            pi->addRef();
+
+            *((IUiLayout**)ppv)=pi;            
+            r = R_OK;
+        }
+        else if(UidIsEqual(rUuid, IID_IUIMENUBAR))
+        {
+            IUiMenuBar *pi = static_cast<IUiMenuBar*>(this);
+            pi->addRef();
+
+            *((IUiMenuBar**)ppv)=pi;
+            r = R_OK;
+        }
+
+        return r;
     }
 
     Result UiEngineImpl::initialize(IApplication* piApp, IAttributes* piAttributes)
     {
         Result r = R_OK;
 
-        sptr<IApplication> spApp = piApp;
-        sptr<IAttributes> spAttr = piAttributes;
-        spAttr->getUlong(UUID_LOGTRACE_ATTRIBUTES,logAttributes_.ul);
+        spApp_ = piApp;
+        spAppAttributes_ = piAttributes;
+
+        spAppAttributes_->getUlong(UUID_LOGTRACE_ATTRIBUTES,logAttributes_.ul);
 
         // initialize the log trace
-        r = spApp->createInterface(IID_LOGTRACE,(void**)&spLogTrace_);
+        r = spApp_->createInterface(IID_LOGTRACE,(void**)&spLogTrace_);
         if(!UAP_SUCCESS(r))
         {
             TRACE("createInterface failed! r = 0x%8.8x\n",r);
             return r;
         }
 
-        r = spLogTrace_->initialize(spApp.get(), "uiengine.dll", spAttr.get());
-        
-        LOG("UiEngineImpl::initialize\n");
+        r = spLogTrace_->initialize(spApp_.get(), "uiengine.dll", spAppAttributes_.get());
+        LOG("initialize ILogTrace - r = 0x%8.8x\n", r);
+
+        return r;
+    }
+
+
+
+    Result UiEngineImpl:: startup()
+    {
+        Result r = R_OK;
+
+        LOG("UiEngineImpl::startup\n");
 
         r = initializeWindow();
         VERIFY(r, "initializeWindow")
@@ -64,6 +102,7 @@ namespace uap
 
         return r;
     }
+
 
 
     Result UiEngineImpl::run()
@@ -173,6 +212,33 @@ namespace uap
 
 
         return R_OK;
+    }
+
+
+
+    Result UiEngineImpl::initializeLayout(IAttributes *piAttributes)
+    {
+        Result r = R_OK;
+
+        LOG("UiEngineImpl::initializeLayout\n");
+
+        spLayoutAttributes_ = piAttributes;     
+
+
+        return r;
+    }
+
+
+    Result UiEngineImpl::initializeMenuBar(IAttributes *piAttributes)
+    {
+        Result r = R_OK;
+
+        LOG("UiEngineImpl::initializeMenuBar\n");
+
+        spLayoutAttributes_ = piAttributes;        
+
+
+        return r;
     }
 
 
