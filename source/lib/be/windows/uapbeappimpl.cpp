@@ -1,7 +1,5 @@
 #include "uapbe.h"
 
-
-
 static int GetModuleFilePath(LPCTSTR lpszModuleFile, int size, LPTSTR lpszPath)
 {
     TCHAR path[MAX_PATH] = _T("");
@@ -45,27 +43,23 @@ static BOOL IsDll(LPCTSTR lpszName)
     return bDll;
 }
 
-
-
-
 namespace uap
 {
-    const Uuid& AppImpl::uuidof()
-    {
-        return uuid_;
-    }
 
     Ulong AppImpl::addRef()
     {
-        TRACE("AppImpl::addRef- refcount=%d\n",refcount_);
+        Ulong ref = InterlockedIncrement(&refcount_);
 
-        return InterlockedIncrement(&refcount_);
+        TRACE("AppImpl::addRef- refcount=%d\n", ref);
+
+        return ref;
     }
     Ulong AppImpl::release()
     {
-        TRACE("AppImpl::release - refcount=%d\n",refcount_);
 
         Ulong ref = InterlockedDecrement(&refcount_);
+        TRACE("AppImpl::release - refcount=%d\n", ref);
+
         if (!ref)
         {
             TRACE("delete AppImpl()\n");
@@ -76,129 +70,119 @@ namespace uap
         }
         return ref;
     }
-    Result AppImpl::queryInterface(const uap::Uuid & rUuid, void ** ppv)
+    Result AppImpl::queryInterface(const uap::Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
         // create the interfaces implemented by uapbe
-        if(UidIsEqual(rUuid, IDD_IAPP))
+        if (UidIsEqual(rUuid, IDD_IAPP))
         {
-            IApplication *pi = static_cast<IApplication*>(this);
-            pi->addRef();
+            IApplication *pi = static_cast<IApplication *>(this);
+            addRef();
 
-            *((IApplication**)ppv)=pi;            
+            *((IApplication **)ppv) = pi;
             r = R_OK;
         }
-        else if(UidIsEqual(rUuid, IID_FILELOGGER))
+        else if (UidIsEqual(rUuid, IID_FILELOGGER))
         {
-            IFileLogger *pi = static_cast<IFileLogger*>(this);
-            pi->addRef();
+            IFileLogger *pi = static_cast<IFileLogger *>(this);
+            addRef();
 
-            *((IFileLogger**)ppv)=pi;            
+            *((IFileLogger **)ppv) = pi;
             r = R_OK;
         }
-
 
         return r;
     }
 
-
-    Result AppImpl::initialize(IAttributes* piAttributes)
+    Result AppImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_OK;
         TRACE("AppImpl::initialize\n");
 
         sptr<IAttributes> spAttr = piAttributes;
 
-        spAttr->getUint(UUID_APP_INIT_FLAGS,initFlags_);
-        if(initFlags_ & APP_INIT_LOGTRACE_ENALBE)
+        spAttr->getUint(UUID_APP_INIT_FLAGS, initFlags_);
+        if (initFlags_ & APP_INIT_LOGTRACE_ENALBE)
         {
             TRACE("enabled application log trace\n");
             //
             initialize("app.log");
-
         }
 
-        if(initFlags_ & APP_INIT_COMPONENT_ENALBE)
+        if (initFlags_ & APP_INIT_COMPONENT_ENALBE)
         {
             // build the interfaces database
-            r =  enumComponent();
+            r = enumComponent();
         }
-
 
         return r;
     }
 
-    Result AppImpl::createInterface(const Uuid & rUuid, void **ppv)
+    Result AppImpl::createInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
         IUnknown *pi;
-        
+
         TRACE("AppImpl::createInterface\n");
 
-
         // create the interfaces implemented by uapbe
-        if(UidIsEqual(rUuid, IID_IATTRIBUTES))
+        if (UidIsEqual(rUuid, IID_IATTRIBUTES))
         {
 
             pi = new AttributesImpl();
-            if(pi)
+            if (pi)
             {
-                *ppv = (void**)pi;
+                *ppv = (void **)pi;
                 r = R_OK;
             }
-            else        
+            else
             {
                 r = R_NO_MEMORY;
             }
         }
-        else if(UidIsEqual(rUuid, IID_LOGTRACE))
+        else if (UidIsEqual(rUuid, IID_LOGTRACE))
         {
             pi = new LogTraceImpl();
-            if(pi)
+            if (pi)
             {
-                *ppv = (void**)pi;
+                *ppv = (void **)pi;
                 r = R_OK;
             }
-            else        
+            else
             {
                 r = R_NO_MEMORY;
             }
         }
 
-
         // if not uapbe interface, find in component
-        if(!UAP_SUCCESS(r))
+        if (!UAP_SUCCESS(r))
         {
             TRACE("not uapbe interface, find in component\n");
 
-            for( auto it :  vecInterfaceInfo_ )
+            for (auto it : vecInterfaceInfo_)
             {
 
-                TRACE("DLL(%s)-%p\n", it.path,it.hDll);
+                TRACE("DLL(%s)-%p\n", it.path, it.hDll);
                 PFN_compGetInterface pfn = (PFN_compGetInterface)GetProcAddress(it.hDll, "compGetInterface");
-                if(pfn)
+                if (pfn)
                 {
                     TRACE("found compGetInterface\n");
 
-                    r = pfn(rUuid,(void**)ppv);
-                    if(UAP_SUCCESS(r))
+                    r = pfn(rUuid, (void **)ppv);
+                    if (UAP_SUCCESS(r))
                     {
                         TRACE("compGetInterface returned! r = %d\n", r);
 
-                        break;// break if find the interface!
+                        break; // break if find the interface!
                     }
-
                 }
-        
             }
-
         }
 
         return r;
     }
 
-
-    Result AppImpl::initialize(Char* filename)
+    Result AppImpl::initialize(Char *filename)
     {
         Result r = R_OK;
 
@@ -207,11 +191,11 @@ namespace uap
         return r;
     }
 
-    Result AppImpl::saveMessage(Char* message)
+    Result AppImpl::saveMessage(Char *message)
     {
         Result r = R_OK;
 
-        logFile_<<message;
+        logFile_ << message;
 
         return r;
     }
@@ -253,7 +237,7 @@ namespace uap
                 filesize.HighPart = ffd.nFileSizeHigh;
                 TRACE("%s   %ld bytes\n", ffd.cFileName, filesize.QuadPart);
 
-                if(lstrcmp(ffd.cFileName,_T("uapbe.dll"))==0)
+                if (lstrcmp(ffd.cFileName, _T("uapbe.dll")) == 0)
                 {
                     // for a DLL which is uapbe.dll, ignore and continue
                     continue;
@@ -265,17 +249,14 @@ namespace uap
                 {
                     r = registerInterface(ffd.cFileName);
                 }
-
             }
         } while (FindNextFile(hFind, &ffd) != 0);
-
 
         FindClose(hFind);
 
         r = R_OK;
-        return r; 
+        return r;
     }
-
 
     Result AppImpl::registerInterface(LPCTSTR szFileName)
     {
@@ -283,14 +264,12 @@ namespace uap
 
         TRACE("AppImpl::registerInterface - %s\n", szFileName);
 
-
         HMODULE hDll = LoadLibrary(szFileName);
         if (hDll)
-        {					
+        {
             PFN_compRegisterInterface pfn = (PFN_compRegisterInterface)GetProcAddress(hDll, "compRegisterInterface");
             if (pfn == NULL)
             {
-
 
                 TRACE("compRegisterInterface not found! - %s\n", szFileName);
 
@@ -301,26 +280,25 @@ namespace uap
 
             TRACE("compRegisterInterface found! - %p\n", pfn);
 
+            Ulong count = 0;
+            Uuid *paUuid = NULL;
 
-            Ulong count=0;
-            Uuid* paUuid=NULL;
-
-            r = pfn(paUuid,&count);
+            r = pfn(paUuid, &count);
 
             TRACE("compRegisterInterface step 1 ,returned! r = %d, count =%d\n", r, count);
-            if(!UAP_SUCCESS(r))
+            if (!UAP_SUCCESS(r))
             {
-                if(count>0)
+                if (count > 0)
                     paUuid = new Uuid[count];
             }
 
-            if(paUuid)
+            if (paUuid)
             {
-                r = pfn(paUuid,&count);
+                r = pfn(paUuid, &count);
             }
 
             TRACE("compRegisterInterface step 2, returned! r = %d\n", r);
-            if(!UAP_SUCCESS(r))
+            if (!UAP_SUCCESS(r))
             {
                 return r;
             }
@@ -342,17 +320,14 @@ namespace uap
             // }
 
             r = R_OK;
-
         }
         else
         {
-            // for a library damaged, just ignore and output a warning mesage 
+            // for a library damaged, just ignore and output a warning mesage
             r = R_FILE_NOT_EXIST;
             TRACE("WARN: LoadLibrary failed! %s\n", szFileName);
         }
         return r;
     }
-
-
 
 }; //@namespace uap

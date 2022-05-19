@@ -1,29 +1,17 @@
 #include "comp.h"
 
-
-
 // Forward declare message handler from imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-
-
 namespace uap
 {
-    const Uuid& UiEngineImpl::uuidof()
-    {
-        return uuid_;
-    }
 
     Ulong UiEngineImpl::addRef()
     {
-        TRACE("UiEngineImpl::addRef\n");
-
         return InterlockedIncrement(&refcount_);
     }
     Ulong UiEngineImpl::release()
     {
-        TRACE("UiEngineImpl::release\n");
-
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
         {
@@ -31,52 +19,52 @@ namespace uap
         }
         return ref;
     }
-    Result UiEngineImpl::queryInterface(const uap::Uuid & rUuid, void ** ppv)
+    Result UiEngineImpl::queryInterface(const uap::Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
         // create the interfaces implemented by uapbe
-        if(UidIsEqual(rUuid, IID_UIENGINE))
+        if (UidIsEqual(rUuid, IID_UIENGINE))
         {
-            IUiEngine *pi = static_cast<IUiEngine*>(this);
-            pi->addRef();
+            IUiEngine *pi = static_cast<IUiEngine *>(this);
+            addRef();
 
-            *((IUiEngine**)ppv)=pi;            
+            *((IUiEngine **)ppv) = pi;
             r = R_OK;
         }
-        else if(UidIsEqual(rUuid, IID_IUILAYOUT))
+        else if (UidIsEqual(rUuid, IID_IUILAYOUT))
         {
-            IUiLayout *pi = static_cast<IUiLayout*>(this);
-            pi->addRef();
+            IUiLayout *pi = static_cast<IUiLayout *>(this);
+            addRef();
 
-            *((IUiLayout**)ppv)=pi;            
+            *((IUiLayout **)ppv) = pi;
             r = R_OK;
         }
-        else if(UidIsEqual(rUuid, IID_IUIMENUBAR))
+        else if (UidIsEqual(rUuid, IID_IUIMENUBAR))
         {
-            IUiMenuBar *pi = static_cast<IUiMenuBar*>(this);
-            pi->addRef();
+            IUiMenuBar *pi = static_cast<IUiMenuBar *>(this);
+            addRef();
 
-            *((IUiMenuBar**)ppv)=pi;
+            *((IUiMenuBar **)ppv) = pi;
             r = R_OK;
         }
 
         return r;
     }
 
-    Result UiEngineImpl::initialize(IApplication* piApp, IAttributes* piAttributes)
+    Result UiEngineImpl::initialize(IApplication *piApp, IAttributes *piAttributes)
     {
         Result r = R_OK;
 
         spApp_ = piApp;
         spAppAttributes_ = piAttributes;
 
-        spAppAttributes_->getUlong(UUID_LOGTRACE_ATTRIBUTES,logAttributes_.ul);
+        spAppAttributes_->getUlong(UUID_LOGTRACE_ATTRIBUTES, logAttributes_.ul);
 
         // initialize the log trace
-        r = spApp_->createInterface(IID_LOGTRACE,(void**)&spLogTrace_);
-        if(!UAP_SUCCESS(r))
+        r = spApp_->createInterface(IID_LOGTRACE, (void **)&spLogTrace_);
+        if (!UAP_SUCCESS(r))
         {
-            TRACE("createInterface failed! r = 0x%8.8x\n",r);
+            TRACE("createInterface failed! r = 0x%8.8x\n", r);
             return r;
         }
 
@@ -86,9 +74,7 @@ namespace uap
         return r;
     }
 
-
-
-    Result UiEngineImpl:: startup()
+    Result UiEngineImpl::startup()
     {
         Result r = R_OK;
 
@@ -98,12 +84,10 @@ namespace uap
         VERIFY(r, "initializeWindow")
 
         r = initializeBackEnd();
-        VERIFY(r,"initializeBackEnd")
+        VERIFY(r, "initializeBackEnd")
 
         return r;
     }
-
-
 
     Result UiEngineImpl::run()
     {
@@ -146,16 +130,16 @@ namespace uap
                 static float f = 0.0f;
                 static int counter = 0;
 
-                ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+                ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
 
-                ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-                ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+                ImGui::Text("This is some useful text.");          // Display some text (you can use a format strings too)
+                ImGui::Checkbox("Demo Window", &show_demo_window); // Edit bools storing our window open/close state
                 ImGui::Checkbox("Another Window", &show_another_window);
 
-                ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-                ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+                ImGui::SliderFloat("float", &f, 0.0f, 1.0f);             // Edit 1 float using a slider from 0.0f to 1.0f
+                ImGui::ColorEdit3("clear color", (float *)&clear_color); // Edit 3 floats representing a color
 
-                if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+                if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
                     counter++;
                 ImGui::SameLine();
                 ImGui::Text("counter = %d", counter);
@@ -167,7 +151,7 @@ namespace uap
             // 3. Show another simple window.
             if (show_another_window)
             {
-                ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+                ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
                 ImGui::Text("Hello from another window!");
                 if (ImGui::Button("Close Me"))
                     show_another_window = false;
@@ -179,7 +163,7 @@ namespace uap
             d3d9Device_->SetRenderState(D3DRS_ZENABLE, FALSE);
             d3d9Device_->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
             d3d9Device_->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-            D3DCOLOR clear_col_dx = D3DCOLOR_RGBA((int)(clear_color.x*clear_color.w*255.0f), (int)(clear_color.y*clear_color.w*255.0f), (int)(clear_color.z*clear_color.w*255.0f), (int)(clear_color.w*255.0f));
+            D3DCOLOR clear_col_dx = D3DCOLOR_RGBA((int)(clear_color.x * clear_color.w * 255.0f), (int)(clear_color.y * clear_color.w * 255.0f), (int)(clear_color.z * clear_color.w * 255.0f), (int)(clear_color.w * 255.0f));
             d3d9Device_->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, clear_col_dx, 1.0f, 0);
             if (d3d9Device_->BeginScene() >= 0)
             {
@@ -210,11 +194,8 @@ namespace uap
         ::DestroyWindow(hWnd_);
         ::UnregisterClass(wc_.lpszClassName, wc_.hInstance);
 
-
         return R_OK;
     }
-
-
 
     Result UiEngineImpl::initializeLayout(IAttributes *piAttributes)
     {
@@ -222,12 +203,10 @@ namespace uap
 
         LOG("UiEngineImpl::initializeLayout\n");
 
-        spLayoutAttributes_ = piAttributes;     
-
+        spLayoutAttributes_ = piAttributes;
 
         return r;
     }
-
 
     Result UiEngineImpl::initializeMenuBar(IAttributes *piAttributes)
     {
@@ -235,12 +214,10 @@ namespace uap
 
         LOG("UiEngineImpl::initializeMenuBar\n");
 
-        spLayoutAttributes_ = piAttributes;        
-
+        spLayoutAttributes_ = piAttributes;
 
         return r;
     }
-
 
     // private member functions
     Result UiEngineImpl::initializeWindow()
@@ -248,23 +225,23 @@ namespace uap
         Result r = R_OK;
         LOG("UiEngineImpl::initializeWindow\n");
 
-        WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, 
-            GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("ImGui Example"), NULL };
+        WNDCLASSEX wc = {sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
+                         GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("ImGui Example"), NULL};
 
-        wc_=wc;
+        wc_ = wc;
         ::RegisterClassEx(&wc);
-        hWnd_ = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX9 Example"), 
-            WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, (LPVOID)this);
+        hWnd_ = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX9 Example"),
+                               WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, (LPVOID)this);
 
-        LOG("UiEngineImpl instance, this=0x%p\n",this);
+        LOG("UiEngineImpl instance, this=0x%p\n", this);
 
         // Initialize Direct3D
         r = d3d9CreateDevice(hWnd_);
-        if(!UAP_SUCCESS(r))
+        if (!UAP_SUCCESS(r))
         {
             d3d9DestoryDevice();
             ::UnregisterClass(wc.lpszClassName, wc.hInstance);
-            r= R_ERROR;
+            r = R_ERROR;
         }
 
         // Show the window
@@ -277,7 +254,6 @@ namespace uap
     Result UiEngineImpl::initializeBackEnd()
     {
         Result r = R_OK;
-
 
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
@@ -309,7 +285,7 @@ namespace uap
 
         return r;
     }
-    
+
     Result UiEngineImpl::reset()
     {
         Result r = R_OK;
@@ -327,7 +303,7 @@ namespace uap
         Result r = R_OK;
         if ((d3d9_ = Direct3DCreate9(D3D_SDK_VERSION)) == NULL)
         {
-            r= R_INTERNEL_FAILURE;
+            r = R_INTERNEL_FAILURE;
         }
 
         VERIFY(r, "Direct3DCreate9");
@@ -339,8 +315,8 @@ namespace uap
         d3dpp_.BackBufferFormat = D3DFMT_UNKNOWN; // Need to use an explicit format with alpha if needing per-pixel alpha composition.
         d3dpp_.EnableAutoDepthStencil = TRUE;
         d3dpp_.AutoDepthStencilFormat = D3DFMT_D16;
-        d3dpp_.PresentationInterval = D3DPRESENT_INTERVAL_ONE;           // Present with vsync
-        //d3dpp_.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;   // Present without vsync, maximum unthrottled framerate
+        d3dpp_.PresentationInterval = D3DPRESENT_INTERVAL_ONE; // Present with vsync
+        // d3dpp_.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;   // Present without vsync, maximum unthrottled framerate
         if (d3d9_->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
                                 D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp_, &d3d9Device_) < 0)
         {
@@ -348,7 +324,7 @@ namespace uap
         }
 
         VERIFY(r, "IDirect3D9::CreateDevice");
-        
+
         return r;
     }
 
@@ -362,11 +338,6 @@ namespace uap
         return r;
     }
 
-
-
-
-
-
     // Win32 message handler
     // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
     // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
@@ -375,23 +346,22 @@ namespace uap
     LRESULT WINAPI UiEngineImpl::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
 
-        UiEngineImpl* pThis = nullptr;
+        UiEngineImpl *pThis = nullptr;
         if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
             return true;
 
-
-        pThis = (UiEngineImpl*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-        //TRACE("UiEngineImpl instance, this=0x%p",pThis);
+        pThis = (UiEngineImpl *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        // TRACE("UiEngineImpl instance, this=0x%p",pThis);
 
         switch (msg)
         {
         case WM_NCCREATE:
-            SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR) (( (CREATESTRUCT *) lParam)->lpCreateParams) );
-            //TRACE("UiEngineImpl instance, this=0x%p", ( (CREATESTRUCT *) lParam)->lpCreateParams);
+            SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)(((CREATESTRUCT *)lParam)->lpCreateParams));
+            // TRACE("UiEngineImpl instance, this=0x%p", ( (CREATESTRUCT *) lParam)->lpCreateParams);
 
             break;
         case WM_SIZE:
-            if(pThis)
+            if (pThis)
             {
                 if (pThis->d3d9Device_ != NULL && wParam != SIZE_MINIMIZED)
                 {
@@ -411,18 +381,14 @@ namespace uap
         case WM_DPICHANGED:
             if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DpiEnableScaleViewports)
             {
-                //const int dpi = HIWORD(wParam);
-                //printf("WM_DPICHANGED to %d (%.0f%%)\n", dpi, (float)dpi / 96.0f * 100.0f);
-                const RECT* suggested_rect = (RECT*)lParam;
+                // const int dpi = HIWORD(wParam);
+                // printf("WM_DPICHANGED to %d (%.0f%%)\n", dpi, (float)dpi / 96.0f * 100.0f);
+                const RECT *suggested_rect = (RECT *)lParam;
                 ::SetWindowPos(hWnd, NULL, suggested_rect->left, suggested_rect->top, suggested_rect->right - suggested_rect->left, suggested_rect->bottom - suggested_rect->top, SWP_NOZORDER | SWP_NOACTIVATE);
             }
             break;
         }
         return ::DefWindowProc(hWnd, msg, wParam, lParam);
     }
-
-
-
-
 
 }; //@namespace uap

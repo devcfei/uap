@@ -12,7 +12,6 @@ namespace uap
         {
             logAttributes_.ul=0;
         }
-        virtual const Uuid& uuidof();
         virtual Ulong addRef();
         virtual Ulong release();
         virtual Result queryInterface(const uap::Uuid &,void **);

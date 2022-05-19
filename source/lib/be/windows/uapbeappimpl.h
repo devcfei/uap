@@ -11,7 +11,6 @@ namespace uap
             , initFlags_(APP_INIT_COMPONENT_ENALBE)
         {
         }
-        virtual const Uuid& uuidof();
         virtual Ulong addRef();
         virtual Ulong release();
         virtual Result queryInterface(const uap::Uuid &,void **);

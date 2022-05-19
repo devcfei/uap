@@ -18,14 +18,13 @@ namespace uap
     class IUnknown
     {
     public:
-        virtual const Uuid& uuidof() = 0;
         virtual Ulong addRef() = 0;
         virtual Ulong release() = 0;
         virtual Result queryInterface(const Uuid& uuid, void** ppv) = 0;
     };
 
 
-    // Smart pointer
+
     template <typename T>
     class sptr
     {
@@ -34,12 +33,18 @@ namespace uap
         {
         }
 
-        sptr(T *lp)
+        sptr(T *lp) : ptr_(lp)
         {
-            ptr_ = lp;
             if (ptr_ != nullptr)
                 ptr_->addRef();
         }
+
+        sptr(const sptr &r) : ptr_(r.ptr_)
+        {
+            if (ptr_ != nullptr)
+                ptr_->addRef();
+        }
+
         ~sptr() throw()
         {
             releasep();
@@ -60,11 +65,7 @@ namespace uap
             return &ptr_;
         }
 
-        template <typename U>
-        Result as(sptr<U> *lp) const throw()
-        {
-            return ptr_->queryInterface(lp->uuidof(), reinterpret_cast<void **>(lp->releasegetaddrof()));
-        }
+
 
         T **releasegetaddrof() throw()
         {
@@ -72,36 +73,51 @@ namespace uap
             return &ptr_;
         }
 
-        // copy constructors
+        // operator=
 
         sptr &operator=(T *other) throw()
         {
             if (ptr_ != other)
             {
-                sptr(other).Swap(*this);
+                sptr(other).swap(*this);
             }
             return *this;
         }
 
-        void Swap(sptr &&r) throw()
+        sptr& operator=(const sptr &other) throw()
+        {
+            if (ptr_ != other.ptr_)
+            {
+                sptr(other).swap(*this);
+            }
+            return *this;
+        }
+
+        void swap(sptr &&r) throw()
         {
             T *tmp = ptr_;
             ptr_ = r.ptr_;
             r.ptr_ = tmp;
         }
 
-        void Swap(sptr &r) throw()
+        void swap(sptr &r) throw()
         {
             T *tmp = ptr_;
             ptr_ = r.ptr_;
             r.ptr_ = tmp;
+        }
+
+        template <typename U>
+        Result as(sptr<U> *lp) const throw()
+        {
+            return ptr_->queryInterface(U::uuid(), reinterpret_cast<void **>(lp->releasegetaddrof()));
         }
 
     protected:
         unsigned long releasep() throw()
         {
             unsigned long ref = 0;
-            T* temp = ptr_;
+            T *temp = ptr_;
 
             if (temp != nullptr)
             {
@@ -113,6 +129,8 @@ namespace uap
         }
         T *ptr_;
     };
+
+
 
 
 }; // @namespace uap

@@ -11,7 +11,6 @@ namespace uap
     class IApplication : public IUnknown
     {
     public:
-        virtual const Uuid &uuidof() = 0;
         virtual Ulong addRef() = 0;
         virtual Ulong release() = 0;
         virtual Result queryInterface(const uap::Uuid &, void **) = 0;

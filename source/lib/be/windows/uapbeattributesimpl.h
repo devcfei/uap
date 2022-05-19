@@ -16,7 +16,6 @@ namespace uap
             : refcount_(1)
         {
         }
-        virtual const Uuid& uuidof();
         virtual Ulong addRef();
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &,void **);

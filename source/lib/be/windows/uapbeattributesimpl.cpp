@@ -7,10 +7,7 @@
 namespace uap
 {
 
-    const Uuid &AttributesImpl::uuidof()
-    {
-        return uuid_;
-    }
+
 
     Ulong AttributesImpl::addRef()
     {

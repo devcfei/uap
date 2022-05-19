@@ -3,20 +3,12 @@
 
 namespace uap
 {
-    const Uuid& ImageEngineImpl::uuidof()
-    {
-        return uuid_;
-    }
-
     Ulong ImageEngineImpl::addRef()
     {
-        TRACE("ImageEngineImpl::addRef\n");
-
         return InterlockedIncrement(&refcount_);
     }
     Ulong ImageEngineImpl::release()
     {
-        TRACE("AttributesImpl::release\n");
 
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)

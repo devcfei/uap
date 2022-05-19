@@ -1,64 +1,66 @@
 #include <gtest/gtest.h>
 #include <uap.h>
+using namespace uap;
 
+#include "foo.h"
 
-
-class iptr : public uap::IUnknown
+static void ComponentCreateInstance()
 {
-public:
-    virtual const uap::Uuid& uuidof() = 0;
-    virtual uap::Ulong addRef() = 0;
-    virtual uap::Ulong release() = 0;
-    virtual uap::Result queryInterface(const uap::Uuid &, void **) = 0;
-};
+    sptr<IFoo> sp;
+    FooImpl::createInstance((void **)&sp);
+}
 
-class ptrimpl: public iptr
+TEST(Component, CreateInstance)
 {
-public:
-    ptrimpl()
-    :refcount_(1)
-    {
-    }
-        virtual const uap::Uuid& uuidof()
-        {
-            return uuid_;
-        }
-    virtual uap::Ulong addRef()
-    {
-        return ++refcount_;
 
-    }
-    virtual uap::Ulong release()
-    {
-        refcount_--;
-        if(refcount_==0)
-        {
-            delete this;
-        }
-        return refcount_;
-    }
+    ComponentCreateInstance(); // Demostrate how to use sptr to create instance without delete
 
-    virtual uap::Result queryInterface(const uap::Uuid &, void **)
-    {
-        return uap::R_OK;
-    }
-private:
-    const uap::Uuid uuid_= IDD_IAPP;
-    uap::Ulong refcount_;
-};
+    EXPECT_EQ(0, FooImpl::memcount);
+}
 
-
-
-
-TEST(sptr, copy)
+static void FooSmartPtrArgumentPointor()
 {
-    //uap::Result r;
+    sptr<IFoo> p;
+    FooImpl::createInstance((void **)&p);
 
-    ptrimpl* p=new ptrimpl();
+    sptr<IFoo> sp(p);   // constructor
+    sptr<IFoo> sp2(sp); // constructor
+    sptr<IFoo> sp3 = p; // copy constructor
+    sptr<IFoo> sp4;     // default constructor
+    sp4 = p;            // operator=
+}
 
-    uap::sptr<iptr> sp;
-    sp = p;
+TEST(SmartPtr, SmartPtrArgumentPointor)
+{
 
-    uap::sptr<iptr> spApp_;
-    spApp_ = sp.get();
+    FooSmartPtrArgumentPointor();
+
+    EXPECT_EQ(0, FooImpl::memcount);
+}
+
+static void FooSmartPtrAs()
+{
+    Result r;
+    sptr<IUnknown> sp;
+    FooImpl::createInstance((void **)&sp);
+
+    sptr<IFoo> spFoo;
+    r = sp.as(&spFoo);
+
+    EXPECT_EQ(r, R_OK);
+
+    spFoo->foo();
+
+    sptr<IFooBar> spFoobar;
+    r = sp.as(&spFoobar);
+
+    EXPECT_EQ(r, R_OK);
+
+    spFoobar->foobar();
+}
+
+TEST(SmartPtr, SmartPtrAs)
+{
+    FooSmartPtrAs();
+    EXPECT_EQ(0, FooImpl::memcount);
 }

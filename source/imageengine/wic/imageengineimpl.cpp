@@ -2,20 +2,13 @@
 
 namespace uap
 {
-    const Uuid& ImageEngineImpl::uuidof()
-    {
-        return uuid_;
-    }
 
     Ulong ImageEngineImpl::addRef()
     {
-        TRACE("ImageEngineImpl::addRef\n");
-
         return InterlockedIncrement(&refcount_);
     }
     Ulong ImageEngineImpl::release()
     {
-        TRACE("ImageEngineImpl::release\n");
 
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
@@ -30,29 +23,27 @@ namespace uap
     }
 
     //
-    Result ImageEngineImpl::initialize(IApplication* piApp)
+    Result ImageEngineImpl::initialize(IApplication *piApp)
     {
         Result r;
         TRACE("ImageEngineImpl::initialize\n");
-        TRACE("refcount_=%d\n",this->refcount_);
-        TRACE("piApp=%p\n",piApp);
+        TRACE("refcount_=%d\n", this->refcount_);
+        TRACE("piApp=%p\n", piApp);
 
         spApp_ = piApp;
 
-
         uap::sptr<uap::IAttributes> spAttributes;
-        r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
-        if(!UAP_SUCCESS(r))
+        r = spApp_->createInterface(IID_IATTRIBUTES, (void **)&spAttributes);
+        if (!UAP_SUCCESS(r))
         {
             return r;
         }
 
-        uap::Uint val =36;
-        spAttributes->setUint(UUID_NULL,val);
-        spAttributes->getUint(UUID_NULL,val);
+        uap::Uint val = 36;
+        spAttributes->setUint(UUID_NULL, val);
+        spAttributes->getUint(UUID_NULL, val);
 
         return r;
     }
-
 
 }; //@namespace uap
