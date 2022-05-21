@@ -29,8 +29,23 @@ if ( _cpp_17_flag_supported )
 
 include_directories(
     "${PROJECT_SOURCE_DIR}/include"
+    "${PROJECT_SOURCE_DIR}/assets/fontawesome"
     )
 
 
 add_subdirectory(source)
 add_subdirectory(test)
+
+
+# install
+install(FILES assets/fontawesome/fontawesome-webfont.ttf
+        CONFIGURATIONS Debug
+        DESTINATION Debug/bin
+        )
+
+install(FILES assets/fontawesome/fontawesome-webfont.ttf
+        CONFIGURATIONS Release
+        DESTINATION Release/bin
+        )
+
+

@@ -2,6 +2,17 @@
 
 Universal Application Platform
 
+UAP leverages several open source projects as submodules. Clone the code with **--recursive** option
+```
+git clone --recursive https://github.com/devcfei/uap.git
+```
+
+`submodules`
+
+Project | Original repository | Description
+---|---|---
+ImGui | https://github.com/ocornut/imgui | mapped to source/uiengine/be/imguibe/imgui
+
 
 ## Build
 
@@ -34,7 +45,7 @@ cmake --install build --config Release
 
 All the APIs are in **uap** namespace, there are several C APIs and C++ APIs
 
-The C++ APIs are are always interface based. They should be get by uapGetInterface
+The C++ APIs are are always interface based
 
 
 ### C APIs
@@ -55,6 +66,8 @@ Interface | component|backend
 ----|----|----
 uap::IAttributes| UAP |windows, linux(N/A)
 uap::IApplication| UAP |windows, linux(N/A)
+uap::IFileLogger| UAP |windows, linux(N/A)
 uap::ILogTrace| UAP |windows, linux(N/A)
 uap::IUiEngine| uiengine| ImGui(win32-d3d9)
+uap::IUiLayout| uiengine| ImGui(win32-d3d9)
 uap::IImageEngine| imageengine| WIC, libpng(N/A)

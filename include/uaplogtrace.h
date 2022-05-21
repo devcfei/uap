@@ -65,6 +65,7 @@ namespace uap
     }; // @class IFileLogger
 
 
+
     // {edae39f6-8b9f-4874-bc49-c7a04f7c6e45}
     DEFINE_UUID(UUID_LOGTRACE_ATTRIBUTES,
             0xedae39f6, 0x8b9f, 0x4874, 0xbc, 0x49, 0xc7, 0xa0, 0x4f, 0x7c, 0x6e, 0x45);

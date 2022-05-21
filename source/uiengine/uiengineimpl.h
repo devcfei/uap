@@ -4,10 +4,49 @@
 
 namespace uap
 {
+    class UiMenuBarImpl: public IUiMenuBar
+    {
+    public:
+        Ulong addRef()
+        {
+            return InterlockedIncrement(&refcount_);
+        }
+        Ulong release()
+        {
+            Ulong ref = InterlockedDecrement(&refcount_);
+            if (!ref)
+            {
+                delete this;
+            }
+            return ref;
+        }
+        Result queryInterface(const Uuid &rUuid, void **ppv)
+        {
+            Result r = R_NO_SUCH_INTERFACE;
+
+            if (uapUuidIsEqual(rUuid, IID_IUIMENUBAR))
+            {
+                IUiMenuBar *pi = static_cast<IUiMenuBar *>(this);
+                addRef();
+
+                *((IUiMenuBar **)ppv) = pi;
+                r = R_SUCCESS;
+            }
+
+            return r;
+        }
+        // IUiMenuBar
+        virtual Result initializeMenuBar(IAttributes* piAttributes)
+        {
+            Result r = R_SUCCESS;
+            return r;
+        }
+    private:
+        Ulong refcount_;
+    };
 
     class UiEngineImpl : public IUiEngine
-        , public IUiLayout
-        , public IUiMenuBar
+        , public UiMenuBarImpl
     {
     public:
         UiEngineImpl()
@@ -23,11 +62,6 @@ namespace uap
         virtual Result startup();
         virtual Result run();
 
-        // IUiLayout
-        virtual Result initializeLayout(IAttributes* piAttributes);
-        // IUiMenuBar
-        virtual Result initializeMenuBar(IAttributes* piAttributes);
-        
 
     private:
         Ulong refcount_;
@@ -35,6 +69,9 @@ namespace uap
         Result initializeWindow();
         Result initializeBackEnd();
         Result reset();
+        Result createLayout();
+        Result drawLayout();
+
 
         // Win32
         WNDCLASSEX wc_;
@@ -57,7 +94,11 @@ namespace uap
         sptr<ILogTrace> spLogTrace_;
 
         // layout attributes
-        sptr<IAttributes> spLayoutAttributes_ ;
+        sptr<IUiLayout> spLayout_;
+        sptr<IAttributes> spMenuBarAttributes_ ;
+
+        ImVec4 colorClear_;
+
 
     };
 

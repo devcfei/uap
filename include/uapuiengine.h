@@ -14,6 +14,19 @@ namespace uap
     DEFINE_UUID(IID_UIENGINE, 
         0x7f8d5daf, 0xf386, 0x430d, 0xac, 0x32, 0x55, 0x78, 0xec, 0x60, 0x78, 0xa0);
 
+        // {181e8813-adad-4e43-826d-6553d11ed520}
+    DEFINE_UUID(UUID_UILAYOUT_STYLE, 
+        0x181e8813, 0xadad, 0x4e43, 0x82, 0x6d, 0x65, 0x53, 0xd1, 0x1e, 0xd5, 0x20);
+
+    enum LayoutStyle
+    {
+        LAYOUT_STYLE_SIMPLE,
+        LAYOUT_STYLE_DOCKING,
+        LAYOUT_STYLE_DEMO,  // keep at the end
+    
+    };
+
+
     class IUiEngine : public IUniversal
     {
     public:
@@ -47,6 +60,7 @@ namespace uap
         0x2e55c329, 0x30cc, 0x4b52, 0x9a, 0xf9, 0xb2, 0xd0, 0xa5, 0xee, 0xeb, 0xcf);
 
 
+
     class IUiLayout: public IUniversal
     {
     public:
@@ -57,6 +71,7 @@ namespace uap
 
         // IUiLayout
         virtual Result initializeLayout(IAttributes* piAttributes) = 0;
+        virtual Result draw() = 0;
         
         // uuid
         static const Uuid uuid()
@@ -67,6 +82,7 @@ namespace uap
     private:
         inline static const Uuid uuid_ = IID_IUILAYOUT;
     }; // @class IUiLayout
+
 
 
 
@@ -84,6 +100,15 @@ namespace uap
 
         // IUiMenuBar
         virtual Result initializeMenuBar(IAttributes* piAttributes) = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IUIMENUBAR;
     }; // @class IUiMenuBar
 
 

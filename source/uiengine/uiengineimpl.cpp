@@ -31,14 +31,14 @@ namespace uap
             *((IUiEngine **)ppv) = pi;
             r = R_SUCCESS;
         }
-        else if (uapUuidIsEqual(rUuid, IID_IUILAYOUT))
-        {
-            IUiLayout *pi = static_cast<IUiLayout *>(this);
-            addRef();
+        // else if (uapUuidIsEqual(rUuid, IID_IUILAYOUT))
+        // {
+        //     IUiLayout *pi = static_cast<IUiLayout *>(this);
+        //     addRef();
 
-            *((IUiLayout **)ppv) = pi;
-            r = R_SUCCESS;
-        }
+        //     *((IUiLayout **)ppv) = pi;
+        //     r = R_SUCCESS;
+        // }
         else if (uapUuidIsEqual(rUuid, IID_IUIMENUBAR))
         {
             IUiMenuBar *pi = static_cast<IUiMenuBar *>(this);
@@ -58,6 +58,7 @@ namespace uap
         spApp_ = piApp;
         spAppAttributes_ = piAttributes;
 
+
         spAppAttributes_->getUlong(UUID_LOGTRACE_ATTRIBUTES, logAttributes_.ul);
 
         // initialize the log trace
@@ -70,6 +71,11 @@ namespace uap
 
         r = spLogTrace_->initialize(spApp_.get(), MODULE_NAME, spAppAttributes_.get());
         VERBOSE("initialize ILogTrace - r = 0x%8.8x\n", r);
+
+
+        // create layout      
+        r = createLayout();
+        VERBOSE("createLayout - r = 0x%8.8x\n", r);
 
         return r;
     }
@@ -95,9 +101,10 @@ namespace uap
 
         ImGuiIO &io = ImGui::GetIO();
 
-        bool show_demo_window = true;
-        bool show_another_window = false;
+
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+        colorClear_ = clear_color;
 
         // Main loop
         bool done = false;
@@ -121,49 +128,18 @@ namespace uap
             ImGui_ImplWin32_NewFrame();
             ImGui::NewFrame();
 
-            // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-            if (show_demo_window)
-                ImGui::ShowDemoWindow(&show_demo_window);
 
-            // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-            {
-                static float f = 0.0f;
-                static int counter = 0;
-
-                ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
-
-                ImGui::Text("This is some useful text.");          // Display some text (you can use a format strings too)
-                ImGui::Checkbox("Demo Window", &show_demo_window); // Edit bools storing our window open/close state
-                ImGui::Checkbox("Another Window", &show_another_window);
-
-                ImGui::SliderFloat("float", &f, 0.0f, 1.0f);             // Edit 1 float using a slider from 0.0f to 1.0f
-                ImGui::ColorEdit3("clear color", (float *)&clear_color); // Edit 3 floats representing a color
-
-                if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
-                    counter++;
-                ImGui::SameLine();
-                ImGui::Text("counter = %d", counter);
-
-                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-                ImGui::End();
-            }
-
-            // 3. Show another simple window.
-            if (show_another_window)
-            {
-                ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-                ImGui::Text("Hello from another window!");
-                if (ImGui::Button("Close Me"))
-                    show_another_window = false;
-                ImGui::End();
-            }
+            drawLayout();
 
             // Rendering
             ImGui::EndFrame();
             d3d9Device_->SetRenderState(D3DRS_ZENABLE, FALSE);
             d3d9Device_->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
             d3d9Device_->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-            D3DCOLOR clear_col_dx = D3DCOLOR_RGBA((int)(clear_color.x * clear_color.w * 255.0f), (int)(clear_color.y * clear_color.w * 255.0f), (int)(clear_color.z * clear_color.w * 255.0f), (int)(clear_color.w * 255.0f));
+            D3DCOLOR clear_col_dx = D3DCOLOR_RGBA((int)(colorClear_.x * colorClear_.w * 255.0f),
+                                                  (int)(colorClear_.y * colorClear_.w * 255.0f),
+                                                  (int)(colorClear_.z * colorClear_.w * 255.0f),
+                                                  (int)(colorClear_.w * 255.0f));
             d3d9Device_->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, clear_col_dx, 1.0f, 0);
             if (d3d9Device_->BeginScene() >= 0)
             {
@@ -197,27 +173,7 @@ namespace uap
         return R_SUCCESS;
     }
 
-    Result UiEngineImpl::initializeLayout(IAttributes *piAttributes)
-    {
-        Result r = R_SUCCESS;
 
-        VERBOSE("UiEngineImpl::initializeLayout\n");
-
-        spLayoutAttributes_ = piAttributes;
-
-        return r;
-    }
-
-    Result UiEngineImpl::initializeMenuBar(IAttributes *piAttributes)
-    {
-        Result r = R_SUCCESS;
-
-        VERBOSE("UiEngineImpl::initializeMenuBar\n");
-
-        spLayoutAttributes_ = piAttributes;
-
-        return r;
-    }
 
     // private member functions
     Result UiEngineImpl::initializeWindow()
@@ -226,11 +182,16 @@ namespace uap
         VERBOSE("UiEngineImpl::initializeWindow\n");
 
         WNDCLASSEX wc = {sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
-                         GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("ImGui Example"), NULL};
+                         GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("wcImGui"), NULL};
+
+
+        Char appName[256];
+        spAppAttributes_->getString(UUID_APP_NAME, appName,256,nullptr);
+
 
         wc_ = wc;
         ::RegisterClassEx(&wc);
-        hWnd_ = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX9 Example"),
+        hWnd_ = ::CreateWindow(wc.lpszClassName, appName,
                                WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, (LPVOID)this);
 
         VERBOSE("UiEngineImpl instance, this=0x%p\n", this);
@@ -271,12 +232,45 @@ namespace uap
         ImGui::StyleColorsDark();
         // ImGui::StyleColorsClassic();
 
+
+        io.Fonts->AddFontDefault();
+        ImFontConfig config;
+        config.MergeMode = true;
+        config.GlyphMinAdvanceX = 18.0f; // Use if you want to make the icon monospaced
+        static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
+        io.Fonts->AddFontFromFileTTF("fontawesome-webfont.ttf", 18.0f, &config, icon_ranges);
+
+        // static CHAR path[MAX_PATH];
+
+        // if (SUCCEEDED(SHGetFolderPathA(NULL,
+        //     CSIDL_PERSONAL | CSIDL_FLAG_CREATE,
+        //     NULL,
+        //     0,
+        //     path)))
+        // {
+        //     StringCchCatA(path, MAX_PATH - 1, "\\demo\\");
+        // }
+
+        // StringCchCatA(path, MAX_PATH - 1, "demo.ini");
+
+
+        //io.IniFilename = path; 
+
+
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
         ImGuiStyle &style = ImGui::GetStyle();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
             style.WindowRounding = 0.0f;
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+
+            style.TabRounding = 0.0f;
+            style.Colors[ImGuiCol_Button].w = 1.0f;
+            style.Colors[ImGuiCol_Button].x = 0.0f;
+            style.Colors[ImGuiCol_Button].y = 0.0f;
+            style.Colors[ImGuiCol_Button].z = 0.0f;
+
+            style.WindowMenuButtonPosition = ImGuiDir_Right;
         }
 
         // Setup Platform/Renderer backends
@@ -285,6 +279,49 @@ namespace uap
 
         return r;
     }
+
+    Result UiEngineImpl::createLayout()
+    {
+        Result r = R_SUCCESS;
+
+        // get layout style
+        LayoutStyle style;
+        r = spAppAttributes_->getUint(UUID_UILAYOUT_STYLE, (Uint&)style);
+        if(!UAP_SUCCESS(r))
+        {
+            r = UiLayoutImplDemo::createInstance((void**)&spLayout_);            
+        }
+        else
+        {
+            if(style == LAYOUT_STYLE_SIMPLE)
+            {
+                r = UiLayoutImplSimple::createInstance((void**)&spLayout_);
+
+            }
+            else if(style == LAYOUT_STYLE_DOCKING)
+            {
+                r = UiLayoutImplDocking::createInstance((void**)&spLayout_);
+            }
+            else if(style == LAYOUT_STYLE_DEMO)
+            {
+                r = UiLayoutImplDemo::createInstance((void**)&spLayout_);
+                
+            }
+        
+        }   
+
+        return r;
+    }
+
+    Result UiEngineImpl::drawLayout()
+    {
+        Result r = R_SUCCESS;
+
+        r = spLayout_->draw();
+
+        return r;
+    }
+
 
     Result UiEngineImpl::reset()
     {

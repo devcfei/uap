@@ -262,6 +262,87 @@ namespace uap
         return r;
     }
 
+    Result AttributesImpl::setString(const Uuid &key, const Char *s, Ulong length)
+    {
+        Result r = R_SUCCESS;
+
+        KeyValue var;
+
+        UAP_TRACE("AttributesImpl::setString\n");
+
+        auto it = map_.find(key);
+        if (it != map_.end())
+        {
+            // overwrite the current item
+            KeyValue &rvar = it->second;
+            UAP_ASSERT(rvar.vt == KT_STRING);
+            if (rvar.str.len != length)
+            {
+                delete[] rvar.str.p;
+                rvar.str.p = new Char[length + 1];
+                if (rvar.str.p == NULL)
+                {
+                    r = R_NO_MEMORY;
+                    return r;
+                }
+                rvar.str.len = length;
+            }
+
+            StringCbCopyA(rvar.str.p, length + 1, s);
+        }
+        else
+        {
+            var.vt = KT_STRING;
+            var.str.p = new Char[length + 1];
+            if (var.str.p == NULL)
+            {
+                r = R_NO_MEMORY;
+                return r;
+            }
+            StringCbCopyA(var.str.p, length + 1, s);
+
+            var.str.len = length;
+
+            map_.insert(std::make_pair(key, var));
+        }
+
+        return r;
+    }
+
+
+    Result AttributesImpl::getString(const Uuid &key, Char *s, Ulong length, Ulong *actureLength)
+    {
+        Result r = R_NOT_FOUND;
+
+        UAP_TRACE("AttributesImpl::getString\n");
+
+        auto it = map_.find(key);
+        if (it != map_.end())
+        {
+            KeyValue var = it->second;
+            if (var.vt == KT_STRING)
+            {
+                if (length < var.str.len)
+                {
+                    r = R_BUFFER_TOO_SMALL;
+                    if(actureLength)
+                        *actureLength = var.str.len;
+                    return r;
+                }
+
+                StringCbCopyA(s, length, var.str.p);
+                if(actureLength)
+                    *actureLength = var.str.len;
+                r = R_SUCCESS;
+            }
+            else
+            {
+                r = R_INVALID_PARAMETERS;
+            }
+        }
+        return r;
+    }
+
     Result AttributesImpl::deleteKey(const Uuid &key)
     {
         Result r = R_NOT_FOUND;
@@ -278,6 +359,12 @@ namespace uap
             {
                 delete [] var.blob.pbuf;
             }
+
+            if (var.vt == KT_STRING)
+            {
+                delete [] var.str.p;
+            }
+
 
             map_.erase(it++);
             r = R_SUCCESS;

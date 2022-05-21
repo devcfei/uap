@@ -29,6 +29,7 @@ private:
     sptr<IAttributes> spLayoutAttributes_;
 
 
+    Result buildLayout();
 
 };
 

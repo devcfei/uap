@@ -47,6 +47,9 @@ private:
         APP_INIT_COMPONENT_ENALBE=  0x00000002,
     };
 
+    // {406aa44a-cccc-4bc8-a7ba-325db6240409}
+    DEFINE_UUID(UUID_APP_NAME,
+                0x406aa44a, 0xcccc, 0x4bc8, 0xa7, 0xba, 0x32, 0x5d, 0xb6, 0x24, 0x04, 0x09);
 
 } // @namespace uap
 

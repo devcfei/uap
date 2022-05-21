@@ -10,7 +10,9 @@ using namespace uap;
 
 // Windows specical
 #include <windows.h>
+#include <strsafe.h>
 #include <tchar.h>
+#include <shlobj.h>
 
 // WRL
 #include <wrl\client.h>
@@ -25,10 +27,14 @@ using namespace Microsoft::WRL;
 #include <imgui_impl_dx9.h>
 #include <imgui_impl_win32.h>
 
-
+//
+#include <IconsForkAwesome.h>
 
 
 // UiEngine implementation
+#include "uilayoutimplsimple.h"
+#include "uilayoutimpldocking.h"
+#include "uilayoutimpldemo.h"
 #include "uiengineimpl.h"
 
 

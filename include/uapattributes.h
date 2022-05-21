@@ -6,6 +6,9 @@
 #error uapattributes.h requires uapresult.h to be included first
 #endif
 
+
+#include <string>
+
 namespace uap
 {
 
@@ -33,6 +36,12 @@ namespace uap
 
         virtual Result setBlob(const Uuid & key, const Uchar* buff, Ulong bufSize) = 0;
         virtual Result getBlob(const Uuid & key, Uchar* buff, Ulong bufSize, Ulong* actualSize) = 0;
+
+
+        virtual Result setString(const Uuid & key, const Char* s, Ulong length) = 0;
+        virtual Result getString(const Uuid & key, Char* s, Ulong length, Ulong* actureLength) = 0;
+
+
 
         virtual Result deleteKey(const Uuid & key) = 0;
         virtual Result deleteAllKeys() = 0;

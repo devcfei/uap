@@ -35,6 +35,11 @@ namespace uap
         virtual Result setBlob(const Uuid & key, const Uchar* buff, Ulong bufSize);
         virtual Result getBlob(const Uuid & key, Uchar* buff, Ulong bufSize, Ulong* actualSize);
 
+
+        virtual Result setString(const Uuid & key, const Char* s, Ulong length);
+        virtual Result getString(const Uuid & key, Char* s, Ulong length, Ulong* actureLength);
+
+
         virtual Result deleteKey(const Uuid & key);
         virtual Result deleteAllKeys();
     private:
@@ -46,6 +51,7 @@ namespace uap
             KT_ULONG,
             KT_UUID,
             KT_BLOB,
+            KT_STRING,
         };
         struct KeyValue
         {
@@ -60,6 +66,12 @@ namespace uap
                     Uchar *pbuf;
                     Ulong size;
                 } blob;
+
+                struct String
+                {
+                    Char *p;
+                    Ulong len;
+                } str;  
             };
         };
 

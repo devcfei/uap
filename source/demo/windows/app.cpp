@@ -51,6 +51,19 @@ Result App::startUI()
     r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spUiAttributes_);
     RESULT_CHECK(r,"create instance attributes")
 
+    //
+    // 
+    //
+
+    // set application name
+    spUiAttributes_->setString(UUID_APP_NAME, "Demo",4);
+
+    // set application layout style
+    LayoutStyle style;
+    //style = LAYOUT_STYLE_SIMPLE; 
+    style = LAYOUT_STYLE_DOCKING; 
+    //style = LAYOUT_STYLE_DEMO;
+    spUiAttributes_->setUint(UUID_UILAYOUT_STYLE,style);
 
     // set log
     LogAttributes logAttr={0};
@@ -61,24 +74,16 @@ Result App::startUI()
     logAttr.s.enableLevelTag=1;
     spUiAttributes_->setUlong(UUID_LOGTRACE_ATTRIBUTES, logAttr.ul);
 
+    
+
     // initialize the UI engine
     r = spUiEngine_->initialize(spApp_.get(),spUiAttributes_.get());
-    RESULT_CHECK(r,"initialze UI engine");
+    RESULT_CHECK(r,"initialze UI engine")
 
 
-    // set layout
-    r = spUiEngine_->queryInterface(IID_IUILAYOUT, (void**)&spLayout_);
-    RESULT_CHECK(r,"queryInterface IUiLayout\n")
-
-    // create an attribute
-    r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spLayoutAttributes_);
-    RESULT_CHECK(r,"create instance attributes")
 
     // set layout
-    setLayout();
-
-    r = spLayout_->initializeLayout(spLayoutAttributes_.get());
-    RESULT_CHECK(r,"create instance attributes")
+    r = setLayout();
 
     // startup
     r = spUiEngine_->startup();   
@@ -92,13 +97,65 @@ Result App::startUI()
 Result App::setLayout()
 {
     Result r = R_SUCCESS;
-    // set attributes of spLayoutAttributes_
 
-    sptr<IAttributes> sp=spLayoutAttributes_.get();
+#if 0
 
-    
+    // get layout IUiLayout
+    r = spUiEngine_->queryInterface(IID_IUILAYOUT, (void**)&spLayout_);
+    RESULT_CHECK(r,"queryInterface IUiLayout")
+
+    // create an attribute
+    r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spLayoutAttributes_);
+    RESULT_CHECK(r,"create instance attributes")
+
+
+    LayoutStyle style;
+    //style = LAYOUT_STYLE_SIMPLE; 
+    style = LAYOUT_STYLE_DOCKING; 
+    //style = LAYOUT_STYLE_DEMO;
+    spLayoutAttributes_->setUint(UUID_UILAYOUT_STYLE,style);
+
+    // initialize the UI layout
+    r = spLayout_->initializeLayout(spLayoutAttributes_.get());
+    RESULT_CHECK(r,"initiaize the UI layout")    
+
+#endif
+    // build the layout
+    r =  buildLayout();
+    RESULT_CHECK(r,"build UI layout")
+
 
     return r;  
 
 }
+
+
+Result App::buildLayout()
+{
+    Result r = R_SUCCESS;
+
+    // MenuBar
+    // get layout IUiLayout
+    sptr<IUiMenuBar> spMenuBar;
+    r = spUiEngine_.as(&spMenuBar);
+    RESULT_CHECK(r,"spUiEngine_.as(<IUiMenuBar>)");
+
+    sptr<IAttributes> spMenuBarAttrbutes;
+
+    // create an attribute
+    r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spMenuBarAttrbutes);
+    RESULT_CHECK(r,"create instance attributes")
+
+
+
+
+
+    // initialize MenuBar
+    r = spMenuBar->initializeMenuBar(spMenuBarAttrbutes.get());
+    RESULT_CHECK(r,"initialize MenuBar")
+
+
+    return r;  
+}
+
 
