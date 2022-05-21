@@ -12,10 +12,10 @@ DEFINE_UUID(UUID_IFOO,
 DEFINE_UUID(UUID_IFOOBAR,
             0x825c724c, 0xe1a5, 0x4272, 0x92, 0x25, 0x81, 0x58, 0xde, 0x6d, 0xe0, 0x05);
 
-class IFoo : public IUnknown
+class IFoo : public IUniversal
 {
 public:
-    // IUnknown
+    // IUniversal
     virtual Ulong addRef() = 0;
     virtual Ulong release() = 0;
     virtual Result queryInterface(const Uuid &uuid, void **ppv) = 0;
@@ -55,13 +55,13 @@ public:
     virtual Ulong addRef()
     {
         ++refcount_;
-        logPrint("uaptest.exe!addRef = %d\n", refcount_);
+        UAP_TRACE("addRef = %d\n", refcount_);
         return refcount_;
     }
     virtual Ulong release()
     {
         refcount_--;
-        logPrint("uaptest.exe!release = %d\n", refcount_);
+        UAP_TRACE("release = %d\n", refcount_);
         if (refcount_ == 0)
         {
             delete this;
@@ -73,23 +73,23 @@ public:
     {
         Result r = R_NO_SUCH_INTERFACE;
 
-        if (UidIsEqual(rUuid, UUID_IFOO))
+        if (uapUuidIsEqual(rUuid, UUID_IFOO))
         {
             IFoo *pi = static_cast<IFoo *>(this);
 
             addRef();
 
             *((IFoo **)ppv) = pi;
-            r = R_OK;
+            r = R_SUCCESS;
         }
-        else if (UidIsEqual(rUuid, UUID_IFOOBAR))
+        else if (uapUuidIsEqual(rUuid, UUID_IFOOBAR))
         {
             IFooBar *pi = static_cast<IFooBar *>(this);
             addRef();
 
             *((IFooBar **)ppv) = pi;
 
-            r = R_OK;
+            r = R_SUCCESS;
         }
 
         return r;
@@ -99,7 +99,7 @@ public:
     void *operator new(size_t size)
     {
         memcount++;
-        logPrint("uaptest.exe!new memcount = %d\n", memcount);
+        UAP_TRACE("new memcount = %d\n", memcount);
 
         return malloc(size);
     }
@@ -107,7 +107,7 @@ public:
     void operator delete(void *p)
     {
         memcount--;
-        logPrint("uaptest.exe!delete memcount = %d\n", memcount);
+        UAP_TRACE("delete memcount = %d\n", memcount);
         free(p);
     }
 
@@ -117,20 +117,20 @@ public:
         if (p)
         {
             *(IFoo **)ppv = p;
-            return R_OK;
+            return R_SUCCESS;
         }
         return R_ERROR;
     }
     virtual Result foo()
     {
-        logPrint("uaptest.exe!FooImpl::foo()\n");
-        return R_OK;
+        UAP_TRACE("FooImpl::foo()\n");
+        return R_SUCCESS;
     }
 
     virtual Result foobar()
     {
-        logPrint("uaptest.exe!FooImpl::foobar()\n");
-        return R_OK;
+        UAP_TRACE("FooImpl::foobar()\n");
+        return R_SUCCESS;
     }
 
 private:

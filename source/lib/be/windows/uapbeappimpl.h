@@ -13,18 +13,17 @@ namespace uap
         }
         virtual Ulong addRef();
         virtual Ulong release();
-        virtual Result queryInterface(const uap::Uuid &,void **);
+        virtual Result queryInterface(const Uuid &,void **);
 
         // IApplication
         virtual Result initialize(IAttributes* piAttributes);
-        virtual Result createInterface(const uap::Uuid & rUuid, void **ppv);
+        virtual Result createInterface(const Uuid & rUuid, void **ppv);
 
         // IFileLogger
         virtual Result initialize(Char* filename);
         virtual Result saveMessage(Char* message);
 
     private:
-        const Uuid uuid_= IDD_IAPP;
         Ulong refcount_;
 
 

@@ -1,11 +1,9 @@
 #ifndef _UAP_UNKNOWN_H_
 #define _UAP_UNKNOWN_H_
 
-
 #ifndef _UAP_RESULT_H_
 #error uapunknown.h requires uapresult.h to be included first
 #endif
-
 
 // #define UAP_DECLEAR_UNKNOWN_INTERFACE()
 //     virtual Ulong addRef() = 0; \
@@ -15,15 +13,17 @@
 namespace uap
 {
 
-    class IUnknown
+    // {00000000-0000-0000-0000-000000000001}
+    DEFINE_UUID(IID_IUNIVERSAL,
+                0x00000000, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01);
+
+    class IUniversal
     {
     public:
         virtual Ulong addRef() = 0;
         virtual Ulong release() = 0;
-        virtual Result queryInterface(const Uuid& uuid, void** ppv) = 0;
+        virtual Result queryInterface(const Uuid &uuid, void **ppv) = 0;
     };
-
-
 
     template <typename T>
     class sptr
@@ -65,8 +65,6 @@ namespace uap
             return &ptr_;
         }
 
-
-
         T **releasegetaddrof() throw()
         {
             releasep();
@@ -84,7 +82,7 @@ namespace uap
             return *this;
         }
 
-        sptr& operator=(const sptr &other) throw()
+        sptr &operator=(const sptr &other) throw()
         {
             if (ptr_ != other.ptr_)
             {
@@ -130,10 +128,6 @@ namespace uap
         T *ptr_;
     };
 
-
-
-
-}; // @namespace uap
-
+} // @namespace uap
 
 #endif // _UAP_UNKNOWN_H_

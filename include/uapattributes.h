@@ -9,7 +9,12 @@
 namespace uap
 {
 
-    class IAttributes : public IUnknown
+    // {50bee31c-be5e-4327-9b8f-dbfca279f3d6}
+    DEFINE_UUID(IID_IATTRIBUTES, 
+	    0x50bee31c, 0xbe5e, 0x4327, 0x9b, 0x8f, 0xdb, 0xfc, 0xa2, 0x79, 0xf3, 0xd6);
+
+
+    class IAttributes : public IUniversal
     {
     public:
         virtual Ulong addRef() = 0;
@@ -32,11 +37,18 @@ namespace uap
         virtual Result deleteKey(const Uuid & key) = 0;
         virtual Result deleteAllKeys() = 0;
 
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
 
+    private:
+        inline static const Uuid uuid_ = IID_IATTRIBUTES;
 
     }; // @class IAttributes
 
-}; // @namespace uap
+} // @namespace uap
 
 
 #endif // _UAP_ATTRIBUTES_H_

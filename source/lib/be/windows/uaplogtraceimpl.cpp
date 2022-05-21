@@ -5,30 +5,30 @@ namespace uap
 
     Ulong LogTraceImpl::addRef()
     {
-        TRACE("LogTraceImpl::addRef\n");
+        UAP_TRACE("LogTraceImpl::addRef\n");
 
         return InterlockedIncrement(&refcount_);
     }
     Ulong LogTraceImpl::release()
     {
-        TRACE("LogTraceImpl::release\n");
+        UAP_TRACE("LogTraceImpl::release\n");
 
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
         {
-            TRACE("delete this(%p)\n", this);
+            UAP_TRACE("delete this(%p)\n", this);
             delete this;
         }
         return ref;
     }
-    Result LogTraceImpl::queryInterface(const uap::Uuid &, void **)
+    Result LogTraceImpl::queryInterface(const Uuid &, void **)
     {
-        return R_OK;
+        return R_SUCCESS;
     }
 
     Result LogTraceImpl::initialize(IApplication *piApp, Char *name, IAttributes *piAttributes)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
         spApp_ = piApp;
 
@@ -42,7 +42,7 @@ namespace uap
 
     Result LogTraceImpl::output(Ulong level, Char *format, ...)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
 #define MBUF_LEN 16380
 
@@ -80,7 +80,7 @@ namespace uap
 
             if (FAILED(hr))
             {
-                TRACE("StringCchVPrintfA failed\n");
+                UAP_TRACE("StringCchVPrintfA failed\n");
                 r = R_ERROR;
                 return r;
             }

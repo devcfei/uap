@@ -1,55 +1,52 @@
-#include <gtest/gtest.h>
-#include <uap.h>
-#include <uapimageengine.h>
-#include <uapuiengine.h>
+#include "headers.h"
 
 TEST(App, initialize)
 {
-    uap::Result r;
+    Result r;
 
-    uap::sptr<uap::IApplication> spApp;
+    sptr<IApplication> spApp;
 
-    r = uap::uapCreateApplication((uap::IApplication**)&spApp);
-    EXPECT_EQ(r, uap::R_OK);
+    r = uapCreateApplication((IApplication**)&spApp);
+    EXPECT_EQ(r, R_SUCCESS);
 
 
-    uap::sptr<uap::IAttributes> spAttributes;
+    sptr<IAttributes> spAttributes;
     r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
 
     r = spApp->initialize(spAttributes.get());
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
 }
 
 
 TEST(App, createInterface)
 {
-    uap::Result r;
+    Result r;
 
-    uap::sptr<uap::IApplication> spApp;
+    sptr<IApplication> spApp;
 
-    r = uap::uapCreateApplication((uap::IApplication**)&spApp);
-    EXPECT_EQ(r, uap::R_OK);
+    r = uapCreateApplication((IApplication**)&spApp);
+    EXPECT_EQ(r, R_SUCCESS);
 
     // uapbe interfaces
-    uap::sptr<uap::IAttributes> spAttributes;
+    sptr<IAttributes> spAttributes;
     r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
 
     r = spApp->initialize(spAttributes.get());
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
 
     // component interfaces
-    uap::sptr<uap::IImageEngine> spImageEngine;
+    sptr<IImageEngine> spImageEngine;
     r = spApp->createInterface(IID_IMAGEENGINE, (void**)&spImageEngine);    
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
-    uap::sptr<uap::IUiEngine> spUiEngine;
+    sptr<IUiEngine> spUiEngine;
     r = spApp->createInterface(IID_UIENGINE, (void**)&spUiEngine);    
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
 }

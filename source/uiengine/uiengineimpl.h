@@ -16,7 +16,7 @@ namespace uap
         }
         virtual Ulong addRef();
         virtual Ulong release();
-        virtual Result queryInterface(const uap::Uuid &,void **);
+        virtual Result queryInterface(const Uuid &,void **);
 
         // IUiEngine
         virtual Result initialize(IApplication* piApp, IAttributes* piAttributes);
@@ -30,7 +30,6 @@ namespace uap
         
 
     private:
-        const Uuid uuid_= IID_IMAGEENGINE;
         Ulong refcount_;
 
         Result initializeWindow();

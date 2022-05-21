@@ -19,33 +19,33 @@ namespace uap
         }
         return ref;
     }
-    Result UiEngineImpl::queryInterface(const uap::Uuid &rUuid, void **ppv)
+    Result UiEngineImpl::queryInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
         // create the interfaces implemented by uapbe
-        if (UidIsEqual(rUuid, IID_UIENGINE))
+        if (uapUuidIsEqual(rUuid, IID_UIENGINE))
         {
             IUiEngine *pi = static_cast<IUiEngine *>(this);
             addRef();
 
             *((IUiEngine **)ppv) = pi;
-            r = R_OK;
+            r = R_SUCCESS;
         }
-        else if (UidIsEqual(rUuid, IID_IUILAYOUT))
+        else if (uapUuidIsEqual(rUuid, IID_IUILAYOUT))
         {
             IUiLayout *pi = static_cast<IUiLayout *>(this);
             addRef();
 
             *((IUiLayout **)ppv) = pi;
-            r = R_OK;
+            r = R_SUCCESS;
         }
-        else if (UidIsEqual(rUuid, IID_IUIMENUBAR))
+        else if (uapUuidIsEqual(rUuid, IID_IUIMENUBAR))
         {
             IUiMenuBar *pi = static_cast<IUiMenuBar *>(this);
             addRef();
 
             *((IUiMenuBar **)ppv) = pi;
-            r = R_OK;
+            r = R_SUCCESS;
         }
 
         return r;
@@ -53,7 +53,7 @@ namespace uap
 
     Result UiEngineImpl::initialize(IApplication *piApp, IAttributes *piAttributes)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
         spApp_ = piApp;
         spAppAttributes_ = piAttributes;
@@ -64,21 +64,21 @@ namespace uap
         r = spApp_->createInterface(IID_LOGTRACE, (void **)&spLogTrace_);
         if (!UAP_SUCCESS(r))
         {
-            TRACE("createInterface failed! r = 0x%8.8x\n", r);
+            UAP_TRACE("createInterface failed! r = 0x%8.8x\n", r);
             return r;
         }
 
-        r = spLogTrace_->initialize(spApp_.get(), "uiengine.dll", spAppAttributes_.get());
-        LOG("initialize ILogTrace - r = 0x%8.8x\n", r);
+        r = spLogTrace_->initialize(spApp_.get(), MODULE_NAME, spAppAttributes_.get());
+        VERBOSE("initialize ILogTrace - r = 0x%8.8x\n", r);
 
         return r;
     }
 
     Result UiEngineImpl::startup()
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
-        LOG("UiEngineImpl::startup\n");
+        VERBOSE("UiEngineImpl::startup\n");
 
         r = initializeWindow();
         VERIFY(r, "initializeWindow")
@@ -91,7 +91,7 @@ namespace uap
 
     Result UiEngineImpl::run()
     {
-        LOG("UiEngineImpl::run\n");
+        VERBOSE("UiEngineImpl::run\n");
 
         ImGuiIO &io = ImGui::GetIO();
 
@@ -194,14 +194,14 @@ namespace uap
         ::DestroyWindow(hWnd_);
         ::UnregisterClass(wc_.lpszClassName, wc_.hInstance);
 
-        return R_OK;
+        return R_SUCCESS;
     }
 
     Result UiEngineImpl::initializeLayout(IAttributes *piAttributes)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
-        LOG("UiEngineImpl::initializeLayout\n");
+        VERBOSE("UiEngineImpl::initializeLayout\n");
 
         spLayoutAttributes_ = piAttributes;
 
@@ -210,9 +210,9 @@ namespace uap
 
     Result UiEngineImpl::initializeMenuBar(IAttributes *piAttributes)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
-        LOG("UiEngineImpl::initializeMenuBar\n");
+        VERBOSE("UiEngineImpl::initializeMenuBar\n");
 
         spLayoutAttributes_ = piAttributes;
 
@@ -222,8 +222,8 @@ namespace uap
     // private member functions
     Result UiEngineImpl::initializeWindow()
     {
-        Result r = R_OK;
-        LOG("UiEngineImpl::initializeWindow\n");
+        Result r = R_SUCCESS;
+        VERBOSE("UiEngineImpl::initializeWindow\n");
 
         WNDCLASSEX wc = {sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
                          GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("ImGui Example"), NULL};
@@ -233,7 +233,7 @@ namespace uap
         hWnd_ = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX9 Example"),
                                WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, (LPVOID)this);
 
-        LOG("UiEngineImpl instance, this=0x%p\n", this);
+        VERBOSE("UiEngineImpl instance, this=0x%p\n", this);
 
         // Initialize Direct3D
         r = d3d9CreateDevice(hWnd_);
@@ -253,7 +253,7 @@ namespace uap
 
     Result UiEngineImpl::initializeBackEnd()
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
@@ -288,7 +288,7 @@ namespace uap
 
     Result UiEngineImpl::reset()
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
         ImGui_ImplDX9_InvalidateDeviceObjects();
         HRESULT hr = d3d9Device_->Reset(&d3dpp_);
         if (hr == D3DERR_INVALIDCALL)
@@ -300,7 +300,7 @@ namespace uap
 
     Result UiEngineImpl::d3d9CreateDevice(HWND hWnd)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
         if ((d3d9_ = Direct3DCreate9(D3D_SDK_VERSION)) == NULL)
         {
             r = R_INTERNEL_FAILURE;
@@ -330,7 +330,7 @@ namespace uap
 
     Result UiEngineImpl::d3d9DestoryDevice()
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
         d3d9Device_.Reset();
         d3d9_.Reset();
@@ -351,13 +351,13 @@ namespace uap
             return true;
 
         pThis = (UiEngineImpl *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-        // TRACE("UiEngineImpl instance, this=0x%p",pThis);
+        // UAP_TRACE("UiEngineImpl instance, this=0x%p",pThis);
 
         switch (msg)
         {
         case WM_NCCREATE:
             SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)(((CREATESTRUCT *)lParam)->lpCreateParams));
-            // TRACE("UiEngineImpl instance, this=0x%p", ( (CREATESTRUCT *) lParam)->lpCreateParams);
+            // UAP_TRACE("UiEngineImpl instance, this=0x%p", ( (CREATESTRUCT *) lParam)->lpCreateParams);
 
             break;
         case WM_SIZE:

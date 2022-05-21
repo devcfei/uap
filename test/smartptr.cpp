@@ -1,22 +1,6 @@
-#include <gtest/gtest.h>
-#include <uap.h>
-using namespace uap;
+#include "headers.h"
 
-#include "foo.h"
 
-static void ComponentCreateInstance()
-{
-    sptr<IFoo> sp;
-    FooImpl::createInstance((void **)&sp);
-}
-
-TEST(Component, CreateInstance)
-{
-
-    ComponentCreateInstance(); // Demostrate how to use sptr to create instance without delete
-
-    EXPECT_EQ(0, FooImpl::memcount);
-}
 
 static void FooSmartPtrArgumentPointor()
 {
@@ -41,20 +25,20 @@ TEST(SmartPtr, SmartPtrArgumentPointor)
 static void FooSmartPtrAs()
 {
     Result r;
-    sptr<IUnknown> sp;
+    sptr<IUniversal> sp;
     FooImpl::createInstance((void **)&sp);
 
     sptr<IFoo> spFoo;
     r = sp.as(&spFoo);
 
-    EXPECT_EQ(r, R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
     spFoo->foo();
 
     sptr<IFooBar> spFoobar;
     r = sp.as(&spFoobar);
 
-    EXPECT_EQ(r, R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
     spFoobar->foobar();
 }

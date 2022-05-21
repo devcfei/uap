@@ -14,13 +14,12 @@ namespace uap
         }
         virtual Ulong addRef();
         virtual Ulong release();
-        virtual Result queryInterface(const uap::Uuid &,void **);
+        virtual Result queryInterface(const Uuid &,void **);
 
         // ILogTrace
         virtual Result initialize(IApplication* piApp, Char* name, IAttributes* piAttributes);
         virtual Result output(Ulong level, Char* format, ...);
     private:
-        const Uuid uuid_= IID_LOGTRACE;
         Ulong refcount_;
 
 

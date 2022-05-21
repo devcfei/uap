@@ -3,7 +3,7 @@
 
 Result setLayout(IAttributes* piLayoutAttr)
 {
-    Result r = R_OK;
+    Result r = R_SUCCESS;
 
     
 

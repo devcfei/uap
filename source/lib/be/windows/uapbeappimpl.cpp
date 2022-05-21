@@ -50,7 +50,7 @@ namespace uap
     {
         Ulong ref = InterlockedIncrement(&refcount_);
 
-        TRACE("AppImpl::addRef- refcount=%d\n", ref);
+        UAP_TRACE("AppImpl::addRef- refcount=%d\n", ref);
 
         return ref;
     }
@@ -58,11 +58,11 @@ namespace uap
     {
 
         Ulong ref = InterlockedDecrement(&refcount_);
-        TRACE("AppImpl::release - refcount=%d\n", ref);
+        UAP_TRACE("AppImpl::release - refcount=%d\n", ref);
 
         if (!ref)
         {
-            TRACE("delete AppImpl()\n");
+            UAP_TRACE("delete AppImpl()\n");
 
             logFile_.close();
 
@@ -70,25 +70,25 @@ namespace uap
         }
         return ref;
     }
-    Result AppImpl::queryInterface(const uap::Uuid &rUuid, void **ppv)
+    Result AppImpl::queryInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
         // create the interfaces implemented by uapbe
-        if (UidIsEqual(rUuid, IDD_IAPP))
+        if (uapUuidIsEqual(rUuid, IDD_IAPP))
         {
             IApplication *pi = static_cast<IApplication *>(this);
             addRef();
 
             *((IApplication **)ppv) = pi;
-            r = R_OK;
+            r = R_SUCCESS;
         }
-        else if (UidIsEqual(rUuid, IID_FILELOGGER))
+        else if (uapUuidIsEqual(rUuid, IID_FILELOGGER))
         {
             IFileLogger *pi = static_cast<IFileLogger *>(this);
             addRef();
 
             *((IFileLogger **)ppv) = pi;
-            r = R_OK;
+            r = R_SUCCESS;
         }
 
         return r;
@@ -96,15 +96,15 @@ namespace uap
 
     Result AppImpl::initialize(IAttributes *piAttributes)
     {
-        Result r = R_OK;
-        TRACE("AppImpl::initialize\n");
+        Result r = R_SUCCESS;
+        UAP_TRACE("AppImpl::initialize\n");
 
         sptr<IAttributes> spAttr = piAttributes;
 
         spAttr->getUint(UUID_APP_INIT_FLAGS, initFlags_);
         if (initFlags_ & APP_INIT_LOGTRACE_ENALBE)
         {
-            TRACE("enabled application log trace\n");
+            UAP_TRACE("enabled application log trace\n");
             //
             initialize("app.log");
         }
@@ -121,32 +121,32 @@ namespace uap
     Result AppImpl::createInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
-        IUnknown *pi;
+        IUniversal *pi;
 
-        TRACE("AppImpl::createInterface\n");
+        UAP_TRACE("AppImpl::createInterface\n");
 
         // create the interfaces implemented by uapbe
-        if (UidIsEqual(rUuid, IID_IATTRIBUTES))
+        if (uapUuidIsEqual(rUuid, IID_IATTRIBUTES))
         {
 
             pi = new AttributesImpl();
             if (pi)
             {
                 *ppv = (void **)pi;
-                r = R_OK;
+                r = R_SUCCESS;
             }
             else
             {
                 r = R_NO_MEMORY;
             }
         }
-        else if (UidIsEqual(rUuid, IID_LOGTRACE))
+        else if (uapUuidIsEqual(rUuid, IID_LOGTRACE))
         {
             pi = new LogTraceImpl();
             if (pi)
             {
                 *ppv = (void **)pi;
-                r = R_OK;
+                r = R_SUCCESS;
             }
             else
             {
@@ -157,21 +157,21 @@ namespace uap
         // if not uapbe interface, find in component
         if (!UAP_SUCCESS(r))
         {
-            TRACE("not uapbe interface, find in component\n");
+            UAP_TRACE("not uapbe interface, find in component\n");
 
             for (auto it : vecInterfaceInfo_)
             {
 
-                TRACE("DLL(%s)-%p\n", it.path, it.hDll);
+                UAP_TRACE("DLL(%s)-%p\n", it.path, it.hDll);
                 PFN_compGetInterface pfn = (PFN_compGetInterface)GetProcAddress(it.hDll, "compGetInterface");
                 if (pfn)
                 {
-                    TRACE("found compGetInterface\n");
+                    UAP_TRACE("found compGetInterface\n");
 
                     r = pfn(rUuid, (void **)ppv);
                     if (UAP_SUCCESS(r))
                     {
-                        TRACE("compGetInterface returned! r = %d\n", r);
+                        UAP_TRACE("compGetInterface returned! r = %d\n", r);
 
                         break; // break if find the interface!
                     }
@@ -184,7 +184,7 @@ namespace uap
 
     Result AppImpl::initialize(Char *filename)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
         logFile_.open(filename);
 
@@ -193,7 +193,7 @@ namespace uap
 
     Result AppImpl::saveMessage(Char *message)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
         logFile_ << message;
 
@@ -202,7 +202,7 @@ namespace uap
 
     Result AppImpl::enumComponent()
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
         HANDLE hFind = INVALID_HANDLE_VALUE;
         WIN32_FIND_DATA ffd;
@@ -229,13 +229,13 @@ namespace uap
         {
             if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
             {
-                TRACE("%s   <DIR>\n", ffd.cFileName);
+                UAP_TRACE("%s   <DIR>\n", ffd.cFileName);
             }
             else
             {
                 filesize.LowPart = ffd.nFileSizeLow;
                 filesize.HighPart = ffd.nFileSizeHigh;
-                TRACE("%s   %ld bytes\n", ffd.cFileName, filesize.QuadPart);
+                UAP_TRACE("%s   %ld bytes\n", ffd.cFileName, filesize.QuadPart);
 
                 if (lstrcmp(ffd.cFileName, _T("uapbe.dll")) == 0)
                 {
@@ -254,7 +254,7 @@ namespace uap
 
         FindClose(hFind);
 
-        r = R_OK;
+        r = R_SUCCESS;
         return r;
     }
 
@@ -262,7 +262,7 @@ namespace uap
     {
         Result r = R_ERROR;
 
-        TRACE("AppImpl::registerInterface - %s\n", szFileName);
+        UAP_TRACE("AppImpl::registerInterface - %s\n", szFileName);
 
         HMODULE hDll = LoadLibrary(szFileName);
         if (hDll)
@@ -271,21 +271,21 @@ namespace uap
             if (pfn == NULL)
             {
 
-                TRACE("compRegisterInterface not found! - %s\n", szFileName);
+                UAP_TRACE("compRegisterInterface not found! - %s\n", szFileName);
 
                 FreeLibrary(hDll);
                 r = R_NO_SUCH_INTERFACE;
                 return r;
             }
 
-            TRACE("compRegisterInterface found! - %p\n", pfn);
+            UAP_TRACE("compRegisterInterface found! - %p\n", pfn);
 
             Ulong count = 0;
             Uuid *paUuid = NULL;
 
             r = pfn(paUuid, &count);
 
-            TRACE("compRegisterInterface step 1 ,returned! r = %d, count =%d\n", r, count);
+            UAP_TRACE("compRegisterInterface step 1 ,returned! r = %d, count =%d\n", r, count);
             if (!UAP_SUCCESS(r))
             {
                 if (count > 0)
@@ -297,7 +297,7 @@ namespace uap
                 r = pfn(paUuid, &count);
             }
 
-            TRACE("compRegisterInterface step 2, returned! r = %d\n", r);
+            UAP_TRACE("compRegisterInterface step 2, returned! r = %d\n", r);
             if (!UAP_SUCCESS(r))
             {
                 return r;
@@ -319,13 +319,13 @@ namespace uap
             // 	continue;
             // }
 
-            r = R_OK;
+            r = R_SUCCESS;
         }
         else
         {
             // for a library damaged, just ignore and output a warning mesage
             r = R_FILE_NOT_EXIST;
-            TRACE("WARN: LoadLibrary failed! %s\n", szFileName);
+            UAP_TRACE("WARN: LoadLibrary failed! %s\n", szFileName);
         }
         return r;
     }

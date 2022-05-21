@@ -7,17 +7,30 @@
 
 
 namespace uap
-{   
-    class IApplication : public IUnknown
+{
+    // {90911642-e6ef-4699-851a-296f1e90cd4b}
+    DEFINE_UUID(IDD_IAPP,
+                0x90911642, 0xe6ef, 0x4699, 0x85, 0x1a, 0x29, 0x6f, 0x1e, 0x90, 0xcd, 0x4b);
+
+    class IApplication : public IUniversal
     {
     public:
         virtual Ulong addRef() = 0;
         virtual Ulong release() = 0;
-        virtual Result queryInterface(const uap::Uuid &, void **) = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
 
         // IApplication
         virtual Result initialize(IAttributes* piAttributes) = 0;
-        virtual Result createInterface(const uap::Uuid & rUuid, void **ppv) = 0;
+        virtual Result createInterface(const Uuid & rUuid, void **ppv) = 0;
+
+    // uuid
+    static const Uuid uuid()
+    {
+        return uuid_;
+    }
+
+private:
+    inline static const Uuid uuid_ = IDD_IAPP;
 
     }; // @class IApplication
 
@@ -35,6 +48,6 @@ namespace uap
     };
 
 
-}; // @namespace uap
+} // @namespace uap
 
 #endif // _UAP_APP_H_

@@ -1,23 +1,21 @@
-#include <gtest/gtest.h>
-#include <uap.h>
+#include "headers.h"
 
-using namespace uap;
 
 
 
 TEST(LogTrace, basictest)
 {
-    uap::Result r;
+    Result r;
 
-    uap::sptr<uap::IApplication> spApp;
+    sptr<IApplication> spApp;
 
-    r = uap::uapCreateApplication((uap::IApplication**)&spApp);
-    EXPECT_EQ(r, uap::R_OK);
+    r = uapCreateApplication((IApplication**)&spApp);
+    EXPECT_EQ(r, R_SUCCESS);
 
 
-    uap::sptr<uap::IAttributes> spAttributes;
+    sptr<IAttributes> spAttributes;
     r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
 
     // application initialize with log trace and components
@@ -25,34 +23,34 @@ TEST(LogTrace, basictest)
     spAttributes->setUint(UUID_APP_INIT_FLAGS, initFlags);
 
     r = spApp->initialize(spAttributes.get());
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
 
 
     // log
-    uap::sptr<uap::ILogTrace> spLog;
+    sptr<ILogTrace> spLog;
     r = spApp->createInterface(IID_LOGTRACE, (void**)&spLog);    
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
 
-    uap::sptr<uap::IAttributes> spAttributesLog;
+    sptr<IAttributes> spAttributesLog;
     r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributesLog);    
-    EXPECT_EQ(r, uap::R_OK);
+    EXPECT_EQ(r, R_SUCCESS);
 
 
-    uap::LogAttributes logAttr;
+    LogAttributes logAttr;
 
-    logAttr.s.defaultLevel=uap::LT_ALL;
+    logAttr.s.defaultLevel=LT_ALL;
     logAttr.s.enableAppLogTrace=1;
     logAttr.s.enableDebugTrace=1;
     logAttr.s.enable=1;
     logAttr.s.enableLevelTag=1;
 
-    spAttributesLog->setUlong(uap::UUID_LOGTRACE_ATTRIBUTES, logAttr.ul);
+    spAttributesLog->setUlong(UUID_LOGTRACE_ATTRIBUTES, logAttr.ul);
 
 
-    r = spLog->initialize(spApp.get(),"uaptest.exe", spAttributesLog.get());
-    EXPECT_EQ(r, uap::R_OK);
+    r = spLog->initialize(spApp.get(),MODULE_NAME, spAttributesLog.get());
+    EXPECT_EQ(r, R_SUCCESS);
 
 
     spLog->output(0, "hello - level=%d\n", 0);

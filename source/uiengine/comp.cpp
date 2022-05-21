@@ -13,23 +13,23 @@ namespace uap
 
 
     // component funcitons
-    uap::Result compGetInterface(const uap::Uuid& iid, void** ppv)
+    Result compGetInterface(const Uuid& iid, void** ppv)
     {
 
         Result r = R_NO_SUCH_INTERFACE;
 
-        TRACE("compGetInterface\n");
+        UAP_TRACE("compGetInterface\n");
 
 
         IUiEngine* pi;
 
-        if(UidIsEqual(iid, IID_UIENGINE))
+        if(uapUuidIsEqual(iid, IID_UIENGINE))
         {
             pi = new UiEngineImpl();
             if(pi)
             {
                 *ppv = pi;
-                r = R_OK;
+                r = R_SUCCESS;
             }
             else        
             {
@@ -42,11 +42,11 @@ namespace uap
 
 
 
-    uap::Result compRegisterInterface(const uap::Uuid *iidArr, uap::Ulong* count)
+    Result compRegisterInterface(const Uuid *iidArr, Ulong* count)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
-        TRACE("compRegisterInterface\n");
+        UAP_TRACE("compRegisterInterface\n");
 
 
         if(iidArr ==nullptr || count ==nullptr)

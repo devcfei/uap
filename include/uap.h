@@ -1,11 +1,10 @@
 #ifndef _UAP_H_
 #define _UAP_H_
 
-#include <uapbase.h>
+#include <uaptypes.h>
 #include <uapresult.h>
 #include <uapdefs.h>
-#include <uapuuid.h>
-#include <uaplog.h>
+
 
 // Component
 #include <uapunknown.h>
@@ -13,26 +12,25 @@
 #include <uapapp.h>
 #include <uaplogtrace.h>
 
-
 namespace uap
 {
 
+    //{00000000-0000-0000-0000-000000000000}
+    DEFINE_UUID(UUID_NULL,
+                0x00000000, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+
     // Global functions
     Result uapInitialize();
+    Result uapPrintMessage(Char* format, ...);
+    const Char *uapGetResultString(Result r);
+    const Char* uapGetUuidString(const Uuid &uuid);
 
-    Result uapCreateApplication(IApplication** ppiApp);
-
+    Result uapCreateApplication(IApplication **ppiApp);
 
     // Component functions
-    typedef Result (*PFN_compRegisterInterface)(const Uuid *iidArr, Ulong* count);
-    typedef Result (*PFN_compGetInterface)(const Uuid& iid, void** ppv);
+    typedef Result (*PFN_compRegisterInterface)(const Uuid *iidArr, Ulong *count);
+    typedef Result (*PFN_compGetInterface)(const Uuid &iid, void **ppv);
 
-
-};
-
-
-// // Component functions
-// typedef uap::Result (*PFN_compRegisterInterface)(const uap::Uuid *iidArr, uap::Ulong* count);
-// typedef uap::Result (*PFN_compGetInterface)(const uap::Uuid& iid, void** ppv);
+} // @namespace uap
 
 #endif //_UAP_H_

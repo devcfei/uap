@@ -44,7 +44,7 @@ API | Description
 ----|----
 uapInitialize | Initialize the UAP 
 uapCreateApplication | Create the application
-logPrint | print log
+uapPrintMessage | print log
 
 ### C++ APIs(Interfaces)
 

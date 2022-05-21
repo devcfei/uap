@@ -9,30 +9,59 @@
 namespace uap
 {
 
-    class ILogTrace : public IUnknown
+    // {4a84f317-1dec-4257-9b3d-980302860820}
+    DEFINE_UUID(IID_LOGTRACE, 
+        0x4a84f317, 0x1dec, 0x4257, 0x9b, 0x3d, 0x98, 0x03, 0x02, 0x86, 0x08, 0x20);
+
+
+    class ILogTrace : public IUniversal
     {
     public:
         virtual Ulong addRef() = 0;
         virtual Ulong release() = 0;
-        virtual Result queryInterface(const uap::Uuid &,void **) = 0;
+        virtual Result queryInterface(const Uuid &,void **) = 0;
 
         // ILogTrace
         virtual Result initialize(IApplication* piApp, Char* name, IAttributes* piAttributes) = 0;
 
         virtual Result output(Ulong level, Char* format, ...) = 0;
+
+            // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_LOGTRACE;
     }; // @class ILogTrace
 
 
-    class IFileLogger : public IUnknown
+
+
+    // {7ad7241f-628d-4a3d-8379-dbaeb69deae8}
+    DEFINE_UUID(IID_FILELOGGER,
+        0x7ad7241f, 0x628d, 0x4a3d, 0x83, 0x79, 0xdb, 0xae, 0xb6, 0x9d, 0xea, 0xe8);
+
+    class IFileLogger : public IUniversal
     {
     public:
         virtual Ulong addRef() = 0;
         virtual Ulong release() = 0;
-        virtual Result queryInterface(const uap::Uuid &,void **) = 0;
+        virtual Result queryInterface(const Uuid &,void **) = 0;
 
         // ILogTrace
         virtual Result initialize(Char* filename) = 0;
         virtual Result saveMessage(Char* message) = 0;
+
+            // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_FILELOGGER;
     }; // @class IFileLogger
 
 
@@ -67,7 +96,7 @@ namespace uap
         LT_MAX = LT_ALL+1,
     };
 
-}; // @namespace uap
+} // @namespace uap
 
 
 #endif // _UAP_LOGTRACE_H_

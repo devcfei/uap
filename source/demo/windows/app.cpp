@@ -91,7 +91,7 @@ Result App::startUI()
 
 Result App::setLayout()
 {
-    Result r = R_OK;
+    Result r = R_SUCCESS;
     // set attributes of spLayoutAttributes_
 
     sptr<IAttributes> sp=spLayoutAttributes_.get();

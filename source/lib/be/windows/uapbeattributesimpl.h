@@ -9,6 +9,8 @@ namespace uap
         return (memcmp(&lhs, &rhs, sizeof(Uuid)) > 0 ? true : false);
     }
 
+
+
     class AttributesImpl : public IAttributes
     {
     public:
@@ -36,7 +38,6 @@ namespace uap
         virtual Result deleteKey(const Uuid & key);
         virtual Result deleteAllKeys();
     private:
-        const Uuid uuid_= IID_IATTRIBUTES;
         Ulong refcount_;
 
         enum KeyType

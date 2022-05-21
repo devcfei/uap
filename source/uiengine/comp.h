@@ -2,9 +2,11 @@
 #define _COMP_H_
 
 
+// uap
+#define MODULE_NAME "uiengine"
 #include <uap.h>
 #include <uapuiengine.h>
-
+using namespace uap;
 
 // Windows specical
 #include <windows.h>
@@ -23,7 +25,10 @@ using namespace Microsoft::WRL;
 #include <imgui_impl_dx9.h>
 #include <imgui_impl_win32.h>
 
-// UiEngine
+
+
+
+// UiEngine implementation
 #include "uiengineimpl.h"
 
 
@@ -35,19 +40,10 @@ using namespace Microsoft::WRL;
 
 
 
-#if defined (_DEBUG)
-#define TRACE(fmt, ...) uap::logPrint("uiengine.dll!" fmt, __VA_ARGS__)
-#define ASSERT(_expr_)
-#else
-#define TRACE(fmt, ...) 
-#define ASSERT(_expr_)
-#endif
-
-
 #define RESULT_CHECK(r, _message_) \
         if(!UAP_SUCCESS(r)) \
         { \
-            TRACE( _message_ ## " failed! r = 0x%8.8x\n",r); \
+            UAP_TRACE( _message_ ## " failed! r = 0x%8.8x\n",r); \
             return r; \
         } 
 
@@ -58,11 +54,11 @@ using namespace Microsoft::WRL;
             return r; \
         } 
 
-#define LOG(_message_, ...) \
+#define VERBOSE(_message_, ...) \
             spLogTrace_->output(LT_VERBOSE, _message_, __VA_ARGS__ ); 
 
 #define WARN(_message_, ...) \
-            spLogTrace_->output(LT_ERROR, _message_, __VA_ARGS__ ); 
+            spLogTrace_->output(LT_WARN, _message_, __VA_ARGS__ ); 
 
 
 namespace uap

@@ -18,8 +18,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
     if(ul_reason_for_call == DLL_PROCESS_ATTACH)
     {
-        uap::Result r = uap::uapInitialize();
-        TRACE("dllmain process attach!\n");
+        Result r = uapInitialize();
+        UAP_TRACE("dllmain process attach!\n");
     }
 
     return TRUE;

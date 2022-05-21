@@ -11,13 +11,13 @@ namespace uap
 
     Ulong AttributesImpl::addRef()
     {
-        TRACE("AttributesImpl::addRef\n");
+        UAP_TRACE("AttributesImpl::addRef\n");
 
         return InterlockedIncrement(&refcount_);
     }
     Ulong AttributesImpl::release()
     {
-        TRACE("AttributesImpl::release\n");
+        UAP_TRACE("AttributesImpl::release\n");
 
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
@@ -28,14 +28,14 @@ namespace uap
     }
     Result AttributesImpl::queryInterface(const Uuid &, void **)
     {
-        return R_OK;
+        return R_SUCCESS;
     }
 
     // IAttributes
 
     Result AttributesImpl::setUint(const Uuid &key, Uint value)
     {
-        TRACE("AttributesImpl::setUint - value=%d\n", value);
+        UAP_TRACE("AttributesImpl::setUint - value=%d\n", value);
 
         KeyValue var;
 
@@ -44,7 +44,7 @@ namespace uap
         {
             // overwrite the current item
             KeyValue &rvar= it->second;
-            ASSERT(rvar.vt == KT_UINT);
+            UAP_ASSERT(rvar.vt == KT_UINT);
             rvar.ui = value;
         }
         else
@@ -55,7 +55,7 @@ namespace uap
         }
 
 
-        return R_OK;
+        return R_SUCCESS;
     }
 
     Result AttributesImpl::getUint(const Uuid &key, Uint &value)
@@ -69,7 +69,7 @@ namespace uap
             if (var.vt == KT_UINT)
             {
                 value = var.ui;
-                r = R_OK;
+                r = R_SUCCESS;
             }
             else
             {
@@ -77,7 +77,7 @@ namespace uap
             }
         }
 
-        TRACE("AttributesImpl::getUint - value=%d\n", value);
+        UAP_TRACE("AttributesImpl::getUint - value=%d\n", value);
 
 
         return r;
@@ -85,7 +85,7 @@ namespace uap
 
     Result AttributesImpl::setUlong(const Uuid &key, Ulong value)
     {
-        TRACE("AttributesImpl::setUlong\n");
+        UAP_TRACE("AttributesImpl::setUlong\n");
 
         KeyValue var;
 
@@ -94,7 +94,7 @@ namespace uap
         {
             // overwrite the current item
             KeyValue &rvar= it->second;
-            ASSERT(rvar.vt == KT_ULONG);
+            UAP_ASSERT(rvar.vt == KT_ULONG);
             rvar.ui = value;
         }
         else
@@ -105,7 +105,7 @@ namespace uap
         }
 
 
-        return R_OK;
+        return R_SUCCESS;
     }
 
     Result AttributesImpl::getUlong(const Uuid &key, Ulong &value)
@@ -119,7 +119,7 @@ namespace uap
             if (var.vt == KT_ULONG)
             {
                 value = var.ul;
-                r = R_OK;
+                r = R_SUCCESS;
             }
             else
             {
@@ -127,7 +127,7 @@ namespace uap
             }
         }
 
-        TRACE("AttributesImpl::getUlong - value=%d\n", value);
+        UAP_TRACE("AttributesImpl::getUlong - value=%d\n", value);
 
 
         return r;
@@ -135,7 +135,7 @@ namespace uap
 
     Result AttributesImpl::setUuid(const Uuid &key, Uuid value)
     {
-        TRACE("AttributesImpl::setUuid\n");
+        UAP_TRACE("AttributesImpl::setUuid\n");
 
         KeyValue var;
 
@@ -144,7 +144,7 @@ namespace uap
         {
             // overwrite the current item
             KeyValue &rvar= it->second;
-            ASSERT(rvar.vt == KT_UUID);
+            UAP_ASSERT(rvar.vt == KT_UUID);
             rvar.uuid = value;
         }
         else
@@ -155,7 +155,7 @@ namespace uap
         }
 
        
-        return R_OK;
+        return R_SUCCESS;
     }
     Result AttributesImpl::getUuid(const Uuid &key, Uuid &value)
     {
@@ -168,7 +168,7 @@ namespace uap
             if (var.vt == KT_UUID)
             {
                 value = var.uuid;
-                r = R_OK;
+                r = R_SUCCESS;
             }
             else
             {
@@ -176,18 +176,18 @@ namespace uap
             }
         }
 
-        TRACE("AttributesImpl::getUuid \n");
+        UAP_TRACE("AttributesImpl::getUuid \n");
 
         return r;
     }
 
     Result AttributesImpl::setBlob(const Uuid &key, const Uchar *buff, Ulong bufSize)
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
         KeyValue var;
 
-        TRACE("AttributesImpl::setBlob\n");
+        UAP_TRACE("AttributesImpl::setBlob\n");
 
 
         auto it = map_.find(key);
@@ -195,7 +195,7 @@ namespace uap
         {
             // overwrite the current item
             KeyValue& rvar = it->second;
-            ASSERT(rvar.vt == KT_BLOB);
+            UAP_ASSERT(rvar.vt == KT_BLOB);
             if (rvar.blob.size != bufSize)
             {
                 delete [] rvar.blob.pbuf;
@@ -235,7 +235,7 @@ namespace uap
     {
         Result r = R_NOT_FOUND;
 
-        TRACE("AttributesImpl::getBlob\n");
+        UAP_TRACE("AttributesImpl::getBlob\n");
 
         auto it = map_.find(key);
         if (it != map_.end())
@@ -252,7 +252,7 @@ namespace uap
 
                 CopyMemory(buff, var.blob.pbuf, var.blob.size);
                 *actualSize = var.blob.size;
-                r = R_OK;
+                r = R_SUCCESS;
             }
             else
             {
@@ -267,7 +267,7 @@ namespace uap
         Result r = R_NOT_FOUND;
 
 
-        TRACE("AttributesImpl::deleteKey\n");
+        UAP_TRACE("AttributesImpl::deleteKey\n");
 
         auto it = map_.find(key);
         if (it != map_.end())
@@ -280,7 +280,7 @@ namespace uap
             }
 
             map_.erase(it++);
-            r = R_OK;
+            r = R_SUCCESS;
 
         }
 
@@ -289,8 +289,8 @@ namespace uap
 
     Result AttributesImpl::deleteAllKeys()
     {
-        Result r = R_NOT_IMPLEMENTED;
-        TRACE("AttributesImpl::deleteAllKeys\n");
+        Result r = R_NOT_IMPL;
+        UAP_TRACE("AttributesImpl::deleteAllKeys\n");
 
         return r;
     }

@@ -13,6 +13,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // uap initialize
     Result r = uapInitialize();
 
+    UAP_TRACE("WinMain start...\n");
+
     // new app;
     App *app = new App();
 

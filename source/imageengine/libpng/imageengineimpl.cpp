@@ -17,16 +17,16 @@ namespace uap
         }
         return ref;
     }
-    Result ImageEngineImpl::queryInterface(const uap::Uuid &, void **)
+    Result ImageEngineImpl::queryInterface(const Uuid &, void **)
     {
-        return R_OK;
+        return R_SUCCESS;
     }
 
     //
     Result ImageEngineImpl::initialize()
     {
-        TRACE("ImageEngineImpl::initialize\n");
-        return R_OK;
+        UAP_TRACE("ImageEngineImpl::initialize\n");
+        return R_SUCCESS;
     }
 
 

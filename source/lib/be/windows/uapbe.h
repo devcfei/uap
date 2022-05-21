@@ -15,14 +15,15 @@
 #include <fstream>
 
 // uap
+#define MODULE_NAME "uapbe"
 #include <uap.h>
-#include "uapbedefs.h"
+using namespace uap;
+
 #include "uapbeappimpl.h"
 #include "uapbeattributesimpl.h"
 #include "uaplogtraceimpl.h"
 
 
-using namespace uap;
 
 
 #ifdef UAPBE_EXPORTS
@@ -38,6 +39,5 @@ Result TraceMessage(LPCTSTR pszFormat, ...);
 // Export functions
 extern "C" DLL_EXPORTS Result uapbeInitialize();
 extern "C" DLL_EXPORTS Result uapbeCreateApplication(IApplication** ppiApp);
-extern "C" DLL_EXPORTS Result uapbeVPrint(Char *pszFormat, va_list vaList);
 
 #endif //_UAPBE_H_

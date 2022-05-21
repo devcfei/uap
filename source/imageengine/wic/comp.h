@@ -2,12 +2,16 @@
 #define _COMP_H_
 
 
+// uap
+#define MODULE_NAME "imageengine"
 #include <uap.h>
 #include <uapimageengine.h>
-
+using namespace uap;
 
 // Windows specical
 #include <windows.h>
+
+
 
 
 #include "imageengineimpl.h"
@@ -20,14 +24,6 @@
 #endif
 
 
-
-#if defined (_DEBUG)
-#define TRACE(fmt, ...) uap::logPrint("imageengine.dll!" fmt, __VA_ARGS__)
-#define ASSERT(_expr_)
-#else
-#define TRACE(fmt, ...) 
-#define ASSERT(_expr_)
-#endif
 
 namespace uap
 {

@@ -1,16 +1,60 @@
-#include <uap.h>
 #include "uapheaders.h"
-#include "uapinternal.h"
 
 namespace uap
 {
+    /// print message 
+    Result uapPrintMessage(Char* format, ...)
+    {
+#if defined(_WIN32)
+        Result r = R_SUCCESS;
+        HRESULT hr;
+        CHAR szMessageBuffer[16380] = {0};
+        va_list valist;
 
-    struct uapPfn global_Pfn;
+        va_start(valist, format);
+        hr = StringCchVPrintfA(szMessageBuffer, 16380, format, valist);
+        if (FAILED(hr))
+        {
+            r = R_ERROR;
+            return r;
+        }
+        va_end(valist);
 
-#if defined(_MSC_VER)
+        OutputDebugStringA(szMessageBuffer);
+        return r;
+#elif defined(__linux__)
+        Result r = R_SUCCESS;
+        va_list valist;
+        va_start(valist, format);
+        vprintf(format,valist);
+        va_end(valist);
+        return r;
+#endif
+    }
+
+    const Char* uapGetUuidString(const Uuid &uuid)
+    {
+        static Char szUuid[]= "{00000000-0000-0000-0000-000000000000}";
+#if defined(_WIN32)
+        StringCchPrintfA(szUuid,sizeof(szUuid)+1,"{%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}",
+            uuid.Data1,uuid.Data2,uuid.Data3,uuid.Data4[0],uuid.Data4[1],
+            uuid.Data4[2],uuid.Data4[3],uuid.Data4[4],uuid.Data4[5],uuid.Data4[6],uuid.Data4[7]);
+
+#elif defined(__linux__)
+        sprintf(szUuid, "{%08lx-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}",
+            uuid.Data1,uuid.Data2,uuid.Data3,uuid.Data4[0],uuid.Data4[1],
+            uuid.Data4[2],uuid.Data4[3],uuid.Data4[4],uuid.Data4[5],uuid.Data4[6],uuid.Data4[7]);
+
+#endif
+        return szUuid;
+    }
+
+    struct uapbePfn global_Pfn;
+
+#if defined(_WIN32)
     static Result uapInitializeWindows()
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
         HMODULE hDll = LoadLibrary(_T("uapbe.dll"));
         if (hDll)
@@ -18,11 +62,9 @@ namespace uap
 
             global_Pfn.pfn_beInitialize = (PFN_beInitialize)GetProcAddress(hDll, "uapbeInitialize");
             global_Pfn.pfn_beCreateApplication = (PFN_beCreateApplication)GetProcAddress(hDll, "uapbeCreateApplication");            
-            global_Pfn.pfn_vPrint = (PFN_vPrint)GetProcAddress(hDll, "uapbeVPrint");
 
-            TRACE("uapbeInitialize address: %p\n", global_Pfn.pfn_beInitialize);
-            TRACE("uapbeCreateApplication address: %p\n", global_Pfn.pfn_beCreateApplication);
-            TRACE("uapbeVPrint address: %p\n", global_Pfn.pfn_vPrint);
+            UAP_TRACE("uapbeInitialize address: %p\n", global_Pfn.pfn_beInitialize);
+            UAP_TRACE("uapbeCreateApplication address: %p\n", global_Pfn.pfn_beCreateApplication);
 
 
             r = global_Pfn.pfn_beInitialize();
@@ -40,27 +82,33 @@ namespace uap
 
     Result uapInitialize()
     {
-        Result r = R_OK;
+        Result r = R_SUCCESS;
 
-        TRACE("uapInitialize\n");
+        UAP_TRACE("uapInitialize\n");
 
-#if defined(_MSC_VER)
+#if defined(_WIN32)
         r = uapInitializeWindows();
 
 #elif defined(__linux__)
 
-        r = R_NOT_IMPLEMENTED;
+        r = R_NOT_IMPL;
 #else
-        r = R_NOT_IMPLEMENTED;
+        r = R_NOT_IMPL;
 #endif
 
         return r;
     }
 
+
+
+
+
+
+
     Result uapCreateApplication(IApplication** ppiApp)
     {
-        Result r = R_OK;
-        ASSERT(global_Pfn.pfn_beCreateApplication);
+        Result r = R_SUCCESS;
+        UAP_ASSERT(global_Pfn.pfn_beCreateApplication);
         r = global_Pfn.pfn_beCreateApplication(ppiApp);
         return r;
     }
