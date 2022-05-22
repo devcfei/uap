@@ -30,7 +30,7 @@ namespace uap
         return r;
     }
 
-    Result UiLayoutImplSimple::initializeLayout(IAttributes *piAttributes)
+    Result UiLayoutImplSimple::initializeLayout(IUiEngine* piUiEngine, IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
 

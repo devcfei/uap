@@ -30,9 +30,11 @@ namespace uap
         return r;
     }
 
-    Result UiLayoutImplDocking::initializeLayout(IAttributes *piAttributes)
+    Result UiLayoutImplDocking::initializeLayout(IUiEngine* piUiEngine, IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
+
+        spUiEngine_ = piUiEngine;
 
         return r;
     }
@@ -147,47 +149,23 @@ namespace uap
     }
 
 
-    void UiLayoutImplDocking::showMenuBar(bool* p_open)
+    Result UiLayoutImplDocking::showMenuBar(bool* p_open)
     {
-        if (ImGui::BeginMenuBar())
-        {
-            if (ImGui::BeginMenu("File"))
-            {
-                ImGui::MenuItem("Exit", NULL, p_open);
+        Result r = R_SUCCESS;
 
-                ImGui::EndMenu();
-            }
-            if (ImGui::BeginMenu("View"))
-            {
-                ImGui::MenuItem("Toolbar", NULL, &showToolBar_);
-                ImGui::MenuItem("StatusBar", NULL, &showStatusBar_);
-                ImGui::EndMenu();
-            }
+        sptr<IUiMenuBar> sp;
 
+        r = spUiEngine_.as(&sp);
+        UAP_ASSERT(UAP_SUCCESS(r));
 
-            //HelpMarker(
-            //    "When docking is enabled, you can ALWAYS dock MOST window into another! Try it now!" "\n"
-            //    "- Drag from window title bar or their tab to dock/undock." "\n"
-            //    "- Drag from window menu button (upper-left button) to undock an entire node (all windows)." "\n"
-            //    "- Hold SHIFT to disable docking (if io.ConfigDockingWithShift == false, default)" "\n"
-            //    "- Hold SHIFT to enable docking (if io.ConfigDockingWithShift == true)" "\n"
-            //    "This demo app has nothing to do with enabling docking!" "\n\n"
-            //    "This demo app only demonstrate the use of ImGui::DockSpace() which allows you to manually create a docking node _within_ another window." "\n\n"
-            //    "Read comments in ShowExampleAppDockSpace() for more details.");
+        r = sp->drawMenuBar();
 
+        return r;
 
-            if (ImGui::BeginMenu("Help"))
-            {
-                ImGui::MenuItem("About", NULL, false);
-                ImGui::EndMenu();
-            }
-
-            ImGui::EndMenuBar();
-        }
     }
 
 
-    void UiLayoutImplDocking::showToolBar(bool* p_open)
+    Result UiLayoutImplDocking::showToolBar(bool* p_open)
     {
         ImGui::BeginChild("Toolbar", ImVec2(0, heightToolBar_), true);
 
@@ -222,9 +200,11 @@ namespace uap
         ImGui::PopStyleVar();
 
         ImGui::EndChild();
+
+        return R_SUCCESS;
     }
 
-    void UiLayoutImplDocking::showStatusBar(bool* p_open)
+    Result UiLayoutImplDocking::showStatusBar(bool* p_open)
     {
         const ImGuiViewport* viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Size.y - heightStatusBar_), ImGuiCond_FirstUseEver);
@@ -247,6 +227,9 @@ namespace uap
         ImGui::ProgressBar(progress, ImVec2(150.f, 0.f), buf); ImGui::SameLine();
 
         ImGui::EndChild();
+
+        return R_SUCCESS;
+
     }
 
     // void UiLayoutImplDocking::ShowConsoleWindow(bool* p_open)

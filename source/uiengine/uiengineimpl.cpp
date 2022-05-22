@@ -301,6 +301,11 @@ namespace uap
             else if(style == LAYOUT_STYLE_DOCKING)
             {
                 r = UiLayoutImplDocking::createInstance((void**)&spLayout_);
+                VERBOSE("create docking style layout, r = 0x%8.8x\n", r);
+
+                r = spLayout_->initializeLayout(this, nullptr);
+                VERBOSE("initialize the layout, r = 0x%8.8x\n", r);
+
             }
             else if(style == LAYOUT_STYLE_DEMO)
             {

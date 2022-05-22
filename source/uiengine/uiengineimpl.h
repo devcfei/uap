@@ -4,47 +4,6 @@
 
 namespace uap
 {
-    class UiMenuBarImpl: public IUiMenuBar
-    {
-    public:
-        Ulong addRef()
-        {
-            return InterlockedIncrement(&refcount_);
-        }
-        Ulong release()
-        {
-            Ulong ref = InterlockedDecrement(&refcount_);
-            if (!ref)
-            {
-                delete this;
-            }
-            return ref;
-        }
-        Result queryInterface(const Uuid &rUuid, void **ppv)
-        {
-            Result r = R_NO_SUCH_INTERFACE;
-
-            if (uapUuidIsEqual(rUuid, IID_IUIMENUBAR))
-            {
-                IUiMenuBar *pi = static_cast<IUiMenuBar *>(this);
-                addRef();
-
-                *((IUiMenuBar **)ppv) = pi;
-                r = R_SUCCESS;
-            }
-
-            return r;
-        }
-        // IUiMenuBar
-        virtual Result initializeMenuBar(IAttributes* piAttributes)
-        {
-            Result r = R_SUCCESS;
-            return r;
-        }
-    private:
-        Ulong refcount_;
-    };
-
     class UiEngineImpl : public IUiEngine
         , public UiMenuBarImpl
     {
@@ -95,13 +54,12 @@ namespace uap
 
         // layout attributes
         sptr<IUiLayout> spLayout_;
-        sptr<IAttributes> spMenuBarAttributes_ ;
 
         ImVec4 colorClear_;
 
 
     };
 
-};
+}
 
 #endif //_UAP_UIENGINEIMPL_H_

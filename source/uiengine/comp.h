@@ -8,6 +8,10 @@
 #include <uapuiengine.h>
 using namespace uap;
 
+// STL
+
+#include <vector>
+
 // Windows specical
 #include <windows.h>
 #include <strsafe.h>
@@ -32,6 +36,7 @@ using namespace Microsoft::WRL;
 
 
 // UiEngine implementation
+#include "uimenubarimpl.h"
 #include "uilayoutimplsimple.h"
 #include "uilayoutimpldocking.h"
 #include "uilayoutimpldemo.h"
@@ -61,7 +66,8 @@ using namespace Microsoft::WRL;
         } 
 
 #define VERBOSE(_message_, ...) \
-            spLogTrace_->output(LT_VERBOSE, _message_, __VA_ARGS__ ); 
+        do{ spLogTrace_->output(LT_VERBOSE, _message_, __VA_ARGS__ ); } while(0)
+
 
 #define WARN(_message_, ...) \
             spLogTrace_->output(LT_WARN, _message_, __VA_ARGS__ ); 

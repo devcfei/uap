@@ -154,7 +154,47 @@ Result App::buildLayout()
     r = spMenuBar->initializeMenuBar(spMenuBarAttrbutes.get());
     RESULT_CHECK(r,"initialize MenuBar")
 
+    UiMenuFlags flags;
 
+    flags.s.start = 1;
+    flags.s.checked = 0;
+    flags.s.enable = 1;
+    flags.s.end = 0;
+    r = spMenuBar->insertMenuItem("File", 0,flags.ui);
+    RESULT_CHECK(r,"insert MenuItem")
+
+
+    flags.s.start = 1;
+    flags.s.checked = 0;
+    flags.s.enable = 1;
+    flags.s.end = 1;
+    r = spMenuBar->insertMenuItem("Exit", 0,flags.ui);
+    RESULT_CHECK(r,"insert MenuItem")
+
+    flags.s.start = 1;
+    flags.s.checked = 0;
+    flags.s.enable = 1;
+    flags.s.end = 0;
+    r = spMenuBar->insertMenuItem("View", 1,flags.ui);
+    RESULT_CHECK(r,"insert MenuItem")
+
+    flags.s.start = 0;
+    flags.s.checked = 0;
+    flags.s.enable = 1;
+    flags.s.end = 0;
+    r = spMenuBar->insertMenuItem("ToolBar", 0,flags.ui);
+    RESULT_CHECK(r,"insert MenuItem")
+
+
+
+    flags.s.start = 0;
+    flags.s.checked = 0;
+    flags.s.enable = 1;
+    flags.s.end = 1;
+    r = spMenuBar->insertMenuItem("StatusBar", 0,flags.ui);
+    RESULT_CHECK(r,"insert MenuItem")
+
+    
     return r;  
 }
 
