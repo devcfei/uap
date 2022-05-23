@@ -98,28 +98,6 @@ Result App::setLayout()
 {
     Result r = R_SUCCESS;
 
-#if 0
-
-    // get layout IUiLayout
-    r = spUiEngine_->queryInterface(IID_IUILAYOUT, (void**)&spLayout_);
-    RESULT_CHECK(r,"queryInterface IUiLayout")
-
-    // create an attribute
-    r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spLayoutAttributes_);
-    RESULT_CHECK(r,"create instance attributes")
-
-
-    LayoutStyle style;
-    //style = LAYOUT_STYLE_SIMPLE; 
-    style = LAYOUT_STYLE_DOCKING; 
-    //style = LAYOUT_STYLE_DEMO;
-    spLayoutAttributes_->setUint(UUID_UILAYOUT_STYLE,style);
-
-    // initialize the UI layout
-    r = spLayout_->initializeLayout(spLayoutAttributes_.get());
-    RESULT_CHECK(r,"initiaize the UI layout")    
-
-#endif
     // build the layout
     r =  buildLayout();
     RESULT_CHECK(r,"build UI layout")

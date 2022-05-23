@@ -182,6 +182,30 @@ namespace uap
         return r;
     }
 
+
+    Result AppImpl::getCurrentPath(Char* path, Ulong size)
+    {
+        Result r = R_SUCCESS;
+
+
+        CHAR szModuleFileName[MAX_PATH];
+        int nSize = GetModuleFileNameA(NULL, szModuleFileName, MAX_PATH);
+        for (int i = nSize - 1; i > 0; --i)
+        {
+            if (szModuleFileName[i] == _T('\\'))
+            {
+                szModuleFileName[i + 1] = 0;
+                break;
+            }
+        }
+
+        StringCchCopyA(path, size - 1, szModuleFileName);
+
+
+        return r;
+    }
+
+
     Result AppImpl::initialize(Char *filename)
     {
         Result r = R_SUCCESS;

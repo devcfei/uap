@@ -18,6 +18,7 @@ namespace uap
         // IApplication
         virtual Result initialize(IAttributes* piAttributes);
         virtual Result createInterface(const Uuid & rUuid, void **ppv);
+        virtual Result getCurrentPath(Char* path, Ulong size);
 
         // IFileLogger
         virtual Result initialize(Char* filename);

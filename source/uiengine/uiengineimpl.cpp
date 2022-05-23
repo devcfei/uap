@@ -234,11 +234,22 @@ namespace uap
 
 
         io.Fonts->AddFontDefault();
+
+        char path[MAX_PATH];
+        spApp_->getCurrentPath(path,MAX_PATH);
+        StringCbCat(path,MAX_PATH,"fontawesome-webfont.ttf");
+
+
+        VERBOSE("front path = %s\n",path);
+        
+
         ImFontConfig config;
         config.MergeMode = true;
         config.GlyphMinAdvanceX = 18.0f; // Use if you want to make the icon monospaced
         static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
-        io.Fonts->AddFontFromFileTTF("fontawesome-webfont.ttf", 18.0f, &config, icon_ranges);
+        io.Fonts->AddFontFromFileTTF(path, 18.0f, &config, icon_ranges);
+
+
 
         // static CHAR path[MAX_PATH];
 
