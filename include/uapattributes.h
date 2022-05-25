@@ -31,6 +31,9 @@ namespace uap
         virtual Result setUlong(const Uuid & key, Ulong value) = 0;
         virtual Result getUlong(const Uuid & key, Ulong &value) = 0;
 
+        virtual Result setPtr(const Uuid & key, void* value) = 0;
+        virtual Result getPtr(const Uuid & key, void* &value) = 0;
+
         virtual Result setUuid(const Uuid & key, Uuid value) = 0;
         virtual Result getUuid(const Uuid & key, Uuid &value) = 0;
 

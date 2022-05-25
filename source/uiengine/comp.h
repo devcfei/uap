@@ -25,10 +25,13 @@ using namespace Microsoft::WRL;
 // Direct3D9
 
 #include <d3d9.h>
+#include <d3d11.h>
+
 
 //imgui
 #include <imgui.h>
 #include <imgui_impl_dx9.h>
+#include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 
 //
@@ -40,6 +43,8 @@ using namespace Microsoft::WRL;
 #include "uilayoutimplsimple.h"
 #include "uilayoutimpldocking.h"
 #include "uilayoutimpldemo.h"
+#include "uienginebackenddx9impl.h"
+#include "uienginebackenddx11impl.h"
 #include "uiengineimpl.h"
 
 

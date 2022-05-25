@@ -133,6 +133,58 @@ namespace uap
         return r;
     }
 
+
+
+    Result AttributesImpl::setPtr(const Uuid &key, void *value)
+    {
+        UAP_TRACE("AttributesImpl::setPtr\n");
+
+        KeyValue var;
+
+        auto it = map_.find(key);
+        if (it != map_.end())
+        {
+            // overwrite the current item
+            KeyValue &rvar= it->second;
+            UAP_ASSERT(rvar.vt == KT_POINTER);
+            rvar.ptr = value;
+        }
+        else
+        {
+            var.vt = KT_POINTER;
+            var.ptr = value;
+            map_.insert(std::make_pair(key, var));
+        }
+
+
+        return R_SUCCESS;
+    }
+    Result AttributesImpl::getPtr(const Uuid &key, void *&value)
+    {
+        Result r = R_NOT_FOUND;
+
+        auto it = map_.find(key);
+        if (it != map_.end())
+        {
+            KeyValue var = it->second;
+            if (var.vt == KT_POINTER)
+            {
+                value = var.ptr;
+                r = R_SUCCESS;
+            }
+            else
+            {
+                r = R_INVALID_PARAMETERS;
+            }
+        }
+
+        UAP_TRACE("AttributesImpl::getUlong - value=%d\n", value);
+
+
+        return r;
+    }
+
+
     Result AttributesImpl::setUuid(const Uuid &key, Uuid value)
     {
         UAP_TRACE("AttributesImpl::setUuid\n");

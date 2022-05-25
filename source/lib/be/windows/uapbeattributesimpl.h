@@ -29,6 +29,9 @@ namespace uap
         virtual Result setUlong(const Uuid & key, Ulong value);
         virtual Result getUlong(const Uuid & key, Ulong &value);
 
+        virtual Result setPtr(const Uuid &key, void *value);
+        virtual Result getPtr(const Uuid &key, void *&value);
+
         virtual Result setUuid(const Uuid & key, Uuid value);
         virtual Result getUuid(const Uuid & key, Uuid &value);
 
@@ -49,6 +52,7 @@ namespace uap
         {
             KT_UINT,
             KT_ULONG,
+            KT_POINTER,
             KT_UUID,
             KT_BLOB,
             KT_STRING,
@@ -60,6 +64,7 @@ namespace uap
             {
                 Uint ui;
                 Ulong ul;
+                void* ptr;
                 Uuid uuid;
                 struct Blob
                 {

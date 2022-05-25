@@ -1,5 +1,7 @@
 #include "comp.h"
 
+
+
 // Forward declare message handler from imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -73,6 +75,28 @@ namespace uap
         VERBOSE("initialize ILogTrace - r = 0x%8.8x\n", r);
 
 
+        // create the backend
+
+        beType_ = BT_D3D9;
+        beType_ = BT_D3D11;
+
+        if (beType_ == BT_D3D9)
+        {
+            r = UiEngineBackendDx9Impl::createInstance((void **)&spBackend_);
+        }
+        else if (beType_ = BT_D3D11)
+        {
+            r = UiEngineBackendDx11Impl::createInstance((void **)&spBackend_);
+
+        }
+        if (!UAP_SUCCESS(r))
+        {
+            UAP_TRACE("backend - createInstance failed! r = 0x%8.8x\n", r);
+            return r;
+        }
+        // initialize the backend
+        r = spBackend_->initializeBackend(this, nullptr);
+
         // create layout      
         r = createLayout();
         VERBOSE("createLayout - r = 0x%8.8x\n", r);
@@ -99,12 +123,7 @@ namespace uap
     {
         VERBOSE("UiEngineImpl::run\n");
 
-        ImGuiIO &io = ImGui::GetIO();
 
-
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-        colorClear_ = clear_color;
 
         // Main loop
         bool done = false;
@@ -123,50 +142,26 @@ namespace uap
             if (done)
                 break;
 
-            // Start the Dear ImGui frame
-            ImGui_ImplDX9_NewFrame();
+            spBackend_->newFrame();
+
             ImGui_ImplWin32_NewFrame();
             ImGui::NewFrame();
 
-
             drawLayout();
 
-            // Rendering
-            ImGui::EndFrame();
-            d3d9Device_->SetRenderState(D3DRS_ZENABLE, FALSE);
-            d3d9Device_->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-            d3d9Device_->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-            D3DCOLOR clear_col_dx = D3DCOLOR_RGBA((int)(colorClear_.x * colorClear_.w * 255.0f),
-                                                  (int)(colorClear_.y * colorClear_.w * 255.0f),
-                                                  (int)(colorClear_.z * colorClear_.w * 255.0f),
-                                                  (int)(colorClear_.w * 255.0f));
-            d3d9Device_->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, clear_col_dx, 1.0f, 0);
-            if (d3d9Device_->BeginScene() >= 0)
-            {
-                ImGui::Render();
-                ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-                d3d9Device_->EndScene();
-            }
+            spBackend_->render();
 
-            // Update and Render additional Platform Windows
-            if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-            {
-                ImGui::UpdatePlatformWindows();
-                ImGui::RenderPlatformWindowsDefault();
-            }
 
-            HRESULT result = d3d9Device_->Present(NULL, NULL, NULL, NULL);
-
-            // Handle loss of D3D9 device
-            if (result == D3DERR_DEVICELOST && d3d9Device_->TestCooperativeLevel() == D3DERR_DEVICENOTRESET)
-                reset();
         }
 
-        ImGui_ImplDX9_Shutdown();
+
+        spBackend_->shutdown();
+
         ImGui_ImplWin32_Shutdown();
         ImGui::DestroyContext();
 
-        d3d9DestoryDevice();
+        spBackend_->destoryDevice();
+
         ::DestroyWindow(hWnd_);
         ::UnregisterClass(wc_.lpszClassName, wc_.hInstance);
 
@@ -192,18 +187,23 @@ namespace uap
         wc_ = wc;
         ::RegisterClassEx(&wc);
         hWnd_ = ::CreateWindow(wc.lpszClassName, appName,
-                               WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, (LPVOID)this);
+                               WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800,
+                                NULL, NULL, wc.hInstance, (LPVOID)this);
 
         VERBOSE("UiEngineImpl instance, this=0x%p\n", this);
 
-        // Initialize Direct3D
-        r = d3d9CreateDevice(hWnd_);
-        if (!UAP_SUCCESS(r))
-        {
-            d3d9DestoryDevice();
-            ::UnregisterClass(wc.lpszClassName, wc.hInstance);
-            r = R_ERROR;
-        }
+        // Initialize Direct3D devicde
+
+        sptr<IAttributes> spDeviceAttributes;
+        r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spDeviceAttributes);
+        VERIFY(r, "create attributes for backend render device");
+
+        spDeviceAttributes->setPtr(UUID_IUIENGINE_BACKEND_HWND, hWnd_);
+
+
+        r = spBackend_->createDevice(spDeviceAttributes.get());
+        VERIFY(r, "create backend render device");
+
 
         // Show the window
         ::ShowWindow(hWnd_, SW_SHOWDEFAULT);
@@ -237,7 +237,7 @@ namespace uap
 
         char path[MAX_PATH];
         spApp_->getCurrentPath(path,MAX_PATH);
-        StringCbCat(path,MAX_PATH,"fontawesome-webfont.ttf");
+        StringCbCatA(path,MAX_PATH,"fontawesome-webfont.ttf");
 
 
         VERBOSE("front path = %s\n",path);
@@ -286,7 +286,8 @@ namespace uap
 
         // Setup Platform/Renderer backends
         ImGui_ImplWin32_Init(hWnd_);
-        ImGui_ImplDX9_Init(d3d9Device_.Get());
+
+        spBackend_->setup();
 
         return r;
     }
@@ -339,63 +340,23 @@ namespace uap
     }
 
 
-    Result UiEngineImpl::reset()
+    Result UiEngineImpl::resize(Uint width, Uint height)
     {
         Result r = R_SUCCESS;
-        ImGui_ImplDX9_InvalidateDeviceObjects();
-        HRESULT hr = d3d9Device_->Reset(&d3dpp_);
-        if (hr == D3DERR_INVALIDCALL)
-            IM_ASSERT(0);
-        ImGui_ImplDX9_CreateDeviceObjects();
+
+        r = spBackend_->resize(width,height);
 
         return r;
     }
 
-    Result UiEngineImpl::d3d9CreateDevice(HWND hWnd)
-    {
-        Result r = R_SUCCESS;
-        if ((d3d9_ = Direct3DCreate9(D3D_SDK_VERSION)) == NULL)
-        {
-            r = R_INTERNEL_FAILURE;
-        }
 
-        VERIFY(r, "Direct3DCreate9");
 
-        // Create the D3DDevice
-        ZeroMemory(&d3dpp_, sizeof(d3dpp_));
-        d3dpp_.Windowed = TRUE;
-        d3dpp_.SwapEffect = D3DSWAPEFFECT_DISCARD;
-        d3dpp_.BackBufferFormat = D3DFMT_UNKNOWN; // Need to use an explicit format with alpha if needing per-pixel alpha composition.
-        d3dpp_.EnableAutoDepthStencil = TRUE;
-        d3dpp_.AutoDepthStencilFormat = D3DFMT_D16;
-        d3dpp_.PresentationInterval = D3DPRESENT_INTERVAL_ONE; // Present with vsync
-        // d3dpp_.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;   // Present without vsync, maximum unthrottled framerate
-        if (d3d9_->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
-                                D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp_, &d3d9Device_) < 0)
-        {
-            r = R_INTERNEL_FAILURE;
-        }
-
-        VERIFY(r, "IDirect3D9::CreateDevice");
-
-        return r;
-    }
-
-    Result UiEngineImpl::d3d9DestoryDevice()
-    {
-        Result r = R_SUCCESS;
-
-        d3d9Device_.Reset();
-        d3d9_.Reset();
-
-        return r;
-    }
 
     // Win32 message handler
     // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
     // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
     // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-    // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+    // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.  
     LRESULT WINAPI UiEngineImpl::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
 
@@ -416,12 +377,7 @@ namespace uap
         case WM_SIZE:
             if (pThis)
             {
-                if (pThis->d3d9Device_ != NULL && wParam != SIZE_MINIMIZED)
-                {
-                    pThis->d3dpp_.BackBufferWidth = LOWORD(lParam);
-                    pThis->d3dpp_.BackBufferHeight = HIWORD(lParam);
-                    pThis->reset();
-                }
+                pThis->resize(LOWORD(lParam), HIWORD(lParam));
             }
             return 0;
         case WM_SYSCOMMAND:

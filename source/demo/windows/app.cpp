@@ -60,7 +60,7 @@ Result App::startUI()
 
     // set application layout style
     LayoutStyle style;
-    //style = LAYOUT_STYLE_SIMPLE; 
+    style = LAYOUT_STYLE_SIMPLE; 
     style = LAYOUT_STYLE_DOCKING; 
     //style = LAYOUT_STYLE_DEMO;
     spUiAttributes_->setUint(UUID_UILAYOUT_STYLE,style);
