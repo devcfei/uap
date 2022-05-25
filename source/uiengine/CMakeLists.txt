@@ -9,16 +9,35 @@ aux_source_directory(${PROJECT_SOURCE_DIR} SRCS)
 include_directories(${PROJECT_SOURCE_DIR}/be/imguibe/imgui)
 include_directories(${PROJECT_SOURCE_DIR}/be/imguibe/imgui/backends)
 
-# imgui
+# imgui source
 aux_source_directory(${PROJECT_SOURCE_DIR}/be/imguibe/imgui SRCS)
 
 
+# imgui_tex_inspectinclude
+include_directories(${PROJECT_SOURCE_DIR}/be/imguibe/imgui_tex_inspect)
+include_directories(${PROJECT_SOURCE_DIR}/be/imguibe/imgui_tex_inspect/backends)
+include_directories(${PROJECT_SOURCE_DIR}/be/imguibe/imgui_tex_inspect/examples/loaders)
 
-add_library(uiengine SHARED ${SRCS}
-    ${PROJECT_SOURCE_DIR}/be/imguibe/imgui/backends/imgui_impl_dx9.cpp
-    ${PROJECT_SOURCE_DIR}/be/imguibe/imgui/backends/imgui_impl_dx11.cpp
-    ${PROJECT_SOURCE_DIR}/be/imguibe/imgui/backends/imgui_impl_win32.cpp
+# imgui_tex_inspect source
+#aux_source_directory(${PROJECT_SOURCE_DIR}/be/imguibe/imgui_tex_inspect SRCS)
+
+
+set(SRC_EXTRA
+     ${PROJECT_SOURCE_DIR}/be/imguibe/imgui/backends/imgui_impl_dx9.cpp
+     ${PROJECT_SOURCE_DIR}/be/imguibe/imgui/backends/imgui_impl_dx11.cpp
+     ${PROJECT_SOURCE_DIR}/be/imguibe/imgui/backends/imgui_impl_win32.cpp 
+
 )
+
+# imgui_tex_inspect source
+list(APPEND SRC_EXTRA 
+     ${PROJECT_SOURCE_DIR}/be/imguibe/imgui_tex_inspect/backends/tex_inspect_directx11.cpp 
+     ${PROJECT_SOURCE_DIR}/be/imguibe/imgui_tex_inspect/imgui_tex_inspect.cpp 
+     #${PROJECT_SOURCE_DIR}/be/imguibe/imgui_tex_inspect/imgui_tex_inspect_demo.cpp 
+)
+
+add_library(uiengine SHARED ${SRCS} ${SRC_EXTRA} )
+
 
 target_compile_definitions(uiengine PRIVATE UAP_UIENGINE_EXPORTS)
 target_link_libraries(uiengine uap d3d9 d3d11 d3dcompiler dxgi)

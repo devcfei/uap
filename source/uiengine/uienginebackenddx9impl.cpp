@@ -183,6 +183,22 @@ namespace uap
         return r;
     }
 
+    Result UiEngineBackendDx9Impl::createTexture(Char* filename, void** ppv)
+    {
+        Result r = R_NOT_IMPL;
+        // IUiTexture* piTexture;
+
+        // r = UiTextureImpl::createInstance((void**)piTexture);
+        
+      
+
+        // r = piTexture->loadTexture(filename);
+
+
+        // *(void**)ppv = piTexture;
+
+        return r;
+    }
 
 } //@namespace uap
 

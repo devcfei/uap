@@ -34,6 +34,11 @@ using namespace Microsoft::WRL;
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 
+// imgui_tex_inspect
+#include <tex_inspect_directx11.h> //TEX_INSPECT_CHANGE
+#include <imgui_tex_inspect.h> //TEX_INSPECT_CHANGE
+#include <imgui_tex_inspect_demo.h> //TEX_INSPECT_CHANGE
+
 //
 #include <IconsForkAwesome.h>
 
@@ -46,6 +51,7 @@ using namespace Microsoft::WRL;
 #include "uienginebackenddx9impl.h"
 #include "uienginebackenddx11impl.h"
 #include "uiengineimpl.h"
+#include "uitextureimpl.h"
 
 
 #ifdef UAP_UIENGINE_EXPORTS

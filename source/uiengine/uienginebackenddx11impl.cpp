@@ -1,6 +1,7 @@
 #include "comp.h"
 
 
+
 namespace uap
 {
 
@@ -121,6 +122,8 @@ namespace uap
         ImGui_ImplDX11_Init(d3d11Device_.Get(), d3d11DeviceContext_.Get());
 #else
         ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
+        ImGuiTexInspect::ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext); //TEX_INSPECT_CHANGE
+
 #endif
 
         return r;
@@ -272,6 +275,23 @@ namespace uap
             g_pd3dDevice = NULL;
         }
 #endif
+
+        return r;
+    }
+
+    Result UiEngineBackendDx11Impl::createTexture(Char* filename, void** ppv)
+    {
+        Result r = R_SUCCESS;
+        IUiTexture* piTexture=nullptr;
+
+        r = UiTextureImpl::createInstance(g_pd3dDevice, (void**)&piTexture);
+        
+      
+
+        r = piTexture->loadTexture(filename);
+
+
+        *(void**)ppv = piTexture;
 
         return r;
     }

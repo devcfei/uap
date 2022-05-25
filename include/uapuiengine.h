@@ -107,6 +107,8 @@ namespace uap
         virtual Result shutdown()= 0;
         virtual Result resize(Uint width, Uint height) = 0;
 
+        virtual Result createTexture(Char* filename, void** ppv) =0;
+
         // uuid
         static const Uuid uuid()
         {
@@ -155,6 +157,36 @@ namespace uap
             Uchar checked:1;
         }s;
     };
+
+    // {88fc8602-d006-443b-8562-6f337843b402}
+    DEFINE_UUID(IID_ITEXTURE,
+                0x88fc8602, 0xd006, 0x443b, 0x85, 0x62, 0x6f, 0x33, 0x78, 0x43, 0xb4, 0x02);
+
+    class IUiTexture : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IUiTexture
+        virtual Result loadTexture(Char* path) = 0;
+        virtual int width() = 0;
+        virtual int height() = 0;
+        virtual void* texture() = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_ITEXTURE;
+    }; // @class IUiTexture
+
+
 } // @namespace uap
 
 #endif // _UAP_UIENGINE_H_

@@ -4,6 +4,7 @@
 namespace uap
 {
 
+
     class UiEngineBackendDx9Impl : public IUiEngineBackend
     {
     public:
@@ -23,6 +24,7 @@ namespace uap
         virtual Result reset();
         virtual Result shutdown();
         virtual Result resize(Uint width, Uint height);
+        virtual Result createTexture(Char* filename, void** ppv);
 
         static Result createInstance(void **ppv)
         {

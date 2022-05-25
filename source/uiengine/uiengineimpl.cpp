@@ -121,9 +121,21 @@ namespace uap
 
     Result UiEngineImpl::run()
     {
+        Result r = R_SUCCESS;
         VERBOSE("UiEngineImpl::run\n");
 
 
+        ImGuiTexInspect::Init();
+        ImGuiTexInspect::CreateContext();
+
+        sptr<IUiTexture> spTexture;
+
+        char path[MAX_PATH];
+        spApp_->getCurrentPath(path,MAX_PATH);
+        StringCchCatA(path,MAX_PATH,"demo.png");      
+
+        r = spBackend_->createTexture(path,(void**)&spTexture);
+        
 
         // Main loop
         bool done = false;
@@ -149,6 +161,66 @@ namespace uap
 
             drawLayout();
 
+
+            // TODO: need to be moved out from UiEngineImpl
+            ImGui::Begin("DirectX11 Texture Test");
+            ImGui::Text("pointer = %p", spTexture->texture());
+            ImGui::Text("size = %d x %d", spTexture->width(), spTexture->height());
+            ImGui::Image((void*)spTexture->texture(), ImVec2((float)spTexture->width(), (float)spTexture->height()));
+            ImGui::End();
+
+            static bool flipX = false;
+            static bool flipY = false;
+
+            ImGuiTexInspect::InspectorFlags flags = 0;
+            if (flipX) 
+                flags|= ImGuiTexInspect::InspectorFlags_FlipX;
+            if (flipY)
+                flags|= ImGuiTexInspect::InspectorFlags_FlipY;
+
+
+
+
+
+            if(ImGui::Begin("Simple Texture Inspector"))
+            {
+                if (ImGuiTexInspect::BeginInspectorPanel("##ColorFilters", spTexture->texture(),
+                                                        ImVec2((float)spTexture->width(), (float)spTexture->height())))
+                {
+                    
+                    
+                    ImGuiTexInspect::DrawAnnotations(ImGuiTexInspect::ValueText(ImGuiTexInspect::ValueText::BytesDec));
+
+                }
+                ImGuiTexInspect::EndInspectorPanel();
+
+                // Now some ordinary ImGui elements to provide some explanation
+                ImGui::BeginChild("Controls", ImVec2(600, 100));
+                ImGui::TextWrapped("Basics:");
+                ImGui::BulletText("Use mouse wheel to zoom in and out.  Click and drag to pan.");
+                ImGui::BulletText("Use the demo select buttons at the top of the window to explore");
+                ImGui::BulletText("Use the controls below to change basic color filtering options");
+                ImGui::EndChild();
+
+
+                /* DrawColorChannelSelector & DrawGridEditor are convenience functions that 
+                * draw ImGui controls to manipulate config of the most recently drawn 
+                * texture inspector
+                **/
+                ImGuiTexInspect::DrawColorChannelSelector();
+                ImGui::SameLine(200);
+                ImGuiTexInspect::DrawGridEditor();
+
+                ImGui::Separator();
+
+                ImGui::Checkbox("Flip X", &flipX);
+                ImGui::Checkbox("Flip Y", &flipY);
+            }
+
+
+            ImGui::End();
+
+
             spBackend_->render();
 
 
@@ -165,7 +237,7 @@ namespace uap
         ::DestroyWindow(hWnd_);
         ::UnregisterClass(wc_.lpszClassName, wc_.hInstance);
 
-        return R_SUCCESS;
+        return r;
     }
 
 

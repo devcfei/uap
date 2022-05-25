@@ -48,4 +48,15 @@ install(FILES assets/fontawesome/fontawesome-webfont.ttf
         DESTINATION Release/bin
         )
 
+install(FILES assets/images/demo.png
+        CONFIGURATIONS Debug
+        DESTINATION Debug/bin
+        )
+
+install(FILES assets/images/demo.png
+        CONFIGURATIONS Release
+        DESTINATION Release/bin
+        )
+
+
 

@@ -29,6 +29,9 @@ namespace uap
         virtual Result shutdown();
         virtual Result resize(Uint width, Uint height);
 
+        virtual Result createTexture(Char* filename, void** ppv) ;
+        
+
         static Result createInstance(void **ppv)
         {
             UiEngineBackendDx11Impl *p = new UiEngineBackendDx11Impl();
