@@ -9,7 +9,7 @@ namespace uap
 {
 
     // {e28c7ea9-40ec-4dd9-92b1-c9fb9db0258f}
-    DEFINE_UUID(IID_IDRAW, 
+    DEFINE_UUID(IID_IDRAW,
                 0xe28c7ea9, 0x40ec, 0x4dd9, 0x92, 0xb1, 0xc9, 0xfb, 0x9d, 0xb0, 0x25, 0x8f);
 
     class IDraw : public IUniversal
@@ -32,8 +32,6 @@ namespace uap
     private:
         inline static const Uuid uuid_ = IID_IDRAW;
     }; // @class IDraw
-
-
 
     // {9b78c15e-f09c-4969-ab82-75582742306e}
     DEFINE_UUID(IID_IUIMENUBAR,
@@ -66,15 +64,15 @@ namespace uap
         Uint ui;
         struct
         {
-            Uchar start:1;
-            Uchar end:1;
-            Uchar enable:1;
-            Uchar checked:1;
-        }s;
+            Uchar start : 1;
+            Uchar end : 1;
+            Uchar enable : 1;
+            Uchar checked : 1;
+        } s;
     };
 
     // {61ad8510-1006-46df-894b-d44d642676a3}
-    DEFINE_UUID(IID_IUIIMAGEWINDOW, 
+    DEFINE_UUID(IID_IUIIMAGEWINDOW,
                 0x61ad8510, 0x1006, 0x46df, 0x89, 0x4b, 0xd4, 0x4d, 0x64, 0x26, 0x76, 0xa3);
 
     class IUiImageWindow : public IUniversal
@@ -99,7 +97,31 @@ namespace uap
         inline static const Uuid uuid_ = IID_IUIIMAGEWINDOW;
     }; // @class IUiImageWindow
 
+    // {fc1c4f48-ea3d-4bfe-902d-d9fdf18add7b}
+    DEFINE_UUID(IID_IUITEXTURE_INSPECTOR,
+                0xfc1c4f48, 0xea3d, 0x4bfe, 0x90, 0x2d, 0xd9, 0xfd, 0xf1, 0x8a, 0xdd, 0x7b);
 
+    class IUiTextureInspector : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IUiTextureInspector
+        virtual Result initialize(IAttributes *piAttributes) = 0;
+        virtual Result loadImage(Char *name) = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IUITEXTURE_INSPECTOR;
+    }; // @class IUiTextureInspector
 
     // {7f8d5daf-f386-430d-ac32-5578ec6078a0}
     DEFINE_UUID(IID_UIENGINE,
@@ -131,19 +153,19 @@ namespace uap
         virtual Ulong release() = 0;
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
-        virtual Result createInstance(const Uuid&, void **) = 0;
-        
+        virtual Result createInstance(const Uuid &, void **) = 0;
+
         // IUiEngine
         virtual Result initialize(IApplication *piApp, IAttributes *piAttributes) = 0;
         virtual Result startup() = 0;
         virtual Result run() = 0;
 
-        virtual Result addMenuBar(IUiMenuBar* piMenuBar)=0;
-        virtual Result getMenuBar(IUiMenuBar** ppiMenuBar)=0;
-        virtual Result addImageWindow(IUiImageWindow* piImageWindow)=0;
-        virtual Result getImageWindow(IUiImageWindow** ppiImageWindow)=0;
-
-        
+        virtual Result addMenuBar(IUiMenuBar *piMenuBar) = 0;
+        virtual Result getMenuBar(IUiMenuBar **ppiMenuBar) = 0;
+        virtual Result addImageWindow(IUiImageWindow *piImageWindow) = 0;
+        virtual Result getImageWindow(IUiImageWindow **ppiImageWindow) = 0;
+        virtual Result addTextureInspector(IUiTextureInspector *piTextureInspector) = 0;
+        virtual Result getTextureInspector(IUiTextureInspector **ppiTextureInspector) = 0;
 
         // uuid
         static const Uuid uuid()
@@ -182,8 +204,6 @@ namespace uap
         inline static const Uuid uuid_ = IID_IUILAYOUT;
     }; // @class IUiLayout
 
- 
-
     // {88fc8602-d006-443b-8562-6f337843b402}
     DEFINE_UUID(IID_ITEXTURE,
                 0x88fc8602, 0xd006, 0x443b, 0x85, 0x62, 0x6f, 0x33, 0x78, 0x43, 0xb4, 0x02);
@@ -197,10 +217,10 @@ namespace uap
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
         // IUiTexture
-        virtual Result loadTexture(Char* path) = 0;
+        virtual Result loadTexture(Char *path) = 0;
         virtual int width() = 0;
         virtual int height() = 0;
-        virtual void* texture() = 0;
+        virtual void *texture() = 0;
 
         // uuid
         static const Uuid uuid()
@@ -212,9 +232,7 @@ namespace uap
         inline static const Uuid uuid_ = IID_ITEXTURE;
     }; // @class IUiTexture
 
-
-
-   // {cbba6aeb-a57c-45b7-81e1-0f0882ae4547}
+    // {cbba6aeb-a57c-45b7-81e1-0f0882ae4547}
     DEFINE_UUID(IID_IUIENGINE_BACKEND,
                 0xcbba6aeb, 0xa57c, 0x45b7, 0x81, 0xe1, 0x0f, 0x08, 0x82, 0xae, 0x45, 0x47);
 
@@ -238,10 +256,10 @@ namespace uap
         virtual Result newFrame() = 0;
         virtual Result render() = 0;
         virtual Result reset() = 0;
-        virtual Result shutdown()= 0;
+        virtual Result shutdown() = 0;
         virtual Result resize(Uint width, Uint height) = 0;
 
-        virtual Result createTexture(Char* filename, IUiTexture** ppiTexture) =0;
+        virtual Result createTexture(Char *filename, IUiTexture **ppiTexture) = 0;
 
         // uuid
         static const Uuid uuid()
@@ -252,8 +270,6 @@ namespace uap
     private:
         inline static const Uuid uuid_ = IID_IUIENGINE_BACKEND;
     }; // @class IUiEngineBackend
-
-
 
 } // @namespace uap
 

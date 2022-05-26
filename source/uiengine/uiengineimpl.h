@@ -28,6 +28,8 @@ namespace uap
         virtual Result addImageWindow(IUiImageWindow* piImageWindow);
         virtual Result getImageWindow(IUiImageWindow** ppiImageWindow);
 
+        virtual Result addTextureInspector(IUiTextureInspector* piTextureInspector);
+        virtual Result getTextureInspector(IUiTextureInspector** ppiTextureInspector);
 
     private:
         Ulong refcount_;
@@ -68,6 +70,7 @@ namespace uap
         sptr<IUiMenuBar> spMenuBar_;
 
         std::vector<sptr<IUiImageWindow> > spImageWindows_;
+        std::vector<sptr<IUiTextureInspector> > spTextureInspector_;
 
 
     };

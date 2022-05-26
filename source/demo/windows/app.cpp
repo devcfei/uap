@@ -106,6 +106,10 @@ Result App::setLayout()
     // build the ImageWindow
     r =  buildImageWindow();
     RESULT_CHECK(r,"build ImageWindow");
+
+    // build the TextureInspector
+    r =  buildTextureInspector();
+    RESULT_CHECK(r,"build TextureInspector");
     
 
     // build the layout
@@ -209,6 +213,27 @@ Result App::buildImageWindow()
     return r;  
 }
 
+
+Result App::buildTextureInspector()
+{
+    Result r = R_SUCCESS;
+
+    sptr<IUiTextureInspector> spTextureInspector;
+    r = spUiEngine_->createInstance(IID_IUITEXTURE_INSPECTOR, (void**)&spTextureInspector);
+    RESULT_CHECK(r,"spUiEngine_.createInstance(<IUiTextureInspector>)");
+
+    char filename[MAX_PATH];
+    spApp_->getCurrentPath(filename,MAX_PATH);
+    StringCchCatA(filename,MAX_PATH,"demo.png");      
+
+    r = spTextureInspector->loadImage(filename);
+
+
+    spUiEngine_->addTextureInspector(spTextureInspector.get());
+
+
+    return r;  
+}
 
 
 

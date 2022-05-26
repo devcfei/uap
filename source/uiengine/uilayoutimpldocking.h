@@ -64,6 +64,8 @@ namespace uap
 
         // ImageWindow
         Result showImageWindow();
+        // Texture Inspector
+        Result showTextureInspector();
 
 
     }; // @class UiLayoutImplDocking

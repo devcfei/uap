@@ -148,6 +148,7 @@ namespace uap
         }
 
         showImageWindow();
+        showTextureInspector();
 
         ImGui::End();
 
@@ -263,7 +264,25 @@ namespace uap
     }
 
 
-    
+    Result UiLayoutImplDocking::showTextureInspector()
+    {
+        Result r = R_SUCCESS;
+
+        sptr<IUiTextureInspector> spTextureInspector;
+        r = spUiEngine_->getTextureInspector(spTextureInspector.getaddrof());
+
+        sptr<IDraw> spDraw;
+        r = spTextureInspector.as(&spDraw);
+        if(UAP_SUCCESS(r))
+        {
+            r = spDraw->draw();
+        }    
+
+
+        return r;
+
+    }
+
 
     // void UiLayoutImplDocking::ShowConsoleWindow(bool* p_open)
     // {
