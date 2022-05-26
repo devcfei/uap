@@ -9,7 +9,7 @@
 namespace uap
 {
     // {90911642-e6ef-4699-851a-296f1e90cd4b}
-    DEFINE_UUID(IDD_IAPP,
+    DEFINE_UUID(IID_IAPPLICATION,
                 0x90911642, 0xe6ef, 0x4699, 0x85, 0x1a, 0x29, 0x6f, 0x1e, 0x90, 0xcd, 0x4b);
 
     class IApplication : public IUniversal
@@ -31,7 +31,7 @@ namespace uap
     }
 
 private:
-    inline static const Uuid uuid_ = IDD_IAPP;
+    inline static const Uuid uuid_ = IID_IAPPLICATION;
 
     }; // @class IApplication
 

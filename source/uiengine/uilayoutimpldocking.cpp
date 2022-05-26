@@ -35,6 +35,8 @@ namespace uap
         Result r = R_SUCCESS;
 
         spUiEngine_ = piUiEngine;
+        // TODO: why need a release? :)
+        //piUiEngine->release();
 
         return r;
     }
@@ -153,15 +155,17 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        IUiMenuBar* p;
+        sptr<IUiMenuBar> spMenuBar;
+        r = spUiEngine_->getMenuBar(spMenuBar.getaddrof());
 
-        r = spUiEngine_->getMenuBar(&p);
-
+        sptr<IDraw> spDraw;
+        r = spMenuBar.as(&spDraw);
         if(UAP_SUCCESS(r))
         {
-
-            r = p->drawMenuBar();
+            r = spDraw->draw();
         }
+        
+
 
         return r;
 

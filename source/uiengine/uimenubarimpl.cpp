@@ -6,13 +6,17 @@ namespace uap
 
     Ulong UiMenuBarImpl::addRef()
     {
-        return InterlockedIncrement(&refcount_);
+        Ulong ref = InterlockedIncrement(&refcount_);
+        //UAP_TRACE("UiMenuBarImpl::addRef- refcount=%d\n", ref);
+        return ref;
     }
     Ulong UiMenuBarImpl::release()
     {
         Ulong ref = InterlockedDecrement(&refcount_);
+        //UAP_TRACE("UiMenuBarImpl::release - refcount=%d\n", ref);
         if (!ref)
         {
+            //UAP_TRACE("delete UiMenuBarImpl!!!!!\n");
             delete this;
         }
         return ref;
@@ -29,14 +33,21 @@ namespace uap
             *((IUiMenuBar **)ppv) = pi;
             r = R_SUCCESS;
         }
+        else if (uapUuidIsEqual(rUuid, IID_IDRAW))
+        {
+            IDraw *pi = static_cast<IDraw *>(this);
+            addRef();
 
+            *((IDraw **)ppv) = pi;
+            r = R_SUCCESS;
+        }
         return r;
     }
 
 
     // IUiMenuBar
 
-    Result UiMenuBarImpl::initializeMenuBar(IAttributes *piAttributes)
+    Result UiMenuBarImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
         return r;
@@ -59,7 +70,9 @@ namespace uap
         return r;
     }
 
-    Result UiMenuBarImpl::drawMenuBar()
+   
+    // IDraw
+    Result UiMenuBarImpl::draw()
     {
         Result r = R_SUCCESS;
 
@@ -108,6 +121,8 @@ namespace uap
         }
         return r;
     }
+
+
 
 }
 

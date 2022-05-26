@@ -258,6 +258,7 @@ namespace uap
         Result r = R_SUCCESS;
 
         spMenuBar_ = piMenuBar;
+
         return r;
     }
     Result UiEngineImpl::getMenuBar(IUiMenuBar** ppiMenuBar)
@@ -265,6 +266,9 @@ namespace uap
         Result r = R_SUCCESS;
 
         *ppiMenuBar = spMenuBar_.get();
+        // Don't forget to add reference count
+        (*ppiMenuBar)->addRef();
+
         return r;
     }
 

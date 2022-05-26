@@ -23,6 +23,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     r = app->startUI();
 
     delete app;
-
+ 
     return ret;
 }

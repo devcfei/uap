@@ -5,6 +5,7 @@ namespace uap
 {
 
     class UiMenuBarImpl : public IUiMenuBar
+                , public IDraw
     {
     public:
         // IUniversal
@@ -13,15 +14,16 @@ namespace uap
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
         // IUiMenuBar
-        virtual Result initializeMenuBar(IAttributes *piAttributes);
+        virtual Result initialize(IAttributes *piAttributes);
 
         /// insert menu
         /// \name the display name
         ///
         virtual Result insertMenuItem(const Char *name, Uint id, Uint flags);
 
-        virtual Result drawMenuBar();
 
+        // IDraw
+        virtual Result draw();
 
         static Result createInstance(void **ppv)
         {

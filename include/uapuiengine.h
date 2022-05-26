@@ -8,6 +8,33 @@
 namespace uap
 {
 
+    // {e28c7ea9-40ec-4dd9-92b1-c9fb9db0258f}
+    DEFINE_UUID(IID_IDRAW, 
+                0xe28c7ea9, 0x40ec, 0x4dd9, 0x92, 0xb1, 0xc9, 0xfb, 0x9d, 0xb0, 0x25, 0x8f);
+
+    class IDraw : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IDraw
+        virtual Result draw() = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IDRAW;
+    }; // @class IDraw
+
+
+
     // {9b78c15e-f09c-4969-ab82-75582742306e}
     DEFINE_UUID(IID_IUIMENUBAR,
                 0x9b78c15e, 0xf09c, 0x4969, 0xab, 0x82, 0x75, 0x58, 0x27, 0x42, 0x30, 0x6e);
@@ -21,9 +48,8 @@ namespace uap
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
         // IUiMenuBar
-        virtual Result initializeMenuBar(IAttributes *piAttributes) = 0;
+        virtual Result initialize(IAttributes *piAttributes) = 0;
         virtual Result insertMenuItem(const Char *name, Uint id, Uint flags) = 0;
-        virtual Result drawMenuBar() = 0;
 
         // uuid
         static const Uuid uuid()

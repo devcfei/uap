@@ -129,7 +129,7 @@ Result App::buildLayout()
 
 
     // initialize MenuBar
-    r = spMenuBar->initializeMenuBar(spMenuBarAttrbutes.get());
+    r = spMenuBar->initialize(spMenuBarAttrbutes.get());
     RESULT_CHECK(r,"initialize MenuBar")
 
     UiMenuFlags flags;

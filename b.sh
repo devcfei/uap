@@ -19,6 +19,11 @@ function runtest()
     ./install/Debug/bin/test
 }
 
+function rundemo()
+{
+    ./install/Debug/bin/demo
+}
+
 function build_precheckin()
 {
     cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install" -DINSTALL_GTEST=OFF
@@ -47,6 +52,8 @@ if [ -n "$1" ]; then
         runtest
     elif [ "$1" = "t" ]; then
         runtest
+    elif [ "$1" = "d" ]; then
+        rundemo
     elif [ "$1" = "p" ]; then
         build_precheckin
     else

@@ -74,7 +74,7 @@ namespace uap
     {
         Result r = R_NO_SUCH_INTERFACE;
         // create the interfaces implemented by uapbe
-        if (uapUuidIsEqual(rUuid, IDD_IAPP))
+        if (uapUuidIsEqual(rUuid, IID_IAPPLICATION))
         {
             IApplication *pi = static_cast<IApplication *>(this);
             addRef();

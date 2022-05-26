@@ -64,6 +64,10 @@ namespace uap
         {
             return &ptr_;
         }
+        T** getaddrof() throw()
+        {
+            return &ptr_;
+        }
 
         T **releasegetaddrof() throw()
         {
@@ -72,6 +76,11 @@ namespace uap
         }
 
         // operator=
+        // sptr& operator=(nullptr) throw()
+        // {
+        //     releasep();
+        //     return *this;
+        // }
 
         sptr &operator=(T *other) throw()
         {
@@ -82,12 +91,39 @@ namespace uap
             return *this;
         }
 
+        template <typename U>
+        sptr& operator=(U *other) throw()
+        {
+            sptr(other).swap(*this);
+            return *this;
+        }
+
         sptr &operator=(const sptr &other) throw()
         {
             if (ptr_ != other.ptr_)
             {
                 sptr(other).swap(*this);
             }
+            return *this;
+        }
+
+        template<class U>
+        sptr& operator=(const sptr<U>& other) throw()
+        {
+            sptr(other).swap(*this);
+            return *this;
+        }
+
+        sptr& operator=(sptr &&other) throw()
+        {
+            sptr(static_cast<sptr&&>(other)).swap(*this);
+            return *this;
+        }
+
+        template<class U>
+        sptr& operator=(sptr<U>&& other) throw()
+        {
+            sptr(static_cast<sptr<U>&&>(other)).swap(*this);
             return *this;
         }
 

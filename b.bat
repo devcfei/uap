@@ -38,6 +38,7 @@ goto end
 
 :runDemo
 .\install\Debug\bin\demo.exe
+goto end
 
 
 :buildPrecheckin
