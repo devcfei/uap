@@ -73,6 +73,33 @@ namespace uap
         }s;
     };
 
+    // {61ad8510-1006-46df-894b-d44d642676a3}
+    DEFINE_UUID(IID_IUIIMAGEWINDOW, 
+                0x61ad8510, 0x1006, 0x46df, 0x89, 0x4b, 0xd4, 0x4d, 0x64, 0x26, 0x76, 0xa3);
+
+    class IUiImageWindow : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IUiImageWindow
+        virtual Result initialize(IAttributes *piAttributes) = 0;
+        virtual Result loadImage(Char *name) = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IUIIMAGEWINDOW;
+    }; // @class IUiImageWindow
+
+
 
     // {7f8d5daf-f386-430d-ac32-5578ec6078a0}
     DEFINE_UUID(IID_UIENGINE,
@@ -113,6 +140,8 @@ namespace uap
 
         virtual Result addMenuBar(IUiMenuBar* piMenuBar)=0;
         virtual Result getMenuBar(IUiMenuBar** ppiMenuBar)=0;
+        virtual Result addImageWindow(IUiImageWindow* piImageWindow)=0;
+        virtual Result getImageWindow(IUiImageWindow** ppiImageWindow)=0;
 
         
 

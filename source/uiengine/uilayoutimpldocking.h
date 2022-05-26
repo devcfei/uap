@@ -62,6 +62,10 @@ namespace uap
         float heightToolBar_;
         float heightStatusBar_;
 
+        // ImageWindow
+        Result showImageWindow();
+
+
     }; // @class UiLayoutImplDocking
 
 

@@ -139,11 +139,15 @@ namespace uap
             ImGui::ShowDemoWindow(&showDemoWindow_);
 
 
+        
+
+
         if (showStatusBar_)
         {
             showStatusBar(&showStatusBar_);
         }
 
+        showImageWindow();
 
         ImGui::End();
 
@@ -238,6 +242,28 @@ namespace uap
         return R_SUCCESS;
 
     }
+
+    Result UiLayoutImplDocking::showImageWindow()
+    {
+        Result r = R_SUCCESS;
+
+        sptr<IUiImageWindow> spImageWindow;
+        r = spUiEngine_->getImageWindow(spImageWindow.getaddrof());
+
+        sptr<IDraw> spDraw;
+        r = spImageWindow.as(&spDraw);
+        if(UAP_SUCCESS(r))
+        {
+            r = spDraw->draw();
+        }    
+
+
+        return r;
+
+    }
+
+
+    
 
     // void UiLayoutImplDocking::ShowConsoleWindow(bool* p_open)
     // {

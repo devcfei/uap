@@ -30,6 +30,8 @@ private:
 
 
     Result buildLayout();
+    Result buildMenuBar();
+    Result buildImageWindow();
 
 };
 

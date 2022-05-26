@@ -45,11 +45,11 @@ Result App::startUI()
 
     // create the engine
     r = spApp_->createInstance(IID_UIENGINE,(void**)&spUiEngine_);
-    RESULT_CHECK(r,"create instance UI engine")
+    RESULT_CHECK(r,"create instance UI engine");
 
     // create an attribute
     r = spApp_->createInstance(IID_IATTRIBUTES, (void**)&spUiAttributes_);
-    RESULT_CHECK(r,"create instance attributes")
+    RESULT_CHECK(r,"create instance attributes");
 
     //
     // 
@@ -78,15 +78,16 @@ Result App::startUI()
 
     // initialize the UI engine
     r = spUiEngine_->initialize(spApp_.get(),spUiAttributes_.get());
-    RESULT_CHECK(r,"initialze UI engine")
+    RESULT_CHECK(r,"initialze UI engine");
 
 
+
+
+    // startup
+    r = spUiEngine_->startup(); 
 
     // set layout
     r = setLayout();
-
-    // startup
-    r = spUiEngine_->startup();   
 
     // run
     r = spUiEngine_->run();
@@ -98,9 +99,18 @@ Result App::setLayout()
 {
     Result r = R_SUCCESS;
 
+    // build the MenuBar
+    r =  buildMenuBar();
+    RESULT_CHECK(r,"build MenuBar");
+
+    // build the ImageWindow
+    r =  buildImageWindow();
+    RESULT_CHECK(r,"build ImageWindow");
+    
+
     // build the layout
     r =  buildLayout();
-    RESULT_CHECK(r,"build UI layout")
+    RESULT_CHECK(r,"build UI layout");
 
 
     return r;  
@@ -108,12 +118,11 @@ Result App::setLayout()
 }
 
 
-Result App::buildLayout()
+Result App::buildMenuBar()
 {
     Result r = R_SUCCESS;
 
     // MenuBar
-    // get layout IUiLayout
     sptr<IUiMenuBar> spMenuBar;
     r = spUiEngine_->createInstance(IID_IUIMENUBAR, (void**)&spMenuBar);
     RESULT_CHECK(r,"spUiEngine_.createInstance(<IUiMenuBar>)");
@@ -122,7 +131,7 @@ Result App::buildLayout()
 
     // create an attribute
     r = spApp_->createInstance(IID_IATTRIBUTES, (void**)&spMenuBarAttrbutes);
-    RESULT_CHECK(r,"create instance attributes")
+    RESULT_CHECK(r,"create instance attributes");
 
 
 
@@ -130,7 +139,7 @@ Result App::buildLayout()
 
     // initialize MenuBar
     r = spMenuBar->initialize(spMenuBarAttrbutes.get());
-    RESULT_CHECK(r,"initialize MenuBar")
+    RESULT_CHECK(r,"initialize MenuBar");
 
     UiMenuFlags flags;
 
@@ -139,7 +148,7 @@ Result App::buildLayout()
     flags.s.enable = 1;
     flags.s.end = 0;
     r = spMenuBar->insertMenuItem("File", 0,flags.ui);
-    RESULT_CHECK(r,"insert MenuItem")
+    RESULT_CHECK(r,"insert MenuItem");
 
 
     flags.s.start = 1;
@@ -147,21 +156,21 @@ Result App::buildLayout()
     flags.s.enable = 1;
     flags.s.end = 1;
     r = spMenuBar->insertMenuItem("Exit", 0,flags.ui);
-    RESULT_CHECK(r,"insert MenuItem")
+    RESULT_CHECK(r,"insert MenuItem");
 
     flags.s.start = 1;
     flags.s.checked = 0;
     flags.s.enable = 1;
     flags.s.end = 0;
     r = spMenuBar->insertMenuItem("View", 1,flags.ui);
-    RESULT_CHECK(r,"insert MenuItem")
+    RESULT_CHECK(r,"insert MenuItem");
 
     flags.s.start = 0;
     flags.s.checked = 0;
     flags.s.enable = 1;
     flags.s.end = 0;
     r = spMenuBar->insertMenuItem("ToolBar", 0,flags.ui);
-    RESULT_CHECK(r,"insert MenuItem")
+    RESULT_CHECK(r,"insert MenuItem");
 
 
 
@@ -170,10 +179,43 @@ Result App::buildLayout()
     flags.s.enable = 1;
     flags.s.end = 1;
     r = spMenuBar->insertMenuItem("StatusBar", 0,flags.ui);
-    RESULT_CHECK(r,"insert MenuItem")
+    RESULT_CHECK(r,"insert MenuItem");
 
 
     spUiEngine_->addMenuBar(spMenuBar.get());
+
+    return r;  
+}
+
+
+Result App::buildImageWindow()
+{
+    Result r = R_SUCCESS;
+
+    sptr<IUiImageWindow> spImageWindow;
+    r = spUiEngine_->createInstance(IID_IUIIMAGEWINDOW, (void**)&spImageWindow);
+    RESULT_CHECK(r,"spUiEngine_.createInstance(<IUiImageWindow>)");
+
+    char filename[MAX_PATH];
+    spApp_->getCurrentPath(filename,MAX_PATH);
+    StringCchCatA(filename,MAX_PATH,"demo.png");      
+
+    r = spImageWindow->loadImage(filename);
+
+
+    spUiEngine_->addImageWindow(spImageWindow.get());
+
+
+    return r;  
+}
+
+
+
+
+
+Result App::buildLayout()
+{
+    Result r = R_SUCCESS;
 
     return r;  
 }

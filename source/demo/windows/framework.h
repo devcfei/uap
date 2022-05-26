@@ -3,6 +3,7 @@
 
 
 #include <windows.h>
+#include <strsafe.h>
 #include <tchar.h>
 
 
@@ -21,12 +22,13 @@ using namespace uap;
 
 
 #define RESULT_CHECK(r, _message_) \
-        if(!UAP_SUCCESS(r)) \
-        { \
-            UAP_TRACE( _message_ ## " failed! r = 0x%8.8x\n",r); \
-            return r; \
-        } 
-
+        do{ \
+            if(!UAP_SUCCESS(r)) \
+            { \
+                UAP_TRACE( _message_ ## " failed! r = 0x%8.8x\n",r); \
+                return r; \
+            }\
+        }while(0)
 
 
 

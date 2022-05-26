@@ -25,6 +25,8 @@ namespace uap
 
         virtual Result addMenuBar(IUiMenuBar* piMenuBar);
         virtual Result getMenuBar(IUiMenuBar** ppiMenuBar);
+        virtual Result addImageWindow(IUiImageWindow* piImageWindow);
+        virtual Result getImageWindow(IUiImageWindow** ppiImageWindow);
 
 
     private:
@@ -64,6 +66,8 @@ namespace uap
 
 
         sptr<IUiMenuBar> spMenuBar_;
+
+        std::vector<sptr<IUiImageWindow> > spImageWindows_;
 
 
     };

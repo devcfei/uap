@@ -60,6 +60,10 @@ namespace uap
         {
             r = UiMenuBarImpl::createInstance(ppv);
         }
+        else if (uapUuidIsEqual(rUuid, IID_IUIIMAGEWINDOW))
+        {
+            r = UiImageWindowImpl::createInstance(spBackend_.get(),(IUiImageWindow **)ppv);
+        }
 
         return r;
     }
@@ -137,9 +141,6 @@ namespace uap
         VERBOSE("UiEngineImpl::run\n");
 
 
-        ImGuiTexInspect::Init();
-        ImGuiTexInspect::CreateContext();
-
         sptr<IUiTexture> spTexture;
 
         char path[MAX_PATH];
@@ -173,13 +174,6 @@ namespace uap
 
             drawLayout();
 
-
-            // TODO: need to be moved out from UiEngineImpl
-            ImGui::Begin("DirectX11 Texture Test");
-            ImGui::Text("pointer = %p", spTexture->texture());
-            ImGui::Text("size = %d x %d", spTexture->width(), spTexture->height());
-            ImGui::Image((void*)spTexture->texture(), ImVec2((float)spTexture->width(), (float)spTexture->height()));
-            ImGui::End();
 
             static bool flipX = false;
             static bool flipY = false;
@@ -272,6 +266,22 @@ namespace uap
         return r;
     }
 
+
+    Result UiEngineImpl::addImageWindow(IUiImageWindow* piImageWindow)
+    {
+        Result r = R_SUCCESS;
+        spImageWindows_.push_back(piImageWindow);
+        return r;
+    }
+
+    Result UiEngineImpl::getImageWindow(IUiImageWindow** ppiImageWindow)
+    {
+        Result r = R_SUCCESS;
+        *ppiImageWindow = spImageWindows_[0].get();
+        // Don't forget to add reference count
+        (*ppiImageWindow)->addRef();
+        return r;
+    }
 
 
     // private member functions
@@ -392,6 +402,10 @@ namespace uap
         ImGui_ImplWin32_Init(hWnd_);
 
         spBackend_->setup();
+
+
+        ImGuiTexInspect::Init();
+        ImGuiTexInspect::CreateContext();
 
         return r;
     }
