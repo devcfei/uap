@@ -115,8 +115,8 @@ Result App::buildLayout()
     // MenuBar
     // get layout IUiLayout
     sptr<IUiMenuBar> spMenuBar;
-    r = spUiEngine_.as(&spMenuBar);
-    RESULT_CHECK(r,"spUiEngine_.as(<IUiMenuBar>)");
+    r = spUiEngine_->createInstance(IID_IUIMENUBAR, (void**)&spMenuBar);
+    RESULT_CHECK(r,"spUiEngine_.createInstance(<IUiMenuBar>)");
 
     sptr<IAttributes> spMenuBarAttrbutes;
 
@@ -172,7 +172,9 @@ Result App::buildLayout()
     r = spMenuBar->insertMenuItem("StatusBar", 0,flags.ui);
     RESULT_CHECK(r,"insert MenuItem")
 
-    
+
+    spUiEngine_->addMenuBar(spMenuBar.get());
+
     return r;  
 }
 

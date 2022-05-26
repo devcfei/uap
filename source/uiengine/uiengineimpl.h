@@ -5,7 +5,6 @@
 namespace uap
 {
     class UiEngineImpl : public IUiEngine
-        , public UiMenuBarImpl
     {
     public:
         UiEngineImpl()
@@ -16,10 +15,16 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &,void **);
 
+        virtual Result createInstance(const Uuid&, void **);
+
+
         // IUiEngine
         virtual Result initialize(IApplication* piApp, IAttributes* piAttributes);
         virtual Result startup();
         virtual Result run();
+
+        virtual Result addMenuBar(IUiMenuBar* piMenuBar);
+        virtual Result getMenuBar(IUiMenuBar** ppiMenuBar);
 
 
     private:
@@ -56,6 +61,9 @@ namespace uap
         // backend
 
         ImVec4 colorClear_;
+
+
+        sptr<IUiMenuBar> spMenuBar_;
 
 
     };

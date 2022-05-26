@@ -8,6 +8,46 @@
 namespace uap
 {
 
+    // {9b78c15e-f09c-4969-ab82-75582742306e}
+    DEFINE_UUID(IID_IUIMENUBAR,
+                0x9b78c15e, 0xf09c, 0x4969, 0xab, 0x82, 0x75, 0x58, 0x27, 0x42, 0x30, 0x6e);
+
+    class IUiMenuBar : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IUiMenuBar
+        virtual Result initializeMenuBar(IAttributes *piAttributes) = 0;
+        virtual Result insertMenuItem(const Char *name, Uint id, Uint flags) = 0;
+        virtual Result drawMenuBar() = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IUIMENUBAR;
+    }; // @class IUiMenuBar
+
+    union UiMenuFlags
+    {
+        Uint ui;
+        struct
+        {
+            Uchar start:1;
+            Uchar end:1;
+            Uchar enable:1;
+            Uchar checked:1;
+        }s;
+    };
+
+
     // {7f8d5daf-f386-430d-ac32-5578ec6078a0}
     DEFINE_UUID(IID_UIENGINE,
                 0x7f8d5daf, 0xf386, 0x430d, 0xac, 0x32, 0x55, 0x78, 0xec, 0x60, 0x78, 0xa0);
@@ -38,10 +78,17 @@ namespace uap
         virtual Ulong release() = 0;
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
+        virtual Result createInstance(const Uuid&, void **) = 0;
+        
         // IUiEngine
         virtual Result initialize(IApplication *piApp, IAttributes *piAttributes) = 0;
         virtual Result startup() = 0;
         virtual Result run() = 0;
+
+        virtual Result addMenuBar(IUiMenuBar* piMenuBar)=0;
+        virtual Result getMenuBar(IUiMenuBar** ppiMenuBar)=0;
+
+        
 
         // uuid
         static const Uuid uuid()
@@ -119,44 +166,6 @@ namespace uap
         inline static const Uuid uuid_ = IID_IUIENGINE_BACKEND;
     }; // @class IUiEngineBackend
 
-    // {9b78c15e-f09c-4969-ab82-75582742306e}
-    DEFINE_UUID(IID_IUIMENUBAR,
-                0x9b78c15e, 0xf09c, 0x4969, 0xab, 0x82, 0x75, 0x58, 0x27, 0x42, 0x30, 0x6e);
-
-    class IUiMenuBar : public IUniversal
-    {
-    public:
-        // IUniversal
-        virtual Ulong addRef() = 0;
-        virtual Ulong release() = 0;
-        virtual Result queryInterface(const Uuid &, void **) = 0;
-
-        // IUiMenuBar
-        virtual Result initializeMenuBar(IAttributes *piAttributes) = 0;
-        virtual Result insertMenuItem(const Char *name, Uint id, Uint flags) = 0;
-        virtual Result drawMenuBar() = 0;
-
-        // uuid
-        static const Uuid uuid()
-        {
-            return uuid_;
-        }
-
-    private:
-        inline static const Uuid uuid_ = IID_IUIMENUBAR;
-    }; // @class IUiMenuBar
-
-    union UiMenuFlags
-    {
-        Uint ui;
-        struct
-        {
-            Uchar start:1;
-            Uchar end:1;
-            Uchar enable:1;
-            Uchar checked:1;
-        }s;
-    };
 
     // {88fc8602-d006-443b-8562-6f337843b402}
     DEFINE_UUID(IID_ITEXTURE,

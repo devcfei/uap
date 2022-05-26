@@ -22,7 +22,24 @@ namespace uap
 
         virtual Result drawMenuBar();
 
+
+        static Result createInstance(void **ppv)
+        {
+            UiMenuBarImpl *p = new UiMenuBarImpl();
+            if (p)
+            {
+                *(IUiMenuBar **)ppv = p;
+                return R_SUCCESS;
+            }
+            return R_ERROR;
+        }
+
     private:
+        UiMenuBarImpl()
+            :refcount_(1)
+        {
+
+        }
         Ulong refcount_;
 
         struct UiMenuItem

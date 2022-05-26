@@ -41,17 +41,29 @@ namespace uap
         //     *((IUiLayout **)ppv) = pi;
         //     r = R_SUCCESS;
         // }
-        else if (uapUuidIsEqual(rUuid, IID_IUIMENUBAR))
-        {
-            IUiMenuBar *pi = static_cast<IUiMenuBar *>(this);
-            addRef();
+        // else if (uapUuidIsEqual(rUuid, IID_IUIMENUBAR))
+        // {
+        //     IUiMenuBar *pi = static_cast<IUiMenuBar *>(this);
+        //     addRef();
 
-            *((IUiMenuBar **)ppv) = pi;
-            r = R_SUCCESS;
+        //     *((IUiMenuBar **)ppv) = pi;
+        //     r = R_SUCCESS;
+        // }
+
+        return r;
+    }
+
+    Result UiEngineImpl::createInstance(const Uuid& rUuid, void ** ppv)
+    {
+        Result r = R_INVALID_PARAMETERS;
+        if (uapUuidIsEqual(rUuid, IID_IUIMENUBAR))
+        {
+            r = UiMenuBarImpl::createInstance(ppv);
         }
 
         return r;
     }
+
 
     Result UiEngineImpl::initialize(IApplication *piApp, IAttributes *piAttributes)
     {
@@ -237,6 +249,22 @@ namespace uap
         ::DestroyWindow(hWnd_);
         ::UnregisterClass(wc_.lpszClassName, wc_.hInstance);
 
+        return r;
+    }
+
+
+    Result UiEngineImpl::addMenuBar(IUiMenuBar* piMenuBar)
+    {
+        Result r = R_SUCCESS;
+
+        spMenuBar_ = piMenuBar;
+        return r;
+    }
+    Result UiEngineImpl::getMenuBar(IUiMenuBar** ppiMenuBar)
+    {
+        Result r = R_SUCCESS;
+
+        *ppiMenuBar = spMenuBar_.get();
         return r;
     }
 

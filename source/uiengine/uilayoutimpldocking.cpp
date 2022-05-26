@@ -153,12 +153,15 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        sptr<IUiMenuBar> sp;
+        IUiMenuBar* p;
 
-        r = spUiEngine_.as(&sp);
-        UAP_ASSERT(UAP_SUCCESS(r));
+        r = spUiEngine_->getMenuBar(&p);
 
-        r = sp->drawMenuBar();
+        if(UAP_SUCCESS(r))
+        {
+
+            r = p->drawMenuBar();
+        }
 
         return r;
 

@@ -11,6 +11,7 @@ if "%1" == "at" goto buildAllTest
 if "%1" == "t" goto runTest
 if "%1" == "cat" goto rebuildAndTest
 if "%1" == "p" goto buildPrecheckin
+if "%1" == "d" goto runDemo
 
 goto end
 
@@ -34,6 +35,10 @@ cmake --install build --config Debug
 :runTest
 .\install\Debug\bin\test.exe
 goto end
+
+:runDemo
+.\install\Debug\bin\demo.exe
+
 
 :buildPrecheckin
 cmake -S . -B build -DCMAKE_INSTALL_PREFIX="install" -DINSTALL_GTEST=OFF
