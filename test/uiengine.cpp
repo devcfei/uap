@@ -15,7 +15,7 @@ TEST(UiEngine, Interface)
 
 
     sptr<IAttributes> spAttributes;
-    r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    r = spApp->createInstance(IID_IATTRIBUTES, (void**)&spAttributes);    
     EXPECT_EQ(r, R_SUCCESS);
 
 
@@ -24,7 +24,7 @@ TEST(UiEngine, Interface)
 
     
     sptr<IUiEngine> spUiEngine;
-    r = spApp->createInterface(IID_UIENGINE, (void**)&spUiEngine);    
+    r = spApp->createInstance(IID_UIENGINE, (void**)&spUiEngine);    
     EXPECT_EQ(r, R_SUCCESS);
 
 

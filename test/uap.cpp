@@ -130,7 +130,7 @@ TEST(UAP, IAttributes)
 
 
     IAttributes *piAttributes;
-    r = sp->createInterface(IID_IATTRIBUTES, (void**)&piAttributes);    
+    r = sp->createInstance(IID_IATTRIBUTES, (void**)&piAttributes);    
     EXPECT_EQ(r, R_SUCCESS);
 
     Uint val =10;
@@ -150,7 +150,7 @@ TEST(UAP, IAttributes_sptr)
     EXPECT_EQ(r, R_SUCCESS);
 
     sptr<IAttributes> spAttributes;
-    r = sp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    r = sp->createInstance(IID_IATTRIBUTES, (void**)&spAttributes);    
     EXPECT_EQ(r, R_SUCCESS);
 
     Uint val =20;
@@ -176,7 +176,7 @@ TEST(UAP, IAttributes_uint)
     EXPECT_EQ(r, R_SUCCESS);
 
     sptr<IAttributes> spAttributes;
-    r = sp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    r = sp->createInstance(IID_IATTRIBUTES, (void**)&spAttributes);    
     EXPECT_EQ(r, R_SUCCESS);
 
 

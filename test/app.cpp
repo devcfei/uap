@@ -11,7 +11,7 @@ TEST(App, initialize)
 
 
     sptr<IAttributes> spAttributes;
-    r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    r = spApp->createInstance(IID_IATTRIBUTES, (void**)&spAttributes);    
     EXPECT_EQ(r, R_SUCCESS);
 
 
@@ -21,7 +21,7 @@ TEST(App, initialize)
 }
 
 
-TEST(App, createInterface)
+TEST(App, createInstance)
 {
     Result r;
 
@@ -32,7 +32,7 @@ TEST(App, createInterface)
 
     // uapbe interfaces
     sptr<IAttributes> spAttributes;
-    r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    r = spApp->createInstance(IID_IATTRIBUTES, (void**)&spAttributes);    
     EXPECT_EQ(r, R_SUCCESS);
 
 
@@ -42,11 +42,11 @@ TEST(App, createInterface)
 
     // component interfaces
     sptr<IImageEngine> spImageEngine;
-    r = spApp->createInterface(IID_IMAGEENGINE, (void**)&spImageEngine);    
+    r = spApp->createInstance(IID_IMAGEENGINE, (void**)&spImageEngine);    
     EXPECT_EQ(r, R_SUCCESS);
 
     sptr<IUiEngine> spUiEngine;
-    r = spApp->createInterface(IID_UIENGINE, (void**)&spUiEngine);    
+    r = spApp->createInstance(IID_UIENGINE, (void**)&spUiEngine);    
     EXPECT_EQ(r, R_SUCCESS);
 
 }

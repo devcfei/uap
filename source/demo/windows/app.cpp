@@ -24,8 +24,8 @@ Result App::initApplication()
     Result r;
 
     sptr<IAttributes> spAttributes;
-    r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);
-    RESULT_CHECK(r,"createInterface IID_IATTRIBUTES");
+    r = spApp_->createInstance(IID_IATTRIBUTES, (void**)&spAttributes);
+    RESULT_CHECK(r,"createInstance IID_IATTRIBUTES");
 
 
     // application initialize with log trace and components
@@ -44,11 +44,11 @@ Result App::startUI()
     Result r;
 
     // create the engine
-    r = spApp_->createInterface(IID_UIENGINE,(void**)&spUiEngine_);
+    r = spApp_->createInstance(IID_UIENGINE,(void**)&spUiEngine_);
     RESULT_CHECK(r,"create instance UI engine")
 
     // create an attribute
-    r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spUiAttributes_);
+    r = spApp_->createInstance(IID_IATTRIBUTES, (void**)&spUiAttributes_);
     RESULT_CHECK(r,"create instance attributes")
 
     //
@@ -121,7 +121,7 @@ Result App::buildLayout()
     sptr<IAttributes> spMenuBarAttrbutes;
 
     // create an attribute
-    r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spMenuBarAttrbutes);
+    r = spApp_->createInstance(IID_IATTRIBUTES, (void**)&spMenuBarAttrbutes);
     RESULT_CHECK(r,"create instance attributes")
 
 

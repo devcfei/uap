@@ -21,7 +21,7 @@ namespace uap
 
         // IApplication
         virtual Result initialize(IAttributes* piAttributes) = 0;
-        virtual Result createInterface(const Uuid & rUuid, void **ppv) = 0;
+        virtual Result createInstance(const Uuid & rUuid, void **ppv) = 0;
         virtual Result getCurrentPath(Char* path, Ulong size) = 0;
 
     // uuid

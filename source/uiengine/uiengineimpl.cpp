@@ -76,10 +76,10 @@ namespace uap
         spAppAttributes_->getUlong(UUID_LOGTRACE_ATTRIBUTES, logAttributes_.ul);
 
         // initialize the log trace
-        r = spApp_->createInterface(IID_LOGTRACE, (void **)&spLogTrace_);
+        r = spApp_->createInstance(IID_LOGTRACE, (void **)&spLogTrace_);
         if (!UAP_SUCCESS(r))
         {
-            UAP_TRACE("createInterface failed! r = 0x%8.8x\n", r);
+            UAP_TRACE("createInstance failed! r = 0x%8.8x\n", r);
             return r;
         }
 
@@ -295,7 +295,7 @@ namespace uap
         // Initialize Direct3D devicde
 
         sptr<IAttributes> spDeviceAttributes;
-        r = spApp_->createInterface(IID_IATTRIBUTES, (void**)&spDeviceAttributes);
+        r = spApp_->createInstance(IID_IATTRIBUTES, (void**)&spDeviceAttributes);
         VERIFY(r, "create attributes for backend render device");
 
         spDeviceAttributes->setPtr(UUID_IUIENGINE_BACKEND_HWND, hWnd_);

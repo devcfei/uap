@@ -118,12 +118,12 @@ namespace uap
         return r;
     }
 
-    Result AppImpl::createInterface(const Uuid &rUuid, void **ppv)
+    Result AppImpl::createInstance(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
         IUniversal *pi;
 
-        UAP_TRACE("AppImpl::createInterface\n");
+        UAP_TRACE("AppImpl::createInstance\n");
 
         // create the interfaces implemented by uapbe
         if (uapUuidIsEqual(rUuid, IID_IATTRIBUTES))

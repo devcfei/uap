@@ -33,7 +33,7 @@ namespace uap
         spApp_ = piApp;
 
         sptr<IAttributes> spAttributes;
-        r = spApp_->createInterface(IID_IATTRIBUTES, (void **)&spAttributes);
+        r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&spAttributes);
         if (!UAP_SUCCESS(r))
         {
             return r;

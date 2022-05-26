@@ -14,7 +14,7 @@ TEST(LogTrace, basictest)
 
 
     sptr<IAttributes> spAttributes;
-    r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributes);    
+    r = spApp->createInstance(IID_IATTRIBUTES, (void**)&spAttributes);    
     EXPECT_EQ(r, R_SUCCESS);
 
 
@@ -29,12 +29,12 @@ TEST(LogTrace, basictest)
 
     // log
     sptr<ILogTrace> spLog;
-    r = spApp->createInterface(IID_LOGTRACE, (void**)&spLog);    
+    r = spApp->createInstance(IID_LOGTRACE, (void**)&spLog);    
     EXPECT_EQ(r, R_SUCCESS);
 
 
     sptr<IAttributes> spAttributesLog;
-    r = spApp->createInterface(IID_IATTRIBUTES, (void**)&spAttributesLog);    
+    r = spApp->createInstance(IID_IATTRIBUTES, (void**)&spAttributesLog);    
     EXPECT_EQ(r, R_SUCCESS);
 
 
