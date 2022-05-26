@@ -146,7 +146,7 @@ namespace uap
         spApp_->getCurrentPath(path,MAX_PATH);
         StringCchCatA(path,MAX_PATH,"demo.png");      
 
-        r = spBackend_->createTexture(path,(void**)&spTexture);
+        r = spBackend_->createTexture(path,spTexture.getaddrof());
         
 
         // Main loop

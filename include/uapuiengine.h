@@ -153,45 +153,7 @@ namespace uap
         inline static const Uuid uuid_ = IID_IUILAYOUT;
     }; // @class IUiLayout
 
-    // {cbba6aeb-a57c-45b7-81e1-0f0882ae4547}
-    DEFINE_UUID(IID_IUIENGINE_BACKEND,
-                0xcbba6aeb, 0xa57c, 0x45b7, 0x81, 0xe1, 0x0f, 0x08, 0x82, 0xae, 0x45, 0x47);
-
-    // {937cb490-66f9-4d24-82ca-058a8c166712}
-    DEFINE_UUID(UUID_IUIENGINE_BACKEND_HWND,
-                0x937cb490, 0x66f9, 0x4d24, 0x82, 0xca, 0x05, 0x8a, 0x8c, 0x16, 0x67, 0x12);
-
-    class IUiEngineBackend : public IUniversal
-    {
-    public:
-        // IUniversal
-        virtual Ulong addRef() = 0;
-        virtual Ulong release() = 0;
-        virtual Result queryInterface(const Uuid &, void **) = 0;
-
-        // UiEngineBackend
-        virtual Result initializeBackend(IUiEngine *piUiEngine, IAttributes *piAttributes) = 0;
-        virtual Result createDevice(IAttributes *piAttributes) = 0;
-        virtual Result destoryDevice() = 0;
-        virtual Result setup() = 0;
-        virtual Result newFrame() = 0;
-        virtual Result render() = 0;
-        virtual Result reset() = 0;
-        virtual Result shutdown()= 0;
-        virtual Result resize(Uint width, Uint height) = 0;
-
-        virtual Result createTexture(Char* filename, void** ppv) =0;
-
-        // uuid
-        static const Uuid uuid()
-        {
-            return uuid_;
-        }
-
-    private:
-        inline static const Uuid uuid_ = IID_IUIENGINE_BACKEND;
-    }; // @class IUiEngineBackend
-
+ 
 
     // {88fc8602-d006-443b-8562-6f337843b402}
     DEFINE_UUID(IID_ITEXTURE,
@@ -220,6 +182,48 @@ namespace uap
     private:
         inline static const Uuid uuid_ = IID_ITEXTURE;
     }; // @class IUiTexture
+
+
+
+   // {cbba6aeb-a57c-45b7-81e1-0f0882ae4547}
+    DEFINE_UUID(IID_IUIENGINE_BACKEND,
+                0xcbba6aeb, 0xa57c, 0x45b7, 0x81, 0xe1, 0x0f, 0x08, 0x82, 0xae, 0x45, 0x47);
+
+    // {937cb490-66f9-4d24-82ca-058a8c166712}
+    DEFINE_UUID(UUID_IUIENGINE_BACKEND_HWND,
+                0x937cb490, 0x66f9, 0x4d24, 0x82, 0xca, 0x05, 0x8a, 0x8c, 0x16, 0x67, 0x12);
+
+    class IUiEngineBackend : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // UiEngineBackend
+        virtual Result initializeBackend(IUiEngine *piUiEngine, IAttributes *piAttributes) = 0;
+        virtual Result createDevice(IAttributes *piAttributes) = 0;
+        virtual Result destoryDevice() = 0;
+        virtual Result setup() = 0;
+        virtual Result newFrame() = 0;
+        virtual Result render() = 0;
+        virtual Result reset() = 0;
+        virtual Result shutdown()= 0;
+        virtual Result resize(Uint width, Uint height) = 0;
+
+        virtual Result createTexture(Char* filename, IUiTexture** ppiTexture) =0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IUIENGINE_BACKEND;
+    }; // @class IUiEngineBackend
+
 
 
 } // @namespace uap

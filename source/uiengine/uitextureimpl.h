@@ -28,12 +28,12 @@ namespace uap
             return (void*)srv_;
         }
 
-        static Result createInstance(ID3D11Device *d3dDevice, void **ppv)
+        static Result createInstance(ID3D11Device *d3dDevice, IUiTexture **ppiTexture)
         {
             UiTextureImpl *p = new UiTextureImpl(d3dDevice);
             if (p)
             {
-                *(IUiTexture **)ppv = p;
+                *ppiTexture = p;
                 return R_SUCCESS;
             }
             return R_ERROR;

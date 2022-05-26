@@ -29,7 +29,7 @@ namespace uap
         virtual Result shutdown();
         virtual Result resize(Uint width, Uint height);
 
-        virtual Result createTexture(Char* filename, void** ppv) ;
+        virtual Result createTexture(Char* filename, IUiTexture** ppiTexture) ;
         
 
         static Result createInstance(void **ppv)
