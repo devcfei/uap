@@ -179,41 +179,23 @@ namespace uap
 
     Result UiLayoutImplDocking::showToolBar(bool* p_open)
     {
-        ImGui::BeginChild("Toolbar", ImVec2(0, heightToolBar_), true);
 
+        Result r = R_SUCCESS;
 
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(ImGui::GetStyle().FramePadding.x, ImGui::GetStyle().FramePadding.y + 10));
-        if (ImGui::Button(ICON_FK_STAR, ImVec2(32, 32)))
+        sptr<IUiToolBar> spToolBar;
+        r = spUiEngine_->getToolBar(spToolBar.getaddrof());
+
+        sptr<IDraw> spDraw;
+        r = spToolBar.as(&spDraw);
+        if(UAP_SUCCESS(r))
         {
-            UAP_TRACE("button clicked -ICON_FK_STAR \n");
+            r = spDraw->draw();
         }
+        
 
-        ImGui::SameLine();
-        ImGui::Button(ICON_FK_STAR_O, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_USER, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_TIMES, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_CHECK, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_SEARCH, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_CAMERA, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_VIDEO_CAMERA, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_PICTURE_O, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_CLOCK_O, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_MINUS_CIRCLE, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_TIMES_CIRCLE, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_CHECK_CIRCLE, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_PENCIL, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_LIST, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_DOWNLOAD, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_UPLOAD, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_USERS, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_LINK, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_BARS, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::Button(ICON_FK_TABLE, ImVec2(32, 32)); ImGui::SameLine();
-        ImGui::PopStyleVar();
 
-        ImGui::EndChild();
+        return r;
 
-        return R_SUCCESS;
     }
 
     Result UiLayoutImplDocking::showStatusBar(bool* p_open)
@@ -271,5 +253,5 @@ namespace uap
         return r;
 
     }
-    
+
 } // @namespace uap

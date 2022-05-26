@@ -71,6 +71,35 @@ namespace uap
         } s;
     };
 
+    // {9de0d6ec-59f6-4901-9d5c-5c8ef58c22a3}
+    DEFINE_UUID(IID_IUITOOLBAR,
+                0x9de0d6ec, 0x59f6, 0x4901, 0x9d, 0x5c, 0x5c, 0x8e, 0xf5, 0x8c, 0x22, 0xa3);
+
+    class IUiToolBar : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IUiToolBar
+        virtual Result initialize(IAttributes *piAttributes) = 0;
+
+        virtual Result buildToolBarFromTTF(const Char* filename, Ushort min, Ushort max) = 0;
+        virtual Result addButton(const Char* label) = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IUITOOLBAR;
+    }; // @class IUiToolBar
+
+
     // {f9bbb1ab-a011-4c52-b403-d541bbc87505}
     DEFINE_UUID(IID_IUISTATUSBAR,
                 0xf9bbb1ab, 0xa011, 0x4c52, 0xb4, 0x03, 0xd5, 0x41, 0xbb, 0xc8, 0x75, 0x05);
@@ -189,6 +218,8 @@ namespace uap
 
         virtual Result addMenuBar(IUiMenuBar *piMenuBar) = 0;
         virtual Result getMenuBar(IUiMenuBar **ppiMenuBar) = 0;
+        virtual Result addToolBar(IUiToolBar *piToolBar) = 0;
+        virtual Result getToolBar(IUiToolBar **ppiToolBar) = 0;
         virtual Result addStatusBar(IUiStatusBar *piStatusBar) = 0;
         virtual Result getStatusBar(IUiStatusBar **ppiStatusBar) = 0;
         virtual Result addImageWindow(IUiImageWindow *piImageWindow) = 0;

@@ -39,12 +39,10 @@ using namespace Microsoft::WRL;
 #include <imgui_tex_inspect.h> //TEX_INSPECT_CHANGE
 #include <imgui_tex_inspect_demo.h> //TEX_INSPECT_CHANGE
 
-//
-#include <IconsForkAwesome.h>
-
 
 // UiEngine implementation
 #include "uimenubarimpl.h"
+#include "uitoolbarimpl.h"
 #include "uistatusbarimpl.h"
 #include "uiimagewindowimpl.h"
 #include "uitextureinspectorimpl.h"

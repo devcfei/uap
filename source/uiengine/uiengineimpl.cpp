@@ -43,6 +43,10 @@ namespace uap
         {
             r = UiMenuBarImpl::createInstance(ppv);
         }
+        else if (uapUuidIsEqual(rUuid, IID_IUITOOLBAR))
+        {
+            r = UiToolBarImpl::createInstance((IUiToolBar **)ppv);
+        }          
         else if (uapUuidIsEqual(rUuid, IID_IUISTATUSBAR))
         {
             r = UiStatusBarImpl::createInstance((IUiStatusBar **)ppv);
@@ -195,6 +199,29 @@ namespace uap
         return r;
     }
 
+
+
+
+    Result UiEngineImpl::addToolBar(IUiToolBar *piToolBar)
+    {
+        Result r = R_SUCCESS;
+
+        spToolBar_ = piToolBar;
+
+        return r;
+    }
+
+    Result UiEngineImpl::getToolBar(IUiToolBar **ppiToolBar)
+    {
+        Result r = R_SUCCESS;
+
+        *ppiToolBar = spToolBar_.get();
+        // Don't forget to add reference count
+        (*ppiToolBar)->addRef();
+
+        return r;
+    }
+
     Result UiEngineImpl::addStatusBar(IUiStatusBar *piStatusBar)
     {
         Result r = R_SUCCESS;
@@ -317,19 +344,19 @@ namespace uap
 
         io.Fonts->AddFontDefault();
 
-        char path[MAX_PATH];
-        spApp_->getCurrentPath(path,MAX_PATH);
-        StringCbCatA(path,MAX_PATH,"fontawesome-webfont.ttf");
+        // char path[MAX_PATH];
+        // spApp_->getCurrentPath(path,MAX_PATH);
+        // StringCbCatA(path,MAX_PATH,"fontawesome-webfont.ttf");
 
 
-        VERBOSE("front path = %s\n",path);
+        // VERBOSE("front path = %s\n",path);
         
 
-        ImFontConfig config;
-        config.MergeMode = true;
-        config.GlyphMinAdvanceX = 18.0f; // Use if you want to make the icon monospaced
-        static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
-        io.Fonts->AddFontFromFileTTF(path, 18.0f, &config, icon_ranges);
+        // ImFontConfig config;
+        // config.MergeMode = true;
+        // config.GlyphMinAdvanceX = 18.0f; // Use if you want to make the icon monospaced
+        // static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
+        // io.Fonts->AddFontFromFileTTF(path, 18.0f, &config, icon_ranges);
 
 
 

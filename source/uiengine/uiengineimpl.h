@@ -25,6 +25,8 @@ namespace uap
 
         virtual Result addMenuBar(IUiMenuBar *piMenuBar);
         virtual Result getMenuBar(IUiMenuBar **ppiMenuBar);
+        virtual Result addToolBar(IUiToolBar *piToolBar);
+        virtual Result getToolBar(IUiToolBar **ppiToolBar);
         virtual Result addStatusBar(IUiStatusBar *piStatusBar);
         virtual Result getStatusBar(IUiStatusBar **ppiStatusBar);
         virtual Result addImageWindow(IUiImageWindow *piImageWindow);
@@ -69,6 +71,7 @@ namespace uap
 
 
         sptr<IUiMenuBar> spMenuBar_;
+        sptr<IUiToolBar> spToolBar_;
         sptr<IUiStatusBar> spStatusBar_;
 
         std::vector<sptr<IUiImageWindow> > spImageWindows_;
