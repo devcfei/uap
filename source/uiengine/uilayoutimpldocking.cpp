@@ -217,31 +217,20 @@ namespace uap
     }
 
     Result UiLayoutImplDocking::showStatusBar(bool* p_open)
-    {
-        const ImGuiViewport* viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Size.y - heightStatusBar_), ImGuiCond_FirstUseEver);
-        ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, heightStatusBar_), ImGuiCond_Appearing);
+    { 
+        Result r = R_SUCCESS;
 
-        ImGui::BeginChild("StatusBar", ImVec2(0, heightStatusBar_), true);
-        ImGui::Text("status bar"); ImGui::SameLine();
+        sptr<IUiStatusBar> spStatusBar;
+        r = spUiEngine_->getStatusBar(spStatusBar.getaddrof());
 
-        static float progress = 0.0f, progress_dir = 1.0f;
-        progress += progress_dir * 0.4f * ImGui::GetIO().DeltaTime;
-        if (progress >= +1.1f) { progress = +1.1f; progress_dir *= -1.0f; }
-        if (progress <= -0.1f) { progress = -0.1f; progress_dir *= -1.0f; }
-        ImGui::ProgressBar(progress, ImVec2(100.0f, 0.0f));  ImGui::SameLine();
-
-
-    #define IM_CLAMP(V, MN, MX)     ((V) < (MN) ? (MN) : (V) > (MX) ? (MX) : (V))    
-        float progress_saturated = IM_CLAMP(progress, 0.0f, 1.0f);
-        char buf[32];
-        StringCchPrintfA(buf, 32, "%d/%d", (int)(progress_saturated * 1753), 1753);
-        ImGui::ProgressBar(progress, ImVec2(150.f, 0.f), buf); ImGui::SameLine();
-
-        ImGui::EndChild();
+        sptr<IDraw> spDraw;
+        r = spStatusBar.as(&spDraw);
+        if(UAP_SUCCESS(r))
+        {
+            r = spDraw->draw();
+        }    
 
         return R_SUCCESS;
-
     }
 
     Result UiLayoutImplDocking::showImageWindow()
@@ -282,30 +271,5 @@ namespace uap
         return r;
 
     }
-
-
-    // void UiLayoutImplDocking::ShowConsoleWindow(bool* p_open)
-    // {
-    //     ImGuiWindowFlags window_flags = 0;
-    //     window_flags |= ImGuiWindowFlags_NoCollapse;
-    //     const ImGuiViewport* viewport = ImGui::GetMainViewport();
-    //     const ImVec2 base_pos = viewport->Pos;
-
-
-    //     int height = 20;
-    //     ImGui::SetNextWindowPos(ImVec2(base_pos.x + 300, base_pos.y + height), ImGuiCond_FirstUseEver);
-    //     ImGui::SetNextWindowSize(ImVec2(viewport->Size.x-300, 300), ImGuiCond_Appearing);
-
-    //     ImGui::Begin("Console", p_open, window_flags);
-
-    //     ImGui::End();
-    // }
-
-    // void UiLayoutImplDocking::ShowLibraryWindow(bool* p_open)
-    // {
-    //     ImGui::Begin("Library", p_open);
-
-    //     ImGui::End();
-    // }
-
+    
 } // @namespace uap

@@ -45,6 +45,7 @@ using namespace Microsoft::WRL;
 
 // UiEngine implementation
 #include "uimenubarimpl.h"
+#include "uistatusbarimpl.h"
 #include "uiimagewindowimpl.h"
 #include "uitextureinspectorimpl.h"
 #include "uilayoutimplsimple.h"

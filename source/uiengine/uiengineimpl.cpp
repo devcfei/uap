@@ -43,6 +43,10 @@ namespace uap
         {
             r = UiMenuBarImpl::createInstance(ppv);
         }
+        else if (uapUuidIsEqual(rUuid, IID_IUISTATUSBAR))
+        {
+            r = UiStatusBarImpl::createInstance((IUiStatusBar **)ppv);
+        }       
         else if (uapUuidIsEqual(rUuid, IID_IUIIMAGEWINDOW))
         {
             r = UiImageWindowImpl::createInstance(spBackend_.get(),(IUiImageWindow **)ppv);
@@ -190,6 +194,26 @@ namespace uap
 
         return r;
     }
+
+    Result UiEngineImpl::addStatusBar(IUiStatusBar *piStatusBar)
+    {
+        Result r = R_SUCCESS;
+
+        spStatusBar_ = piStatusBar;
+
+        return r;
+    }
+    Result UiEngineImpl::getStatusBar(IUiStatusBar **ppiStatusBar)
+    {
+        Result r = R_SUCCESS;
+
+        *ppiStatusBar = spStatusBar_.get();
+        // Don't forget to add reference count
+        (*ppiStatusBar)->addRef();
+
+        return r;
+    }
+
 
 
     Result UiEngineImpl::addImageWindow(IUiImageWindow* piImageWindow)

@@ -31,6 +31,7 @@ private:
 
     Result buildLayout();
     Result buildMenuBar();
+    Result buildStatusBar();    
     Result buildImageWindow();
     Result buildTextureInspector();
 

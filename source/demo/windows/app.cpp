@@ -103,6 +103,11 @@ Result App::setLayout()
     r =  buildMenuBar();
     RESULT_CHECK(r,"build MenuBar");
 
+
+    // build the StatusBar
+    r =  buildStatusBar();
+    RESULT_CHECK(r,"build StatusBar");
+
     // build the ImageWindow
     r =  buildImageWindow();
     RESULT_CHECK(r,"build ImageWindow");
@@ -190,6 +195,22 @@ Result App::buildMenuBar()
 
     return r;  
 }
+
+Result App::buildStatusBar()
+{
+    Result r = R_SUCCESS;
+
+    // StatusBar
+    sptr<IUiStatusBar> spStatusBar;
+    r = spUiEngine_->createInstance(IID_IUISTATUSBAR, (void**)&spStatusBar);
+    RESULT_CHECK(r,"spUiEngine_.createInstance(<IUiStatusBar>)");
+
+
+    spUiEngine_->addStatusBar(spStatusBar.get());
+
+    return r;  
+}
+
 
 
 Result App::buildImageWindow()
