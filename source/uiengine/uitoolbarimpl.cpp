@@ -68,7 +68,7 @@ namespace uap
         config.GlyphMinAdvanceX = 18.0f; // Use if you want to make the icon monospaced
         static const ImWchar icon_ranges[] = { min, max, 0 };
         io.Fonts->AddFontFromFileTTF(filename, 18.0f, &config, icon_ranges);
-
+        io.Fonts->Build();
 
 
 
@@ -88,10 +88,15 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        ImGui::BeginChild("Toolbar", ImVec2(0, heightToolBar_), true);
+
+        // Particular window styling
+        ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(0,255,0,0));
 
 
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(ImGui::GetStyle().FramePadding.x, ImGui::GetStyle().FramePadding.y + 10));
+
+        ImGui::BeginChild("Toolbar", ImVec2(0, heightToolBar_), false);
+
+
 
 
         for(auto it: vecLabel_)
@@ -101,9 +106,11 @@ namespace uap
         }
 
 
-        ImGui::PopStyleVar();
+
 
         ImGui::EndChild();
+
+        ImGui::PopStyleColor();
 
 
         return r;

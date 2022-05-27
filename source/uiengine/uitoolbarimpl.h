@@ -36,7 +36,7 @@ namespace uap
     private:
         UiToolBarImpl()
             :refcount_(1)
-            , heightToolBar_(32.0f)
+            , heightToolBar_(TOOLBAR_HEIGHT)
         {
 
         }

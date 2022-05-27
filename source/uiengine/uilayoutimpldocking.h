@@ -36,9 +36,9 @@ namespace uap
             , showToolBar_(true)
             , showStatusBar_(true)       
             , showDemoWindow_(true)        
-            , heightMenuBar_(20.0f)
-            , heightToolBar_(32.0f)
-            , heightStatusBar_(36.0f)
+            , heightMenuBar_(FONT_SIZE+6.0f)
+            , heightToolBar_(TOOLBAR_HEIGHT)
+            , heightStatusBar_(FONT_SIZE+6.0f)
         {
         }
 

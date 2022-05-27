@@ -1,7 +1,6 @@
 #include "comp.h"
 
 
-
 // Forward declare message handler from imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -342,7 +341,23 @@ namespace uap
         // ImGui::StyleColorsClassic();
 
 
-        io.Fonts->AddFontDefault();
+        //io.Fonts->AddFontDefault();
+
+
+    	ImFontConfig font_cfg;
+        font_cfg.FontDataOwnedByAtlas = false;
+        // font_cfg.OversampleH = 1;
+        // font_cfg.RasterizerMultiply = 1.3f;
+
+        float fontSize =FONT_SIZE;
+        float fonScaler =1.0f;
+
+        io.Fonts->AddFontFromMemoryTTF((void*)tahoma, sizeof(tahoma), fontSize*fonScaler, &font_cfg);
+        //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeui.ttf", fontSize*fonScaler, &font_cfg);
+        //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeuib.ttf", 17.0f, &font_cfg);
+        io.FontGlobalScale /= fonScaler;
+
+
 
         // char path[MAX_PATH];
         // spApp_->getCurrentPath(path,MAX_PATH);

@@ -58,5 +58,14 @@ install(FILES assets/images/demo.png
         DESTINATION Release/bin
         )
 
+install(FILES source/uiengine/be/imguibe/imgui/misc/fonts/Roboto-Medium.ttf
+        CONFIGURATIONS Debug
+        DESTINATION Debug/bin
+        )
+
+install(FILES source/uiengine/be/imguibe/imgui/misc/fonts/Roboto-Medium.ttf
+        CONFIGURATIONS Release
+        DESTINATION Release/bin
+        )
 
 

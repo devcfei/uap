@@ -34,7 +34,7 @@ namespace uap
     private:
         UiStatusBarImpl()
             :refcount_(1)
-            ,heightStatusBar_(36.0)
+            ,heightStatusBar_(FONT_SIZE+6.0f)
         {
 
         }

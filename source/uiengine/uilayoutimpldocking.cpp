@@ -124,7 +124,7 @@ namespace uap
             }
 
             Size.y -= heightMenuBar_;
-            Size.y -= 10.0f; // TODO: need to remove this hard code
+            Size.y -= 8.0f; // don't forget the padding
 
             ImGui::DockSpace(dockspace_id, Size, dockspace_flags);
         }

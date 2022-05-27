@@ -59,12 +59,20 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
+        // Particular window styling
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(66,150,250,79));
+
+
 
         const ImGuiViewport* viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Size.y - heightStatusBar_), ImGuiCond_FirstUseEver);
+        //ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Size.y - heightStatusBar_), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, heightStatusBar_), ImGuiCond_Appearing);
+        ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y +viewport->Size.y- heightStatusBar_), ImGuiCond_Appearing);
 
-        ImGui::BeginChild("StatusBar", ImVec2(0, heightStatusBar_), true);
+
+
+
+        ImGui::BeginChild("StatusBar", ImVec2(0, heightStatusBar_), false);
         ImGui::Text("status bar"); ImGui::SameLine();
 
         static float progress = 0.0f, progress_dir = 1.0f;
@@ -81,6 +89,9 @@ namespace uap
         ImGui::ProgressBar(progress, ImVec2(150.f, 0.f), buf); ImGui::SameLine();
 
         ImGui::EndChild();
+
+        ImGui::PopStyleColor();
+
 
         return r;
     }
