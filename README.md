@@ -11,7 +11,8 @@ git clone --recursive https://github.com/devcfei/uap.git
 
 Project | Original repository | Description
 ---|---|---
-ImGui | https://github.com/ocornut/imgui | mapped to source/uiengine/be/imguibe/imgui
+ImGui | https://github.com/ocornut/imgui | mapped to source/uiengine/be/imguibe/imgui                                     
+imgui_tex_inspect |https://github.com/andyborrell/imgui_tex_inspect |mapped to source/uiengine/be/imguibe/imgui_tex_inspect
 
 
 ## Build
@@ -68,6 +69,14 @@ uap::IAttributes| UAP |windows, linux(N/A)
 uap::IApplication| UAP |windows, linux(N/A)
 uap::IFileLogger| UAP |windows, linux(N/A)
 uap::ILogTrace| UAP |windows, linux(N/A)
-uap::IUiEngine| uiengine| ImGui(win32-d3d9)
-uap::IUiLayout| uiengine| ImGui(win32-d3d9)
+uap::IUiEngine| uiengine| ImGui(win32-d3d9,win32-d3d11)
+uap::IUiLayout| uiengine| ImGui(win32-d3d9,win32-d3d11)
+uap::IUiMenuBar| uiengine| ImGui(win32-d3d9,win32-d3d11)
+uap::IUiToolBar| uiengine| ImGui(win32-d3d9,win32-d3d11)
+uap::IUiStatusBar| uiengine| ImGui(win32-d3d9,win32-d3d11)
+uap::IUiDraw| uiengine| ImGui(win32-d3d9,win32-d3d11)
+uap::IUiImageWindow| uiengine| ImGui(win32-d3d9,win32-d3d11)
+uap::IUiTextureInspector| uiengine| ImGui(win32-d3d9,win32-d3d11)
+uap::IUiTexture| uiengine| ImGui(win32-d3d9,win32-d3d11)
+uap::IUiEngineBackend| uiengine| ImGui(win32-d3d9,win32-d3d11)
 uap::IImageEngine| imageengine| WIC, libpng(N/A)
