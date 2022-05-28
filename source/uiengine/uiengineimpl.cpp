@@ -50,6 +50,10 @@ namespace uap
         {
             r = UiStatusBarImpl::createInstance((IUiStatusBar **)ppv);
         }       
+        else if (uapUuidIsEqual(rUuid, IID_IUILOGWINDOW))
+        {
+            r = UiLogWindowImpl::createInstance((IUiLogWindow **)ppv);
+        } 
         else if (uapUuidIsEqual(rUuid, IID_IUIIMAGEWINDOW))
         {
             r = UiImageWindowImpl::createInstance(spBackend_.get(),(IUiImageWindow **)ppv);
@@ -277,7 +281,21 @@ namespace uap
     }
 
 
+    Result UiEngineImpl::addLogWindow(IUiLogWindow *piLogWindow)
+    {
+        Result r = R_SUCCESS;
+        spLogWindow_ = piLogWindow;
+        return r;
+    }
+    Result UiEngineImpl::getLogWindow(IUiLogWindow **ppiLogWindow)
+    {
+        Result r = R_SUCCESS;
 
+        *ppiLogWindow = spLogWindow_.get();
+        // Don't forget to add reference count
+        (*ppiLogWindow)->addRef();
+        return r;
+    }
 
     // private member functions
     Result UiEngineImpl::initializeWindow()

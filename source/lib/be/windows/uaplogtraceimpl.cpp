@@ -99,6 +99,10 @@ namespace uap
                     spFileLogger->saveMessage(szMessageBuffer);
                 }
             }
+
+
+            
+
         }
 
         return r;

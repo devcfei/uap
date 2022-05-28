@@ -68,6 +68,11 @@ namespace uap
         Result showTextureInspector();
 
 
+        // Log Window
+        Result showLogWindow();
+
+
+
     }; // @class UiLayoutImplDocking
 
 

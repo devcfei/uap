@@ -29,6 +29,10 @@ namespace uap
         virtual Result getToolBar(IUiToolBar **ppiToolBar);
         virtual Result addStatusBar(IUiStatusBar *piStatusBar);
         virtual Result getStatusBar(IUiStatusBar **ppiStatusBar);
+
+        virtual Result addLogWindow(IUiLogWindow *piLogWindow);
+        virtual Result getLogWindow(IUiLogWindow **ppiLogWindow);
+
         virtual Result addImageWindow(IUiImageWindow *piImageWindow);
         virtual Result getImageWindow(IUiImageWindow **ppiImageWindow);
         virtual Result addTextureInspector(IUiTextureInspector* piTextureInspector);
@@ -78,6 +82,7 @@ namespace uap
         sptr<IUiMenuBar> spMenuBar_;
         sptr<IUiToolBar> spToolBar_;
         sptr<IUiStatusBar> spStatusBar_;
+        sptr<IUiLogWindow> spLogWindow_;
 
         std::vector<sptr<IUiImageWindow> > spImageWindows_;
         std::vector<sptr<IUiTextureInspector> > spTextureInspector_;

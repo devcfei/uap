@@ -148,6 +148,7 @@ namespace uap
             showStatusBar(&showStatusBar_);
         }
 
+        showLogWindow();
         showImageWindow();
         showTextureInspector();
 
@@ -245,6 +246,26 @@ namespace uap
 
         sptr<IDraw> spDraw;
         r = spTextureInspector.as(&spDraw);
+        if(UAP_SUCCESS(r))
+        {
+            r = spDraw->draw();
+        }    
+
+
+        return r;
+
+    }
+
+
+    Result UiLayoutImplDocking::showLogWindow()
+    {
+        Result r = R_SUCCESS;
+
+        sptr<IUiLogWindow> spLogWindow;
+        r = spUiEngine_->getLogWindow(spLogWindow.getaddrof());
+
+        sptr<IDraw> spDraw;
+        r = spLogWindow.as(&spDraw);
         if(UAP_SUCCESS(r))
         {
             r = spDraw->draw();

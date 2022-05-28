@@ -51,6 +51,7 @@ using namespace Microsoft::WRL;
 #include "uimenubarimpl.h"
 #include "uitoolbarimpl.h"
 #include "uistatusbarimpl.h"
+#include "uilogwindowimpl.h"
 #include "uiimagewindowimpl.h"
 #include "uitextureinspectorimpl.h"
 #include "uilayoutimplsimple.h"

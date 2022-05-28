@@ -125,7 +125,31 @@ namespace uap
         inline static const Uuid uuid_ = IID_IUISTATUSBAR;
     }; // @class IUiStatusBar
 
+    // {d236619b-80eb-4ecd-ae82-83d70a762ba8}
+    DEFINE_UUID(IID_IUILOGWINDOW,
+                0xd236619b, 0x80eb, 0x4ecd, 0xae, 0x82, 0x83, 0xd7, 0x0a, 0x76, 0x2b, 0xa8);
 
+    class IUiLogWindow : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IUiLogWindow
+        virtual Result initialize(IAttributes *piAttributes) = 0;
+        virtual Result addMessage(Char *name) = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IUILOGWINDOW;
+    }; // @class IUiLogWindow
 
     // {61ad8510-1006-46df-894b-d44d642676a3}
     DEFINE_UUID(IID_IUIIMAGEWINDOW,
@@ -222,6 +246,8 @@ namespace uap
         virtual Result getToolBar(IUiToolBar **ppiToolBar) = 0;
         virtual Result addStatusBar(IUiStatusBar *piStatusBar) = 0;
         virtual Result getStatusBar(IUiStatusBar **ppiStatusBar) = 0;
+        virtual Result addLogWindow(IUiLogWindow *piLogWindow) = 0;
+        virtual Result getLogWindow(IUiLogWindow **ppiLogWindow) = 0;
         virtual Result addImageWindow(IUiImageWindow *piImageWindow) = 0;
         virtual Result getImageWindow(IUiImageWindow **ppiImageWindow) = 0;
         virtual Result addTextureInspector(IUiTextureInspector *piTextureInspector) = 0;

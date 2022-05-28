@@ -203,6 +203,11 @@ Result App::setLayout()
     r = buildStatusBar();
     VERIFY(r, "build StatusBar");
 
+
+    // build the StatusBar
+    r = buildLogWindow();
+    VERIFY(r, "build LogWindow");
+
     // build the ImageWindow
     r = buildImageWindow();
     VERIFY(r, "build ImageWindow");
@@ -343,6 +348,24 @@ Result App::buildStatusBar()
 
     return r;
 }
+
+Result App::buildLogWindow()
+{
+    Result r = R_SUCCESS;
+
+    // StatusBar
+    sptr<IUiLogWindow> spLogWindow;
+    r = spUiEngine_->createInstance(IID_IUILOGWINDOW, (void **)&spLogWindow);
+    VERIFY(r, "spUiEngine_.createInstance(<IUiLogWindow>)");
+
+    spUiEngine_->addLogWindow(spLogWindow.get());
+
+
+
+    spLogWindow->addMessage("first message!\n");
+    return r;
+}
+
 
 Result App::buildImageWindow()
 {
