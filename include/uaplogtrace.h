@@ -77,12 +77,12 @@ namespace uap
         Ulong ul;
         struct
         {
-            Uchar defaultLevel;
-            Uchar enableAppLogTrace:1;
-            Uchar enableDebugTrace:1;
-            Uchar enable:1;
-            Uchar enableLevelTag:1;
-        }s;
+            Uchar enable : 1;                  // enable logtrace
+            Uchar enableFileLogger : 1;        // enable application file logger
+            Uchar enableMessageToDebugger : 1; // enable message to send to debugger
+            Uchar enableLevelTag : 1;          // enable level TAG preffix
+            Uchar defaultLevel;                // filter the message when it's level <=defaultLevel
+        } s;
     };
 
     enum LogTraceLevel
@@ -96,6 +96,45 @@ namespace uap
         LT_ALL = LT_VERBOSE,
         LT_MAX = LT_ALL+1,
     };
+
+
+    /// 
+    class LogTraceHelper
+    {
+    public:
+        static ILogTrace* getLogTrace()
+        {
+            return spLogTrace_.get();
+        }
+
+        virtual Result initializeLogTraceHelper(IApplication* piApp, LogAttributes attr)
+        {
+            Result r = R_SUCCESS;
+
+            sptr<IAttributes> spAttr;
+
+            // initialize the log trace
+            r = piApp->createInstance(IID_LOGTRACE, (void **)&spLogTrace_);
+            if (!UAP_SUCCESS(r))
+            {
+                return r;
+            }
+
+            r = piApp->createInstance(IID_IATTRIBUTES, (void **)&spAttr);
+
+
+            spAttr->setUlong(UUID_LOGTRACE_ATTRIBUTES, attr.ul);
+
+            r = spLogTrace_->initialize(piApp, MODULE_NAME, spAttr.get());
+            return r;
+        }
+    private:
+        inline static sptr<ILogTrace> spLogTrace_;
+    
+    };
+
+
+
 
 } // @namespace uap
 

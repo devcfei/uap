@@ -83,7 +83,7 @@ namespace uap
         }
 
         r = spLogTrace_->initialize(spApp_.get(), MODULE_NAME, spAppAttributes_.get());
-        VERBOSE("initialize ILogTrace - r = 0x%8.8x\n", r);
+        VERIFY(r, "initialize ILogTrace");
 
 
         // create the backend
@@ -100,17 +100,17 @@ namespace uap
             r = UiEngineBackendDx11Impl::createInstance((void **)&spBackend_);
 
         }
-        if (!UAP_SUCCESS(r))
-        {
-            UAP_TRACE("backend - createInstance failed! r = 0x%8.8x\n", r);
-            return r;
-        }
+        VERIFY(r, "createInstance backend!");
+
+
         // initialize the backend
         r = spBackend_->initializeBackend(this, nullptr);
+        VERIFY(r, "initiaize the backend!");
+
 
         // create layout      
         r = createLayout();
-        VERBOSE("createLayout - r = 0x%8.8x\n", r);
+        VERIFY(r, "craete the layout");
 
         return r;
     }
@@ -119,13 +119,13 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        VERBOSE("UiEngineImpl::startup\n");
+        INFO("UiEngineImpl::startup\n");
 
         r = initializeWindow();
-        VERIFY(r, "initializeWindow")
+        VERIFY(r, "initializeWindow");
 
         r = initializeBackEnd();
-        VERIFY(r, "initializeBackEnd")
+        VERIFY(r, "initializeBackEnd");
 
         return r;
     }
@@ -133,7 +133,8 @@ namespace uap
     Result UiEngineImpl::run()
     {
         Result r = R_SUCCESS;
-        VERBOSE("UiEngineImpl::run\n");
+        
+        INFO("UiEngineImpl::run\n");
 
         // Main loop
         bool done = false;
@@ -282,7 +283,7 @@ namespace uap
     Result UiEngineImpl::initializeWindow()
     {
         Result r = R_SUCCESS;
-        VERBOSE("UiEngineImpl::initializeWindow\n");
+        INFO("UiEngineImpl::initializeWindow\n");
 
         WNDCLASSEX wc = {sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
                          GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("wcImGui"), NULL};
@@ -298,7 +299,7 @@ namespace uap
                                WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800,
                                 NULL, NULL, wc.hInstance, (LPVOID)this);
 
-        VERBOSE("UiEngineImpl instance, this=0x%p\n", this);
+        INFO("UiEngineImpl instance, this=0x%p\n", this);
 
         // Initialize Direct3D devicde
 
@@ -364,7 +365,7 @@ namespace uap
         // StringCbCatA(path,MAX_PATH,"fontawesome-webfont.ttf");
 
 
-        // VERBOSE("front path = %s\n",path);
+        // INFO("front path = %s\n",path);
         
 
         // ImFontConfig config;
@@ -429,7 +430,8 @@ namespace uap
         r = spAppAttributes_->getUint(UUID_UILAYOUT_STYLE, (Uint&)style);
         if(!UAP_SUCCESS(r))
         {
-            r = UiLayoutImplDemo::createInstance((void**)&spLayout_);            
+            WARN("unknown layout style to create, fallback to create demo!\n");         
+            r = UiLayoutImplDemo::createInstance((void**)&spLayout_);
         }
         else
         {
@@ -441,11 +443,10 @@ namespace uap
             else if(style == LAYOUT_STYLE_DOCKING)
             {
                 r = UiLayoutImplDocking::createInstance((void**)&spLayout_);
-                VERBOSE("create docking style layout, r = 0x%8.8x\n", r);
+                VERIFY(r, "create docking style layout");
 
                 r = spLayout_->initializeLayout(this, nullptr);
-                VERBOSE("initialize the layout, r = 0x%8.8x\n", r);
-
+                VERIFY(r, "nitialize the layout");
             }
             else if(style == LAYOUT_STYLE_DEMO)
             {

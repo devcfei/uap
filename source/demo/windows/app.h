@@ -4,7 +4,7 @@
 
 using namespace uap;
 
-class App
+class App : public LogTraceHelper
 {
 public:
     App();
@@ -17,18 +17,27 @@ public:
     Result startUI();
     Result setLayout();
 
+
+
 private:
 
     sptr<IApplication> spApp_;
+    sptr<IToml> spToml_;    
+    Result initApplicationConfiguration();
+
 
     sptr<IUiEngine> spUiEngine_;
     sptr<IAttributes> spUiAttributes_;
+
+    Result initUiEngine();
+
 
 
     sptr<IUiLayout> spLayout_;
     sptr<IAttributes> spLayoutAttributes_;
 
 
+    std::string strAppPath_;
     Result buildLayout();
     Result buildMenuBar();
     Result buildToolBar();

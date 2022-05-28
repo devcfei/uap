@@ -50,6 +50,7 @@ namespace uap
     Result UiStatusBarImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
+        INFO("UiStatusBarImpl::initialize\n");
         return r;
     }
 

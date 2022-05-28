@@ -101,19 +101,23 @@ namespace uap
 
         sptr<IAttributes> spAttr = piAttributes;
 
-        spAttr->getUint(UUID_APP_INIT_FLAGS, initFlags_);
-        if (initFlags_ & APP_INIT_LOGTRACE_ENALBE)
+
+        ApplicationConfiguration ac;
+        spAttr->getUint(UUID_APPLICATION_CONFIGURATION, ac.ui);
+        if (ac.s.enableLog)
         {
             UAP_TRACE("enabled application log trace\n");
             //
             initialize("app.log");
         }
 
-        if (initFlags_ & APP_INIT_COMPONENT_ENALBE)
+        if (ac.s.enableComponent)
         {
             // build the interfaces database
             r = enumComponent();
         }
+
+        appConfig_ = ac;
 
         return r;
     }
@@ -152,6 +156,10 @@ namespace uap
             {
                 r = R_NO_MEMORY;
             }
+        }
+        else if(uapUuidIsEqual(rUuid, IID_ITOML))
+        {
+            r = TomlImpl::createInstance((IToml**)ppv);
         }
 
         // if not uapbe interface, find in component
@@ -219,7 +227,10 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        logFile_ << message;
+        if(appConfig_.s.enableLog)
+        {
+            logFile_ << message;
+        }
 
         return r;
     }

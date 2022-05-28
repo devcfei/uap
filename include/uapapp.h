@@ -36,17 +36,28 @@ private:
     }; // @class IApplication
 
 
-    // application attributes
-    
-    // {181e8813-adad-4e43-826d-6553d11ed520}
-    DEFINE_UUID(UUID_APP_INIT_FLAGS, 
-        0x181e8813, 0xadad, 0x4e43, 0x82, 0x6d, 0x65, 0x53, 0xd1, 0x1e, 0xd5, 0x20);
+    // application attributes    
 
-    enum AppInitFlags
+
+    // application configuration UUID
+
+    // {40930e7b-d2d4-4250-809d-ab05d5388c09}
+    DEFINE_UUID(UUID_APPLICATION_CONFIGURATION,
+                0x40930e7b, 0xd2d4, 0x4250, 0x80, 0x9d, 0xab, 0x05, 0xd5, 0x38, 0x8c, 0x09);
+
+    // application configurations
+    union ApplicationConfiguration
     {
-        APP_INIT_LOGTRACE_ENALBE=   0x00000001,
-        APP_INIT_COMPONENT_ENALBE=  0x00000002,
+        Uint ui;
+        struct
+        {
+            Uchar enableLog:1;
+            Uchar enableComponent:1;
+
+            Uchar logLevel:4;
+        }s;
     };
+
 
     // {406aa44a-cccc-4bc8-a7ba-325db6240409}
     DEFINE_UUID(UUID_APP_NAME,

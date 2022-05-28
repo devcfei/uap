@@ -23,16 +23,39 @@ using namespace uap;
 
 
 
-#define RESULT_CHECK(r, _message_) \
+
+#define INFO(_message_, ...) \
         do{ \
+            ILogTrace* p= App::getLogTrace(); \
+            if(p) \
+                p->output(LT_INFO, _message_, __VA_ARGS__ ); \
+        } while(0)
+
+
+#define WARN(_message_, ...) \
+        do{ \
+            ILogTrace* p= App::getLogTrace(); \
+            if(p) \
+                p->output(LT_WARN, _message_, __VA_ARGS__ ); \
+        } while(0)
+
+
+
+#define VERIFY(r, _message_) \
+        do{ \
+            ILogTrace* p= App::getLogTrace(); \
             if(!UAP_SUCCESS(r)) \
             { \
-                UAP_TRACE( _message_ ## " failed! r = 0x%8.8x\n",r); \
+                if(p) \
+                    p->output(LT_ERROR, _message_ ## " failed! r = 0x%8.8x\n",r); \
                 return r; \
-            }\
+            } \
+            else \
+            { \
+                if(p) \
+                    p->output(LT_INFO, _message_ ## " success! r = 0x%8.8x\n",r); \
+            } \
         }while(0)
-
-
 
 
 #endif //@_FRAMEWORK_H_

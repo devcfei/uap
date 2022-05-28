@@ -50,6 +50,7 @@ namespace uap
     Result UiToolBarImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
+        INFO("UiToolBarImpl::initialize\n");
         return r;
     }
 

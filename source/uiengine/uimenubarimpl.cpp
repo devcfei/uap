@@ -50,6 +50,7 @@ namespace uap
     Result UiMenuBarImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
+        INFO("UiMenuBarImpl::initialize\n");
         return r;
     }
 

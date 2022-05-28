@@ -11,6 +11,7 @@
 #include <uapattributes.h>
 #include <uapapp.h>
 #include <uaplogtrace.h>
+#include <uaptoml.h>
 
 namespace uap
 {

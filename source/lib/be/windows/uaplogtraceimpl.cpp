@@ -54,8 +54,8 @@ namespace uap
                     "[FATAL] ",
                     "[ERROR] ",
                     "[WARN] ",
-                    "[OK] ", // INFO show OK
-                    "[OK] ", // VEBOSE show OK
+                    "[INFO] ", // INFO show OK
+                    "[VERBOSE] ", // VEBOSE show OK
                 };
             CHAR szMessageBuffer[MBUF_LEN] = {0};
 
@@ -86,11 +86,11 @@ namespace uap
             }
 
             // check if debug trace needed
-            if (logAttributes_.s.enableDebugTrace)
+            if (logAttributes_.s.enableMessageToDebugger)
                 OutputDebugStringA(szMessageBuffer);
 
             // check if debug application log needed
-            if (logAttributes_.s.enableAppLogTrace)
+            if (logAttributes_.s.enableFileLogger)
             {
                 sptr<IFileLogger> spFileLogger;
                 r = this->spApp_->queryInterface(IID_FILELOGGER, (void **)&spFileLogger);

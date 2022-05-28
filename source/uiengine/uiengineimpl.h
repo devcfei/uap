@@ -34,6 +34,11 @@ namespace uap
         virtual Result addTextureInspector(IUiTextureInspector* piTextureInspector);
         virtual Result getTextureInspector(IUiTextureInspector** ppiTextureInspector);
 
+        static ILogTrace* getLogTrace()
+        {
+            return spLogTrace_.get();
+        }
+
     private:
         Ulong refcount_;
 
@@ -56,7 +61,7 @@ namespace uap
         sptr<IApplication> spApp_ ;
         sptr<IAttributes> spAppAttributes_ ;
         LogAttributes logAttributes_;
-        sptr<ILogTrace> spLogTrace_;
+        inline static sptr<ILogTrace> spLogTrace_;
 
         BackendType beType_;
         sptr<IUiEngineBackend> spBackend_;

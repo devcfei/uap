@@ -50,6 +50,7 @@ namespace uap
     Result UiTextureInspectorImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
+        INFO("UiTextureInspectorImpl::initialize\n");
         return r;
     }
 

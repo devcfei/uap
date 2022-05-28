@@ -39,6 +39,9 @@ namespace uap
     Result UiEngineBackendDx11Impl::initializeBackend(IUiEngine *piUiEngine, IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
+
+        INFO("UiEngineBackendDx11Impl::initializeBackend\n");
+        
         return r;
     }
 
@@ -206,7 +209,7 @@ namespace uap
         }
 #endif
 
-        // VERIFY(r, "IDirect3D11::D3D11CreateDeviceAndSwapChain");
+        VERIFY(r, "IDirect3D11::D3D11CreateDeviceAndSwapChain");
 
         d3d11CreateRenderTarget();
 

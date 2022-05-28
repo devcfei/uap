@@ -1,0 +1,21 @@
+# Default config
+
+title = "demo"
+
+[app]
+log = true # true-enable app logging
+
+
+[uiengine]
+layout = 1 # 0-simple, 1-studio, 2-demo(only debug version)
+
+
+[uiengine.log]
+enable = true # 
+level = 3   # 0-fatal, 1-error, 2-warnning, 3-info , 4-verbose
+todebugger = true  # messsge send to debugger
+tag = true  # message with tag
+
+
+[uiengine.backend]
+

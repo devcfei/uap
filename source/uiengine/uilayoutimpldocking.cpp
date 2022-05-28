@@ -37,6 +37,7 @@ namespace uap
         spUiEngine_ = piUiEngine;
         // TODO: why need a release? :)
         //piUiEngine->release();
+        INFO("UiLayoutImplDocking::initializeLayout\n");
 
         return r;
     }

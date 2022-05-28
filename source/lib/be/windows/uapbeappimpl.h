@@ -8,7 +8,6 @@ namespace uap
     public:
         AppImpl()
             : refcount_(1)
-            , initFlags_(APP_INIT_COMPONENT_ENALBE)
         {
         }
         virtual Ulong addRef();
@@ -43,10 +42,10 @@ namespace uap
         Result registerInterface(LPCTSTR szFileName);
 
         // application init flags
-        Uint initFlags_;
 
         std::ofstream logFile_;
 
+        ApplicationConfiguration appConfig_;
     };
 
 };

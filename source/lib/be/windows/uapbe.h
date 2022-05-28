@@ -14,6 +14,11 @@
 #include <map>
 #include <fstream>
 
+// toml11
+
+#include <toml.hpp>
+
+
 // uap
 #define MODULE_NAME "uapbe"
 #include <uap.h>
@@ -22,6 +27,7 @@ using namespace uap;
 #include "uapbeappimpl.h"
 #include "uapbeattributesimpl.h"
 #include "uaplogtraceimpl.h"
+#include "uaptomlimpl.h"
 
 
 

@@ -50,6 +50,7 @@ namespace uap
     Result UiImageWindowImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
+        INFO("UiImageWindowImpl::initializeBackend\n");
         return r;
     }
 

@@ -30,6 +30,7 @@ if ( _cpp_17_flag_supported )
 include_directories(
     "${PROJECT_SOURCE_DIR}/include"
     "${PROJECT_SOURCE_DIR}/assets/fontawesome"
+    "${PROJECT_SOURCE_DIR}/library/toml11"
     )
 
 
@@ -64,6 +65,17 @@ install(FILES source/uiengine/be/imguibe/imgui/misc/fonts/Roboto-Medium.ttf
         )
 
 install(FILES source/uiengine/be/imguibe/imgui/misc/fonts/Roboto-Medium.ttf
+        CONFIGURATIONS Release
+        DESTINATION Release/bin
+        )
+
+
+install(FILES default.toml
+        CONFIGURATIONS Debug
+        DESTINATION Debug/bin
+        )
+
+install(FILES default.toml
         CONFIGURATIONS Release
         DESTINATION Release/bin
         )

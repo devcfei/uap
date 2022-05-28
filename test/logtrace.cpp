@@ -18,9 +18,13 @@ TEST(LogTrace, basictest)
     EXPECT_EQ(r, R_SUCCESS);
 
 
-    // application initialize with log trace and components
-    Uint initFlags = APP_INIT_LOGTRACE_ENALBE | APP_INIT_COMPONENT_ENALBE;
-    spAttributes->setUint(UUID_APP_INIT_FLAGS, initFlags);
+    // application configuration
+    ApplicationConfiguration ac={0};
+    ac.s.enableLog = 1;
+    ac.s.enableComponent = 1;
+
+    spAttributes->setUint(UUID_APPLICATION_CONFIGURATION, ac.ui);
+
 
     r = spApp->initialize(spAttributes.get());
     EXPECT_EQ(r, R_SUCCESS);
@@ -41,8 +45,8 @@ TEST(LogTrace, basictest)
     LogAttributes logAttr;
 
     logAttr.s.defaultLevel=LT_ALL;
-    logAttr.s.enableAppLogTrace=1;
-    logAttr.s.enableDebugTrace=1;
+    logAttr.s.enableFileLogger=1;
+    logAttr.s.enableMessageToDebugger=1;
     logAttr.s.enable=1;
     logAttr.s.enableLevelTag=1;
 

@@ -34,6 +34,7 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
+        INFO("UiLayoutImplSimple::initializeLayout\n");
         return r;
     }
 

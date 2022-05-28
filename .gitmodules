@@ -5,3 +5,6 @@
 [submodule "source/uiengine/be/imguibe/imgui_tex_inspect"]
 	path = source/uiengine/be/imguibe/imgui_tex_inspect
 	url = https://github.com/andyborrell/imgui_tex_inspect
+[submodule "library/toml11"]
+	path = library/toml11
+	url = https://github.com/devcfei/toml11

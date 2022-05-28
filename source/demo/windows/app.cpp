@@ -20,19 +20,69 @@ Result App::initApplication()
 {
     Result r;
 
-    sptr<IAttributes> spAttributes;
-    r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&spAttributes);
-    RESULT_CHECK(r, "createInstance IID_IATTRIBUTES");
+    // get current path
+    char filename[MAX_PATH];
+    r = spApp_->getCurrentPath(filename, MAX_PATH);
+    strAppPath_= filename;
 
-    // application initialize with log trace and components
-    Uint initFlags = APP_INIT_LOGTRACE_ENALBE | APP_INIT_COMPONENT_ENALBE;
-    spAttributes->setUint(UUID_APP_INIT_FLAGS, initFlags);
+    // get toml config
+    r = spApp_->createInstance(IID_ITOML, (void **)&spToml_);
+    VERIFY(r, "createInstance IID_ITOML");
 
-    r = spApp_->initialize(spAttributes.get());
-    RESULT_CHECK(r, "app initialize");
+    std::string strAppConfig = strAppPath_+ "default.toml";
+    r= spToml_->initialize(spApp_.get(), strAppConfig.data());
+    VERIFY(r, "initial toml");
+
+
+    r =initApplicationConfiguration();
 
     return r;
 }
+
+
+Result App::initApplicationConfiguration()
+{
+    Result r;
+
+    // application configuration
+    ApplicationConfiguration ac={0};
+
+    bool b = false;
+    spToml_->getBool("app","log",b);
+    if(b)
+        ac.s.enableLog = 1;
+
+    ac.s.enableComponent = 1;   // always enable component
+    ac.s.logLevel = 4;  // not impl    
+
+    sptr<IAttributes> spAttributes;
+    r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&spAttributes);
+    VERIFY(r, "createInstance IID_IATTRIBUTES");
+
+
+    spAttributes->setUint(UUID_APPLICATION_CONFIGURATION, ac.ui);
+
+
+    r = spApp_->initialize(spAttributes.get());
+    VERIFY(r, "app initialize");
+
+
+
+    // app log
+    LogAttributes logAttr = {0};
+
+    logAttr.s.enable = 1;
+    logAttr.s.enableFileLogger = 1;
+    logAttr.s.enableLevelTag = 1;
+    logAttr.s.defaultLevel = 3;
+
+    initializeLogTraceHelper(spApp_.get(), logAttr);
+
+
+
+    return r;
+}
+
 
 Result App::startUI()
 {
@@ -40,38 +90,12 @@ Result App::startUI()
 
     // create the engine
     r = spApp_->createInstance(IID_UIENGINE, (void **)&spUiEngine_);
-    RESULT_CHECK(r, "create instance UI engine");
+    VERIFY(r, "create instance UI engine");
 
-    // create an attribute
-    r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&spUiAttributes_);
-    RESULT_CHECK(r, "create instance attributes");
 
-    //
-    //
-    //
+    // init UiEngine
+    r = initUiEngine();
 
-    // set application name
-    spUiAttributes_->setString(UUID_APP_NAME, "Demo", 4);
-
-    // set application layout style
-    LayoutStyle style;
-    style = LAYOUT_STYLE_SIMPLE;
-    style = LAYOUT_STYLE_DOCKING;
-    // style = LAYOUT_STYLE_DEMO;
-    spUiAttributes_->setUint(UUID_UILAYOUT_STYLE, style);
-
-    // set log
-    LogAttributes logAttr = {0};
-
-    logAttr.s.defaultLevel = LT_ALL;
-    logAttr.s.enableAppLogTrace = 1;
-    logAttr.s.enableDebugTrace = 1;
-    logAttr.s.enableLevelTag = 1;
-    spUiAttributes_->setUlong(UUID_LOGTRACE_ATTRIBUTES, logAttr.ul);
-
-    // initialize the UI engine
-    r = spUiEngine_->initialize(spApp_.get(), spUiAttributes_.get());
-    RESULT_CHECK(r, "initialze UI engine");
 
     // startup
     r = spUiEngine_->startup();
@@ -85,33 +109,111 @@ Result App::startUI()
     return r;
 }
 
+
+Result App::initUiEngine()
+{
+    Result r = R_SUCCESS;
+
+    // create an attribute
+    r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&spUiAttributes_);
+    VERIFY(r, "create instance attributes");
+
+    //
+    //
+    //
+
+    // set application name
+    spUiAttributes_->setString(UUID_APP_NAME, "Demo", 4);
+
+    int layout = 0;
+    spToml_->getInt("uiengine", "layout", layout);
+
+    // set application layout style
+    LayoutStyle style;
+    // style = LAYOUT_STYLE_SIMPLE;
+    // style = LAYOUT_STYLE_DOCKING;
+    //  style = LAYOUT_STYLE_DEMO;
+
+    switch (layout)
+    {
+    case 0:
+        style = LAYOUT_STYLE_SIMPLE;
+        break;
+    case 1:
+        style = LAYOUT_STYLE_DOCKING;
+        break;
+    case 2:
+        style = LAYOUT_STYLE_DEMO;
+        break;
+    default:
+        style = LAYOUT_STYLE_SIMPLE;
+        break;
+    }
+
+    spUiAttributes_->setUint(UUID_UILAYOUT_STYLE, style);
+
+
+    // set log
+    LogAttributes logAttr = {0};
+
+    bool b;
+    r = spToml_->getBool("uiengine", "log", "enable",b);
+    if(b)
+        logAttr.s.enableFileLogger = 1;
+
+    b=false;
+    spToml_->getBool("uiengine", "log", "todebugger",b);
+    if(b)
+        logAttr.s.enableMessageToDebugger = 1;
+
+    b=false;
+    spToml_->getBool("uiengine", "log", "tag",b);
+    if(b)
+        logAttr.s.enableLevelTag = 1;
+
+    int level=0;
+
+    spToml_->getInt("uiengine", "log", "level",level);
+    logAttr.s.defaultLevel =level;
+
+
+    spUiAttributes_->setUlong(UUID_LOGTRACE_ATTRIBUTES, logAttr.ul);
+
+    // initialize the UI engine
+    r = spUiEngine_->initialize(spApp_.get(), spUiAttributes_.get());
+    VERIFY(r, "initialze UI engine");
+
+    return r;
+}
+
+
 Result App::setLayout()
 {
     Result r = R_SUCCESS;
 
     // build the MenuBar
     r = buildMenuBar();
-    RESULT_CHECK(r, "build MenuBar");
+    VERIFY(r, "build MenuBar");
 
     // build the ToolBar
     r = buildToolBar();
-    RESULT_CHECK(r, "build ToolBar");
+    VERIFY(r, "build ToolBar");
 
     // build the StatusBar
     r = buildStatusBar();
-    RESULT_CHECK(r, "build StatusBar");
+    VERIFY(r, "build StatusBar");
 
     // build the ImageWindow
     r = buildImageWindow();
-    RESULT_CHECK(r, "build ImageWindow");
+    VERIFY(r, "build ImageWindow");
 
     // build the TextureInspector
     r = buildTextureInspector();
-    RESULT_CHECK(r, "build TextureInspector");
+    VERIFY(r, "build TextureInspector");
 
     // build the layout
     r = buildLayout();
-    RESULT_CHECK(r, "build UI layout");
+    VERIFY(r, "build UI layout");
 
     return r;
 }
@@ -123,17 +225,17 @@ Result App::buildMenuBar()
     // MenuBar
     sptr<IUiMenuBar> spMenuBar;
     r = spUiEngine_->createInstance(IID_IUIMENUBAR, (void **)&spMenuBar);
-    RESULT_CHECK(r, "spUiEngine_.createInstance(<IUiMenuBar>)");
+    VERIFY(r, "spUiEngine_.createInstance(<IUiMenuBar>)");
 
     sptr<IAttributes> spMenuBarAttrbutes;
 
     // create an attribute
     r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&spMenuBarAttrbutes);
-    RESULT_CHECK(r, "create instance attributes");
+    VERIFY(r, "create instance attributes");
 
     // initialize MenuBar
     r = spMenuBar->initialize(spMenuBarAttrbutes.get());
-    RESULT_CHECK(r, "initialize MenuBar");
+    VERIFY(r, "initialize MenuBar");
 
     UiMenuFlags flags;
 
@@ -142,35 +244,35 @@ Result App::buildMenuBar()
     flags.s.enable = 1;
     flags.s.end = 0;
     r = spMenuBar->insertMenuItem("File", 0, flags.ui);
-    RESULT_CHECK(r, "insert MenuItem");
+    VERIFY(r, "insert MenuItem");
 
     flags.s.start = 1;
     flags.s.checked = 0;
     flags.s.enable = 1;
     flags.s.end = 1;
     r = spMenuBar->insertMenuItem("Exit", 0, flags.ui);
-    RESULT_CHECK(r, "insert MenuItem");
+    VERIFY(r, "insert MenuItem");
 
     flags.s.start = 1;
     flags.s.checked = 0;
     flags.s.enable = 1;
     flags.s.end = 0;
     r = spMenuBar->insertMenuItem("View", 1, flags.ui);
-    RESULT_CHECK(r, "insert MenuItem");
+    VERIFY(r, "insert MenuItem");
 
     flags.s.start = 0;
     flags.s.checked = 0;
     flags.s.enable = 1;
     flags.s.end = 0;
     r = spMenuBar->insertMenuItem("ToolBar", 0, flags.ui);
-    RESULT_CHECK(r, "insert MenuItem");
+    VERIFY(r, "insert MenuItem");
 
     flags.s.start = 0;
     flags.s.checked = 0;
     flags.s.enable = 1;
     flags.s.end = 1;
     r = spMenuBar->insertMenuItem("StatusBar", 0, flags.ui);
-    RESULT_CHECK(r, "insert MenuItem");
+    VERIFY(r, "insert MenuItem");
 
     spUiEngine_->addMenuBar(spMenuBar.get());
 
@@ -184,7 +286,7 @@ Result App::buildToolBar()
     // ToolBar
     sptr<IUiToolBar> spToolBar;
     r = spUiEngine_->createInstance(IID_IUITOOLBAR, (void **)&spToolBar);
-    RESULT_CHECK(r, "spUiEngine_.createInstance(<IUiToolBar>)");
+    VERIFY(r, "spUiEngine_.createInstance(<IUiToolBar>)");
 
     char filename[MAX_PATH];
     spApp_->getCurrentPath(filename, MAX_PATH);
@@ -235,7 +337,7 @@ Result App::buildStatusBar()
     // StatusBar
     sptr<IUiStatusBar> spStatusBar;
     r = spUiEngine_->createInstance(IID_IUISTATUSBAR, (void **)&spStatusBar);
-    RESULT_CHECK(r, "spUiEngine_.createInstance(<IUiStatusBar>)");
+    VERIFY(r, "spUiEngine_.createInstance(<IUiStatusBar>)");
 
     spUiEngine_->addStatusBar(spStatusBar.get());
 
@@ -248,7 +350,7 @@ Result App::buildImageWindow()
 
     sptr<IUiImageWindow> spImageWindow;
     r = spUiEngine_->createInstance(IID_IUIIMAGEWINDOW, (void **)&spImageWindow);
-    RESULT_CHECK(r, "spUiEngine_.createInstance(<IUiImageWindow>)");
+    VERIFY(r, "spUiEngine_.createInstance(<IUiImageWindow>)");
 
     char filename[MAX_PATH];
     spApp_->getCurrentPath(filename, MAX_PATH);
@@ -267,7 +369,7 @@ Result App::buildTextureInspector()
 
     sptr<IUiTextureInspector> spTextureInspector;
     r = spUiEngine_->createInstance(IID_IUITEXTURE_INSPECTOR, (void **)&spTextureInspector);
-    RESULT_CHECK(r, "spUiEngine_.createInstance(<IUiTextureInspector>)");
+    VERIFY(r, "spUiEngine_.createInstance(<IUiTextureInspector>)");
 
     char filename[MAX_PATH];
     spApp_->getCurrentPath(filename, MAX_PATH);
