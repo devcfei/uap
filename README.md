@@ -1,30 +1,38 @@
 # uap
 
-Universal Application Platform
+## Universal Application Platform
+![example workflow](https://github.com/devcfei/uap/actions/workflows/Windows.yml/badge.svg)
 
+
+📖 [API](doc/api.md)
+
+## ✨ Features
+🕹 Simple and clear user interface
+
+
+
+## ⌨️ Development
+
+
+### Clone Code
 UAP leverages several open source projects as submodules. Clone the code with **--recursive** option
 ```
 git clone --recursive https://github.com/devcfei/uap.git
 ```
 
-`submodules`
-
-Project | Original repository | Description
----|---|---
-ImGui | https://github.com/ocornut/imgui | mapped to source/uiengine/be/imguibe/imgui                                     
-imgui_tex_inspect |https://github.com/andyborrell/imgui_tex_inspect |mapped to source/uiengine/be/imguibe/imgui_tex_inspect
+Submodules | Description
+---|---
+[ImGui](https://github.com/ocornut/imgui) | Dear ImGui                         
+[imgui_tex_inspect](https://github.com/andyborrell/imgui_tex_inspect) | Texture inspector
 
 
-## Build
-
+### Build
 Supported platform and build
 
 Platform | Build Type
 ----|----
 Windows| Debug,Release 
 Linux| N/A
-
-### Windows Build
 
 
 `Debug Build`
@@ -42,41 +50,11 @@ cmake --install build --config Release
 ```
 
 
-## APIs
-
-All the APIs are in **uap** namespace, there are several C APIs and C++ APIs
-
-The C++ APIs are are always interface based
 
 
-### C APIs
+
+## 📜 License
+uap is licensed under the MIT License, see LICENSE.txt for more information.
 
 
-API | Description
-----|----
-uapInitialize | Initialize the UAP 
-uapCreateApplication | Create the application
-uapPrintMessage | print log
-
-### C++ APIs(Interfaces)
-
-The C++ APIs are all interfaces, they are exposed from UAP(uapbe) itself or the components
-
-
-Interface | component|backend
-----|----|----
-uap::IAttributes| UAP |windows, linux(N/A)
-uap::IApplication| UAP |windows, linux(N/A)
-uap::IFileLogger| UAP |windows, linux(N/A)
-uap::ILogTrace| UAP |windows, linux(N/A)
-uap::IUiEngine| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IUiLayout| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IUiMenuBar| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IUiToolBar| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IUiStatusBar| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IUiDraw| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IUiImageWindow| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IUiTextureInspector| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IUiTexture| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IUiEngineBackend| uiengine| ImGui(win32-d3d9,win32-d3d11)
-uap::IImageEngine| imageengine| WIC, libpng(N/A)
+[MIT](https://opensource.org/licenses/MIT) Copyright (c) 2018-present Chao Fei
