@@ -5,8 +5,9 @@
 // uap
 #define MODULE_NAME "imageengine"
 #include <uap.h>
+#include <uapcomponent.h>
 #include <uapimageengine.h>
-using namespace uap;
+//using namespace uap;
 
 // Windows specical
 #include <windows.h>
@@ -17,20 +18,20 @@ using namespace uap;
 #include "imageengineimpl.h"
 
 
-#ifdef UAP_IMAGEENGINE_EXPORTS
-#define DLL_EXPORTS _declspec(dllexport)
-#else
-#define DLL_EXPORTS _declspec(dllimport)
-#endif
+// #ifdef UAP_IMAGEENGINE_EXPORTS
+// #define DLL_EXPORTS _declspec(dllexport)
+// #else
+// #define DLL_EXPORTS _declspec(dllimport)
+// #endif
 
 
 
-namespace uap
-{
-    extern "C" DLL_EXPORTS Result compGetInterface(const Uuid &iid, void **ppv);
-    extern "C" DLL_EXPORTS Result compRegisterInterface(const Uuid *iidArr, Ulong *count);
+// namespace uap
+// {
+//     extern "C" DLL_EXPORTS Result compGetInterface(const Uuid &iid, void **ppv);
+//     extern "C" DLL_EXPORTS Result compRegisterInterface(const Uuid *iidArr, Ulong *count);
 
-};
+// };
 
 
 

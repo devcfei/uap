@@ -1,4 +1,5 @@
 #include "comp.h"
+using namespace uap;
 
 
 BOOL APIENTRY DllMain( HMODULE hModule,
@@ -18,7 +19,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
     if(ul_reason_for_call == DLL_PROCESS_ATTACH)
     {
-        Result r = uapInitialize();
         UAP_TRACE("dllmain process attach!\n");
     }
 

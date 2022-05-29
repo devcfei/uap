@@ -1,4 +1,4 @@
-#include "comp.h"
+#include "common.h"
 
 
 namespace uap
@@ -17,7 +17,7 @@ namespace uap
         //UAP_TRACE("UiLogWindowImpl::release - refcount=%d\n", ref);
         if (!ref)
         {
-            //UAP_TRACE("delete UiLogWindowImpl!!!!!\n");
+            UAP_TRACE("UiLogWindowImpl delete!!!!\n");
             delete this;
         }
         return ref;

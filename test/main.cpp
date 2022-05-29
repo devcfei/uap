@@ -1,12 +1,8 @@
-#include "headers.h"
-
-
+#include "common.h"
 
 
 int main(int argc, char *argv[])
-{
-    uapInitialize();
-    
+{  
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

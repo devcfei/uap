@@ -1,4 +1,4 @@
-#include "comp.h"
+#include "common.h"
 
 
 
@@ -14,6 +14,7 @@ namespace uap
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
         {
+            UAP_TRACE("UiEngineBackendDx11Impl delete!!!!\n");
             delete this;
         }
         return ref;

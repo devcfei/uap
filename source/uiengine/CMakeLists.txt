@@ -39,7 +39,7 @@ list(APPEND SRC_EXTRA
 add_library(uiengine SHARED ${SRCS} ${SRC_EXTRA} )
 
 
-target_compile_definitions(uiengine PRIVATE UAP_UIENGINE_EXPORTS)
+target_compile_definitions(uiengine PRIVATE COMPONENT_EXPORTS)
 target_link_libraries(uiengine uap d3d9 d3d11 d3dcompiler dxgi)
 
 # backends

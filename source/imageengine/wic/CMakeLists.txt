@@ -4,7 +4,7 @@ project(uap-imageengine)
 
 aux_source_directory(${PROJECT_SOURCE_DIR} SRCS)
 add_library(imageengine SHARED ${SRCS})
-target_compile_definitions(imageengine PRIVATE UAP_IMAGEENGINE_EXPORTS)
+target_compile_definitions(imageengine PRIVATE COMPONENT_EXPORTS)
 target_link_libraries(imageengine uap)
 
 

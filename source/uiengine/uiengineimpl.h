@@ -7,10 +7,7 @@ namespace uap
     class UiEngineImpl : public IUiEngine
     {
     public:
-        UiEngineImpl()
-            : refcount_(1)
-        {
-        }
+
         virtual Ulong addRef();
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &,void **);
@@ -43,7 +40,22 @@ namespace uap
             return spLogTrace_.get();
         }
 
+        static Result createInstance(IUiEngine **ppv)
+        {
+            UiEngineImpl *p = new UiEngineImpl();
+            if (p)
+            {
+                *ppv = p;
+                return R_SUCCESS;
+            }
+            return R_ERROR;
+        }
+
     private:
+        UiEngineImpl()
+            : refcount_(1)
+        {
+        }
         Ulong refcount_;
 
         Result initializeWindow();

@@ -1,4 +1,4 @@
-#include "comp.h"
+#include "common.h"
 
 
 // Forward declare message handler from imgui_impl_win32.cpp
@@ -16,6 +16,7 @@ namespace uap
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
         {
+            UAP_TRACE("UiEngineImpl delete!!!!\n");
             delete this;
         }
         return ref;

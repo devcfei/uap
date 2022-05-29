@@ -1,4 +1,4 @@
-#include "comp.h"
+#include "common.h"
 
 
 namespace uap
@@ -16,7 +16,7 @@ namespace uap
         //UAP_TRACE("UiMenuBarImpl::release - refcount=%d\n", ref);
         if (!ref)
         {
-            //UAP_TRACE("delete UiMenuBarImpl!!!!!\n");
+            UAP_TRACE("UiMenuBarImpl delete!!!!\n");
             delete this;
         }
         return ref;

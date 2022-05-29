@@ -13,12 +13,12 @@ namespace uap
 
 
     // component funcitons
-    Result compGetInterface(const Uuid& iid, void** ppv)
+    Result CreateInstance(const Uuid& iid, void** ppv)
     {
 
         Result r = R_NO_SUCH_INTERFACE;
 
-        UAP_TRACE("compGetInterface\n");
+        //UAP_TRACE("compGetInterface\n");
 
 
         IImageEngine* pi;
@@ -42,11 +42,11 @@ namespace uap
 
 
 
-    Result compRegisterInterface(const Uuid *iidArr, Ulong* count)
+    Result RegisterComponent(const Uuid *iidArr, Ulong* count)
     {
         Result r = R_SUCCESS;
 
-        UAP_TRACE("compRegisterInterface\n");
+        //UAP_TRACE("compRegisterInterface\n");
 
 
         if(iidArr ==nullptr || count ==nullptr)

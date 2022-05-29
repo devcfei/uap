@@ -1,5 +1,4 @@
-#include "headers.h"
-
+#include "common.h"
 
 TEST(UAP, Types)
 {
@@ -120,85 +119,11 @@ TEST(UAP, Log)
 }
 
 
-TEST(UAP, IAttributes)
+TEST(UAP, createApplication)
 {
     Result r;
-    sptr<IApplication> sp;
-
-    r = uapCreateApplication((IApplication**)&sp);
+    sptr<IApplication> spApp;
+    r = uapCreateApplication((IApplication**)&spApp);
     EXPECT_EQ(r, R_SUCCESS);
-
-
-    IAttributes *piAttributes;
-    r = sp->createInstance(IID_IATTRIBUTES, (void**)&piAttributes);    
-    EXPECT_EQ(r, R_SUCCESS);
-
-    Uint val =10;
-    piAttributes->setUint(UUID_NULL,val);
-    piAttributes->getUint(UUID_NULL,val);
-    piAttributes->release();
 
 }
-
-
-TEST(UAP, IAttributes_sptr)
-{
-    Result r;
-    sptr<IApplication> sp;
-
-    r = uapCreateApplication((IApplication**)&sp);
-    EXPECT_EQ(r, R_SUCCESS);
-
-    sptr<IAttributes> spAttributes;
-    r = sp->createInstance(IID_IATTRIBUTES, (void**)&spAttributes);    
-    EXPECT_EQ(r, R_SUCCESS);
-
-    Uint val =20;
-    spAttributes->setUint(UUID_NULL,val);
-    spAttributes->getUint(UUID_NULL,val);
-
-
-}
-
-
-// {7b4a8d1a-137c-4945-ad03-16d068f36346}
-DEFINE_UUID(UUID_TEST_ITEM, 
-    0x7b4a8d1a, 0x137c, 0x4945, 0xad, 0x03, 0x16, 0xd0, 0x68, 0xf3, 0x63, 0x46);
-
-
-
-TEST(UAP, IAttributes_uint) 
-{
-    Result r;
-    sptr<IApplication> sp;
-
-    r = uapCreateApplication((IApplication**)&sp);
-    EXPECT_EQ(r, R_SUCCESS);
-
-    sptr<IAttributes> spAttributes;
-    r = sp->createInstance(IID_IATTRIBUTES, (void**)&spAttributes);    
-    EXPECT_EQ(r, R_SUCCESS);
-
-
-    Uint val = 0xdeedbeef;
-    r = spAttributes->setUint(UUID_TEST_ITEM, val);
-    EXPECT_EQ(r, R_SUCCESS);
-    val = 0;
-
-    r = spAttributes->getUint(UUID_TEST_ITEM, val);
-    EXPECT_EQ(r, R_SUCCESS);
-
-    EXPECT_EQ(val, 0xdeedbeef);
-
-    // overwrite test
-    val =  0xfacefeed;
-    r = spAttributes->setUint(UUID_TEST_ITEM, val);
-    EXPECT_EQ(r, R_SUCCESS);
-
-    val = 0;
-
-    r = spAttributes->getUint(UUID_TEST_ITEM, val);
-    EXPECT_EQ(r, R_SUCCESS);
-    EXPECT_EQ(val, 0xfacefeed);
-}
-

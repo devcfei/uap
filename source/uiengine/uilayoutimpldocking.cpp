@@ -1,4 +1,4 @@
-#include "comp.h"
+#include "common.h"
 
 namespace uap
 {
@@ -12,6 +12,7 @@ namespace uap
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
         {
+            UAP_TRACE("UiLayoutImplDocking delete!!!!\n");
             delete this;
         }
         return ref;

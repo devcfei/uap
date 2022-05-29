@@ -1,10 +1,10 @@
-#include "headers.h"
+#include "common.h"
 
 
 static void ComponentCreateInstance()
 {
-    sptr<IFoo> sp;
-    FooImpl::createInstance((void **)&sp);
+    sptr<IFooBar> sp;
+    FooBarImpl::createInstance(sp.getaddrof());
 }
 
 TEST(Component, CreateInstance)
@@ -12,5 +12,5 @@ TEST(Component, CreateInstance)
 
     ComponentCreateInstance(); // Demostrate how to use sptr to create instance without delete
 
-    EXPECT_EQ(0, FooImpl::memcount);
+    EXPECT_EQ(0, FooBarImpl::memcount);
 }

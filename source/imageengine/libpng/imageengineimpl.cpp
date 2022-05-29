@@ -13,6 +13,7 @@ namespace uap
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
         {
+            UAP_TRACE("ImageEngineImpl delete!!!!\n");
             delete this;
         }
         return ref;

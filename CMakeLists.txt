@@ -36,6 +36,7 @@ include_directories(
 
 add_subdirectory(source)
 add_subdirectory(test)
+add_subdirectory(demo)
 
 
 # install

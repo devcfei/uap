@@ -1,4 +1,4 @@
-#include "comp.h"
+#include "common.h"
 
 #define STB_IMAGE_IMPLEMENTATION//TEX_INSPECT_CHANGE
 #include <stb_image.h> //TEX_INSPECT_CHANGE

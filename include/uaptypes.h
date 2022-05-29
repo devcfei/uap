@@ -17,6 +17,8 @@ namespace uap
     typedef unsigned long Ulong;
     typedef unsigned long long UlongLong;
 
+    typedef bool Boolean;
+
     typedef struct
     {
         unsigned int Data1;
@@ -24,6 +26,7 @@ namespace uap
         unsigned short Data3;
         unsigned char Data4[8];
     } Uuid;
+
 
     inline int uapUuidIsEqual(const Uuid &uid1, const Uuid &uid2)
     {
