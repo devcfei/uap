@@ -108,15 +108,26 @@ namespace uap
             //     ImGui::EndMenu();
             // }
 
-            for(auto it: vecMenuItem_)
-            {
+            bool bSuc;
 
-                if(ImGui::BeginMenu(it.name.c_str()) )                              
+            for (auto it : vecMenuItem_)
+            {
+                if (it.flags.s.start)
                 {
-                    ImGui::EndMenu();
+                    bSuc = ImGui::BeginMenu(it.name.c_str());
+                    continue;
+                }
+
+                if (bSuc)
+                {
+                    ImGui::MenuItem(it.name.c_str(), NULL);
+
+                    if (it.flags.s.end)
+                    {
+                        ImGui::EndMenu();
+                    }
                 }
             }
-
 
             ImGui::EndMenuBar();
         }

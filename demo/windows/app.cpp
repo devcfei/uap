@@ -251,7 +251,7 @@ Result App::buildMenuBar()
     r = spMenuBar->insertMenuItem("File", 0, flags.ui);
     VERIFY(r, "insert MenuItem");
 
-    flags.s.start = 1;
+    flags.s.start = 0;
     flags.s.checked = 0;
     flags.s.enable = 1;
     flags.s.end = 1;
@@ -275,9 +275,41 @@ Result App::buildMenuBar()
     flags.s.start = 0;
     flags.s.checked = 0;
     flags.s.enable = 1;
-    flags.s.end = 1;
+    flags.s.end = 0;
     r = spMenuBar->insertMenuItem("StatusBar", 0, flags.ui);
     VERIFY(r, "insert MenuItem");
+
+
+    flags.s.start = 0;
+    flags.s.checked = 0;
+    flags.s.enable = 1;
+    flags.s.end = 0;
+    r = spMenuBar->insertMenuItem("Console", 0, flags.ui);
+    VERIFY(r, "insert MenuItem");
+
+    flags.s.start = 0;
+    flags.s.checked = 0;
+    flags.s.enable = 1;
+    flags.s.end = 1;
+    r = spMenuBar->insertMenuItem("Log", 0, flags.ui);
+    VERIFY(r, "insert MenuItem");
+
+
+    flags.s.start = 1;
+    flags.s.checked = 0;
+    flags.s.enable = 1;
+    flags.s.end = 1;
+    r = spMenuBar->insertMenuItem("Help", 0, flags.ui);
+    VERIFY(r, "insert MenuItem");
+
+
+    flags.s.start = 0;
+    flags.s.checked = 0;
+    flags.s.enable = 1;
+    flags.s.end = 1;
+    r = spMenuBar->insertMenuItem("About", 0, flags.ui);
+    VERIFY(r, "insert MenuItem");
+
 
     spUiEngine_->addMenuBar(spMenuBar.get());
 
