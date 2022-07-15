@@ -372,9 +372,9 @@ namespace uap
         float fontSize =FONT_SIZE;
         float fonScaler =1.0f;
 
-        io.Fonts->AddFontFromMemoryTTF((void*)tahoma, sizeof(tahoma), fontSize*fonScaler, &font_cfg);
         //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeui.ttf", fontSize*fonScaler, &font_cfg);
         //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeuib.ttf", 17.0f, &font_cfg);
+        io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\calibri.ttf", fontSize*fonScaler , &font_cfg);
         io.FontGlobalScale /= fonScaler;
 
 

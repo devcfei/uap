@@ -28,10 +28,8 @@ using namespace Microsoft::WRL;
 #include <d3d11.h>
 
 
-#include "tahoma.h"
 
-
-#define FONT_SIZE 17.0f
+#define FONT_SIZE 15.0f
 #define TOOLBAR_HEIGHT 32.0f
 
 //#define IMGUI_ENABLE_FREETYPE
