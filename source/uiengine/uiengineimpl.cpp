@@ -1,6 +1,6 @@
 #include "common.h"
 
-
+#include "style.h"
 // Forward declare message handler from imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -366,6 +366,7 @@ namespace uap
 
     	ImFontConfig font_cfg;
         font_cfg.FontDataOwnedByAtlas = false;
+        font_cfg.OversampleH = 3;
         // font_cfg.OversampleH = 1;
         // font_cfg.RasterizerMultiply = 1.3f;
 
@@ -374,7 +375,12 @@ namespace uap
 
         //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeui.ttf", fontSize*fonScaler, &font_cfg);
         //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeuib.ttf", 17.0f, &font_cfg);
-        io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\calibri.ttf", fontSize*fonScaler , &font_cfg);
+        io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeuisl.ttf", fontSize * fonScaler, &font_cfg);
+
+        //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\calibri.ttf", fontSize*fonScaler , &font_cfg);
+        //io.Fonts->AddFontFromFileTTF("Roboto-Medium.ttf", fontSize*fonScaler , &font_cfg);
+
+        
         io.FontGlobalScale /= fonScaler;
 
 
@@ -427,6 +433,10 @@ namespace uap
 
             style.WindowMenuButtonPosition = ImGuiDir_Right;
         }
+
+
+        Style::SetStyle(CORPORATE);
+    
 
         // Setup Platform/Renderer backends
         ImGui_ImplWin32_Init(hWnd_);

@@ -29,7 +29,7 @@ using namespace Microsoft::WRL;
 
 
 
-#define FONT_SIZE 15.0f
+#define FONT_SIZE 18.0f
 #define TOOLBAR_HEIGHT 32.0f
 
 //#define IMGUI_ENABLE_FREETYPE
@@ -59,6 +59,9 @@ using namespace Microsoft::WRL;
 #include "uienginebackenddx11impl.h"
 #include "uiengineimpl.h"
 #include "uitextureimpl.h"
+
+
+
 
 
 
