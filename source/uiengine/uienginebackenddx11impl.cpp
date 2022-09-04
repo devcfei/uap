@@ -139,6 +139,10 @@ namespace uap
 #if defined(USE_COMPTR)
         d3d11SwapChain_->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
 #else
+        if(nullptr==g_pd3dDevice)
+        {
+            return r;
+        }
         g_pSwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
 #endif
         d3d11CreateRenderTarget();

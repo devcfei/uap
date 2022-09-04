@@ -55,6 +55,10 @@ namespace uap
         {
             r = UiLogWindowImpl::createInstance((IUiLogWindow **)ppv);
         } 
+        else if (uapUuidIsEqual(rUuid, IID_IFILEBROSWER))
+        {
+            r = UiFileBrowser::createInstance((IUiFileBrowser **)ppv);
+        } 
         else if (uapUuidIsEqual(rUuid, IID_IUIIMAGEWINDOW))
         {
             r = UiImageWindowImpl::createInstance(spBackend_.get(),(IUiImageWindow **)ppv);
@@ -299,6 +303,22 @@ namespace uap
         *ppiLogWindow = spLogWindow_.get();
         // Don't forget to add reference count
         (*ppiLogWindow)->addRef();
+        return r;
+    }
+
+    Result UiEngineImpl::addFileBroserWindow(IUiFileBrowser *piFileBrowserWindow)
+    {
+        Result r = R_SUCCESS;
+        spFileBrowserWindow_ = piFileBrowserWindow;
+        return r;
+    }
+    Result UiEngineImpl::getFileBroserWindow(IUiFileBrowser **ppiFileBrowserWindow)
+    {
+        Result r = R_SUCCESS;
+
+        *ppiFileBrowserWindow = spFileBrowserWindow_.get();
+        // Don't forget to add reference count
+        (*ppiFileBrowserWindow)->addRef();
         return r;
     }
 

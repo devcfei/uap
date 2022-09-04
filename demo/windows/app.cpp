@@ -208,6 +208,7 @@ Result App::setLayout()
     r = buildLogWindow();
     VERIFY(r, "build LogWindow");
 
+
     // build the ImageWindow
     r = buildImageWindow();
     VERIFY(r, "build ImageWindow");
@@ -215,6 +216,13 @@ Result App::setLayout()
     // build the TextureInspector
     r = buildTextureInspector();
     VERIFY(r, "build TextureInspector");
+
+    // build the FileBrowseWindow
+
+    r = buildFileBrowserWindow();
+    VERIFY(r, "build file browser");
+    
+
 
     // build the layout
     r = buildLayout();
@@ -395,6 +403,26 @@ Result App::buildLogWindow()
 
 
     spLogWindow->addMessage("first message!\n");
+    return r;
+}
+
+
+Result App::buildFileBrowserWindow()
+{
+    Result r = R_SUCCESS;
+
+    // StatusBar
+    sptr<IUiFileBrowser> spBrowser;
+    r = spUiEngine_->createInstance(IID_IFILEBROSWER, (void **)&spBrowser);
+    VERIFY(r, "spUiEngine_.createInstance(<IUiLogWindow>)");
+
+    spUiEngine_->addFileBroserWindow(spBrowser.get());
+
+
+    char path[256];
+    spApp_->getCurrentPath(path,256);
+    spBrowser->initialize(path);
+
     return r;
 }
 

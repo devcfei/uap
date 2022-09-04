@@ -203,6 +203,41 @@ namespace uap
         inline static const Uuid uuid_ = IID_IUITEXTURE_INSPECTOR;
     }; // @class IUiTextureInspector
 
+
+
+
+    
+    // {a80fca28-e467-48a8-a986-1f0d45367ccb}
+    DEFINE_UUID(IID_IFILEBROSWER, 
+        0xa80fca28, 0xe467, 0x48a8, 0xa9, 0x86, 0x1f, 0x0d, 0x45, 0x36, 0x7c, 0xcb);
+
+
+    class IUiFileBrowser : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IUiFileBrowser
+
+        virtual Result initialize(char* path)=0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IFILEBROSWER;
+    }; // @class IUiFileBrowser
+
+
+
+
+
     // {7f8d5daf-f386-430d-ac32-5578ec6078a0}
     DEFINE_UUID(IID_UIENGINE,
                 0x7f8d5daf, 0xf386, 0x430d, 0xac, 0x32, 0x55, 0x78, 0xec, 0x60, 0x78, 0xa0);
@@ -248,6 +283,8 @@ namespace uap
         virtual Result getStatusBar(IUiStatusBar **ppiStatusBar) = 0;
         virtual Result addLogWindow(IUiLogWindow *piLogWindow) = 0;
         virtual Result getLogWindow(IUiLogWindow **ppiLogWindow) = 0;
+        virtual Result addFileBroserWindow(IUiFileBrowser *piFileBrowserWindow) = 0;
+        virtual Result getFileBroserWindow(IUiFileBrowser **ppiFileBrowserWindow) = 0;
         virtual Result addImageWindow(IUiImageWindow *piImageWindow) = 0;
         virtual Result getImageWindow(IUiImageWindow **ppiImageWindow) = 0;
         virtual Result addTextureInspector(IUiTextureInspector *piTextureInspector) = 0;
@@ -317,6 +354,8 @@ namespace uap
     private:
         inline static const Uuid uuid_ = IID_ITEXTURE;
     }; // @class IUiTexture
+
+
 
     // {cbba6aeb-a57c-45b7-81e1-0f0882ae4547}
     DEFINE_UUID(IID_IUIENGINE_BACKEND,

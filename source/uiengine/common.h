@@ -63,6 +63,7 @@ using namespace Microsoft::WRL;
 #include "uienginebackenddx11impl.h"
 #include "uiengineimpl.h"
 #include "uitextureimpl.h"
+#include "uifilebrowser.h"
 
 
 

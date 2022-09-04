@@ -42,6 +42,7 @@ private:
     Result buildToolBar();
     Result buildStatusBar();    
     Result buildLogWindow();        
+    Result buildFileBrowserWindow();
     Result buildImageWindow();
     Result buildTextureInspector();
 

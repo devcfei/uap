@@ -73,6 +73,11 @@ namespace uap
         Result showLogWindow();
 
 
+        // FileBrowser Window
+        Result showFileBrowserWindow();
+
+
+
 
     }; // @class UiLayoutImplDocking
 

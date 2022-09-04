@@ -159,6 +159,8 @@ namespace uap
         showLogWindow();
         showImageWindow();
         showTextureInspector();
+        showFileBrowserWindow();
+
 
         ImGui::End();
 
@@ -282,6 +284,25 @@ namespace uap
 
         return r;
 
+    }
+
+
+    Result UiLayoutImplDocking::showFileBrowserWindow()
+    {
+        Result r = R_SUCCESS;
+
+        sptr<IUiFileBrowser> spFileBrowser;
+        r = spUiEngine_->getFileBroserWindow(spFileBrowser.getaddrof());
+
+        sptr<IDraw> spDraw;
+        r = spFileBrowser.as(&spDraw);
+        if(UAP_SUCCESS(r))
+        {
+            r = spDraw->draw();
+        }    
+
+
+        return r;  
     }
 
 } // @namespace uap

@@ -59,10 +59,10 @@ namespace uap
         ComPtr<ID3D11RenderTargetView> d3d11RenderTargetView_;
 
 #else
-        ID3D11Device *g_pd3dDevice;
-        ID3D11DeviceContext *g_pd3dDeviceContext;
-        IDXGISwapChain *g_pSwapChain;
-        ID3D11RenderTargetView *g_mainRenderTargetView;
+        ID3D11Device *g_pd3dDevice = nullptr;
+        ID3D11DeviceContext *g_pd3dDeviceContext = nullptr;
+        IDXGISwapChain *g_pSwapChain = nullptr;
+        ID3D11RenderTargetView *g_mainRenderTargetView=nullptr;
 #endif
 
         Result d3d11CreateDevice(HWND hWnd);

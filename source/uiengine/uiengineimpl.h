@@ -35,6 +35,10 @@ namespace uap
         virtual Result addTextureInspector(IUiTextureInspector* piTextureInspector);
         virtual Result getTextureInspector(IUiTextureInspector** ppiTextureInspector);
 
+
+        virtual Result addFileBroserWindow(IUiFileBrowser *piFileBrowserWindow);
+        virtual Result getFileBroserWindow(IUiFileBrowser **ppiFileBrowserWindow);
+
         static ILogTrace* getLogTrace()
         {
             return spLogTrace_.get();
@@ -95,6 +99,7 @@ namespace uap
         sptr<IUiToolBar> spToolBar_;
         sptr<IUiStatusBar> spStatusBar_;
         sptr<IUiLogWindow> spLogWindow_;
+        sptr<IUiFileBrowser> spFileBrowserWindow_;
 
         std::vector<sptr<IUiImageWindow> > spImageWindows_;
         std::vector<sptr<IUiTextureInspector> > spTextureInspector_;
