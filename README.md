@@ -25,6 +25,7 @@ Submodules | Description
 [ImGui](https://github.com/ocornut/imgui) | Dear ImGui                         
 [imgui_tex_inspect](https://github.com/andyborrell/imgui_tex_inspect) | Texture inspector
 [toml11](https://github.com/ToruNiina/toml11) | toml parser/encoder
+[ImPlot](https://github.com/epezent/implot) | implot
 
 
 ### Build

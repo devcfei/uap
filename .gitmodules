@@ -8,3 +8,6 @@
 [submodule "library/toml11"]
 	path = library/toml11
 	url = https://github.com/devcfei/toml11
+[submodule "source/uiengine/be/imguibe/implot"]
+	path = source/uiengine/be/imguibe/implot
+	url = https://github.com/epezent/implot
