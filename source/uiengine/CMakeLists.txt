@@ -36,6 +36,13 @@ list(APPEND SRC_EXTRA
      #${PROJECT_SOURCE_DIR}/be/imguibe/imgui_tex_inspect/imgui_tex_inspect_demo.cpp 
 )
 
+
+
+# implot
+include_directories(${PROJECT_SOURCE_DIR}/be/imguibe/implot)
+aux_source_directory(${PROJECT_SOURCE_DIR}/be/imguibe/implot SRCS)
+
+
 add_library(uiengine SHARED ${SRCS} ${SRC_EXTRA} )
 
 

@@ -137,11 +137,18 @@ namespace uap
         }
 
 
+
+  #if defined(_DEBUG)
         if (showDemoWindow_)
             ImGui::ShowDemoWindow(&showDemoWindow_);
 
 
-        
+        if(showDemoImPlot_)
+        {
+            ImPlot::ShowDemoWindow(&showDemoImPlot_);
+        }
+
+#endif      
 
 
         if (showStatusBar_)

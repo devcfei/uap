@@ -52,7 +52,8 @@ namespace uap
         Result showToolBar(bool* p_open);
         Result showStatusBar(bool* p_open);
         
-        bool showDemoWindow_;
+        bool showDemoWindow_=true;
+        bool showDemoImPlot_=true;
         bool showMenuBar_;
         bool showToolBar_;
         bool showStatusBar_;

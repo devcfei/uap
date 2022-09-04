@@ -174,6 +174,10 @@ namespace uap
         spBackend_->shutdown();
 
         ImGui_ImplWin32_Shutdown();
+
+
+        ImPlot::DestroyContext();
+
         ImGui::DestroyContext();
 
         spBackend_->destoryDevice();
@@ -446,6 +450,10 @@ namespace uap
 
         ImGuiTexInspect::Init();
         ImGuiTexInspect::CreateContext();
+
+
+        ImPlot::CreateContext();
+
 
         return r;
     }

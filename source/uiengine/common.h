@@ -45,6 +45,10 @@ using namespace Microsoft::WRL;
 #include <imgui_tex_inspect_demo.h> //TEX_INSPECT_CHANGE
 
 
+// implot
+#include <implot.h>
+
+
 // UiEngine implementation
 #include "uimenubarimpl.h"
 #include "uitoolbarimpl.h"
