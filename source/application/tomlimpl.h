@@ -15,12 +15,25 @@ namespace uap
         // IToml
         virtual Result initialize(IApplication *piApp, Char *filename);
 
-        virtual Result getBool(Char *k, bool& v);
-        virtual Result getInt(Char *k, int& v);
-        virtual Result getBool(Char* s, Char *k, bool& v);
-        virtual Result getInt(Char* s,Char *k, int& v);
-        virtual Result getBool(Char* s, Char* ss,  Char *k, bool& v);
-        virtual Result getInt(Char* s,Char *ss, Char *k, int& v);
+        virtual Result getBool(const Char *k, bool& v);
+        virtual Result getInt(const Char *k, int& v);
+        virtual Result getString(const Char *k,Char *v ,Ulong length, Ulong *actureLength);
+        virtual Result getBool(const Char* s, const Char *k, bool& v);
+        virtual Result getInt(const Char* s,const Char *k, int& v);
+        virtual Result getString(const Char* s,const Char *k, Char *v, Ulong length, Ulong *actureLength);
+        virtual Result getBool(const Char* s, const Char* ss,  const Char *k, bool& v);
+        virtual Result getInt(const Char* s,const Char *ss, const Char *k, int& v);
+        virtual Result getString(const Char* s,const Char *ss, const Char *k, Char *v, Ulong length, Ulong *actureLength);
+
+        virtual Result setBool(const Char *k, bool& v);
+        virtual Result setInt(const Char *k , int &v);
+        virtual Result setString(const Char *k , const Char *v, Ulong length);
+        virtual Result setBool(const Char* s,const Char *k, bool& v);
+        virtual Result setInt(const Char* s,const Char *k, int& v);
+        virtual Result setString(const Char* s,const Char *k, const Char *v, Ulong length);
+        virtual Result setBool(const Char* s,const Char *ss, const Char *k, bool& v) ;
+        virtual Result setInt(const Char* s,const Char *ss, const Char *k, int& v);
+        virtual Result setString(const Char* s,const Char *ss, const Char *k, const Char *v, Ulong length);
 
         static Result createInstance(IToml **ppv)
         {

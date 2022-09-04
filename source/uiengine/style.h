@@ -1,6 +1,3 @@
-//
-// Copyright(C) 2022 Advanced Micro Devices, Inc. All rights reserved.
-//
 #ifndef _STYLES_H_
 #define _STYLES_H_
 

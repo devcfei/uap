@@ -57,13 +57,13 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::getBool(Char *k, bool &v)
+    Result TomlImpl::getInt(const Char *k, int &v)
     {
         Result r = R_SUCCESS;
 
         try
         {
-            v = toml::find<bool>(data_, k);
+            v = toml::find<int>(data_, k);
         }
         catch (toml::syntax_error &e)
         {
@@ -78,18 +78,27 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::getInt(Char *k, int &v)
+    Result TomlImpl::getString(const Char *k,Char *v ,Ulong length, Ulong *actureLength)
     {
         Result r = R_SUCCESS;
 
         try
         {
-            v = toml::find<bool>(data_, k);
+            auto  as =toml::find<std::string>(data_, k);
+            
+            if (length <as.length())
+            {
+                r = R_BUFFER_TOO_SMALL;
+                if (actureLength)
+                        *actureLength = as.length();
+                return r;
+            }
+
+            strncpy(v, as.c_str(),as.length()+1);
         }
         catch (toml::syntax_error &e)
         {
             const char *errmsg = e.what();
-            v = false;
             r = R_NOT_FOUND;
         }
         catch (...)
@@ -98,9 +107,10 @@ namespace uap
         }
 
         return r;
+
     }
 
-    Result TomlImpl::getBool(Char *s, Char *k, bool &v)
+    Result TomlImpl::getBool(const Char *s, const Char *k, bool &v)
     {
         Result r = R_SUCCESS;
 
@@ -123,7 +133,7 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::getInt(Char *s, Char *k, int &v)
+    Result TomlImpl::getInt(const Char *s, const Char *k, int &v)
     {
         Result r = R_SUCCESS;
 
@@ -146,8 +156,41 @@ namespace uap
 
         return r;
     }
+    
+    Result TomlImpl::getString(const Char* s,const Char *k, Char *v, Ulong length, Ulong *actureLength)
+    {
+        Result r = R_SUCCESS;
 
-    Result TomlImpl::getBool(Char *s, Char *ss, Char *k, bool &v)
+        try
+        {
+
+            const auto &section = toml::find(data_, s);
+            auto as = toml::find<std::string>(section, k);
+
+            if (length <as.length())
+            {
+                r = R_BUFFER_TOO_SMALL;
+                if (actureLength)
+                        *actureLength = as.length();
+                return r;
+            }
+
+            strncpy(v, as.c_str(),as.length()+1);
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::getBool(const Char *s, const Char *ss, const Char *k, bool &v)
     {
         Result r = R_SUCCESS;
 
@@ -171,7 +214,7 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::getInt(Char *s, Char *ss, Char *k, int &v)
+    Result TomlImpl::getInt(const Char *s, const Char *ss, const Char *k, int &v)
     {
         Result r = R_SUCCESS;
 
@@ -181,6 +224,253 @@ namespace uap
             const auto &section = toml::find(data_, s);
             const auto &sub = toml::find(section, ss);
             v = toml::find<int>(sub, k);
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::getString(const Char *s, const Char *ss, const Char *k, Char *v, Ulong length, Ulong *actureLength)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {
+
+            const auto &section = toml::find(data_, s);
+            const auto &sub = toml::find(section, ss);
+            auto as = toml::find<std::string>(sub, k);
+
+            if (length <as.length())
+            {
+                r = R_BUFFER_TOO_SMALL;
+                if (actureLength)
+                        *actureLength = as.length();
+                return r;
+            }
+
+            strncpy(v, as.c_str(),as.length()+1);
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::getBool(const Char *k, bool &v)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {
+            v = toml::find<bool>(data_, k);
+            
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::setBool(const Char *k,bool& v)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {          
+            data_[k] = v;        
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::setInt(const Char *k,int &v)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {          
+            data_[k] = v;        
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::setString(const Char *k,const Char *v, Ulong length)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {  
+            data_[k] = v;   
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::setBool(const Char *s, const Char *k, bool& v)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {
+           data_[s][k] = v;  
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            v = 0;
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::setInt(const Char *s, const Char *k, int &v)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {
+           data_[s][k] = v;  
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            v = 0;
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::setString(const Char *s, const Char *k, const Char *v, Ulong length)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {
+           data_[s][k] = v;  
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::setBool(const Char *s, const Char *ss, const Char *k, bool& v)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {
+            data_[s][ss][k] = v;  
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::setInt(const Char *s, const Char *ss, const Char *k, int &v)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {
+            data_[s][ss][k] = v;  
+        }
+        catch (toml::syntax_error &e)
+        {
+            const char *errmsg = e.what();
+            r = R_NOT_FOUND;
+        }
+        catch (...)
+        {
+            r = R_NOT_FOUND;
+        }
+
+        return r;
+    }
+
+    Result TomlImpl::setString(const Char *s, const Char *ss, const Char *k, const Char *v, Ulong length)
+    {
+        Result r = R_SUCCESS;
+
+        try
+        {
+            data_[s][ss][k] = v;  
         }
         catch (toml::syntax_error &e)
         {

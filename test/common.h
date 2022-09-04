@@ -5,6 +5,10 @@
 
 #include <gtest/gtest.h>
 
+// STL
+#include <fstream>
+
+// UAP
 #include <uap.h>
 #include <uapunknown.h>
 #include <uapimageengine.h>
