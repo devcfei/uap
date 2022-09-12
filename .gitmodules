@@ -11,3 +11,6 @@
 [submodule "source/uiengine/be/imguibe/implot"]
 	path = source/uiengine/be/imguibe/implot
 	url = https://github.com/epezent/implot
+[submodule "library/freetype"]
+	path = library/freetype
+	url = https://github.com/freetype/freetype.git

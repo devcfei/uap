@@ -32,7 +32,7 @@ using namespace Microsoft::WRL;
 #define FONT_SIZE 18.0f
 #define TOOLBAR_HEIGHT 32.0f
 
-//#define IMGUI_ENABLE_FREETYPE
+#define IMGUI_ENABLE_FREETYPE
 //imgui
 #include <imgui.h>
 #include <imgui_impl_dx9.h>

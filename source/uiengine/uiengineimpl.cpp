@@ -407,7 +407,7 @@ namespace uap
         
         io.FontGlobalScale /= fonScaler;
 
-
+        io.Fonts->Build();
 
         // char path[MAX_PATH];
         // spApp_->getCurrentPath(path,MAX_PATH);

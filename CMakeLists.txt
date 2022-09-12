@@ -31,9 +31,11 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include"
     "${PROJECT_SOURCE_DIR}/assets/fontawesome"
     "${PROJECT_SOURCE_DIR}/library/toml11"
+    "${PROJECT_SOURCE_DIR}/library/freetype/include"
     )
 
 
+add_subdirectory(library)
 add_subdirectory(source)
 add_subdirectory(test)
 add_subdirectory(demo)

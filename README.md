@@ -26,6 +26,7 @@ Submodules | Description
 [imgui_tex_inspect](https://github.com/andyborrell/imgui_tex_inspect) | Texture inspector
 [toml11](https://github.com/ToruNiina/toml11) | toml parser/encoder
 [ImPlot](https://github.com/epezent/implot) | implot
+[freetype](https://github.com/freetype/freetype) | freetype
 
 
 ### Build
