@@ -18,7 +18,7 @@ goto end
 :rebuildAll
 cmake --build build --target clean
 :buildAll
-cmake -S . -B build -DCMAKE_INSTALL_PREFIX="install" -DINSTALL_GTEST=OFF
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install/Debug"
 cmake --build build
 cmake --install build --config Debug
 
@@ -29,7 +29,7 @@ goto end
 :rebuildAndTest
 cmake --build build --target clean
 :buildAllTest
-cmake -S . -B build -DCMAKE_INSTALL_PREFIX="install" -DINSTALL_GTEST=OFF
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install/Debug"
 cmake --build build
 cmake --install build --config Debug
 :runTest
@@ -42,9 +42,11 @@ goto end
 
 
 :buildPrecheckin
-cmake -S . -B build -DCMAKE_INSTALL_PREFIX="install" -DINSTALL_GTEST=OFF
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install/Debug"
 cmake --build build
 cmake --install build --config Debug
+
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="install/Release"
 
 cmake --build build --config Release
 cmake --install build --config Release

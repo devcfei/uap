@@ -35,7 +35,7 @@ install(TARGETS test
         CONFIGURATIONS Debug
         LIBRARY DESTINATION Debug/lib
         ARCHIVE DESTINATION Debug/lib
-        RUNTIME DESTINATION Debug/bin
+        RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )
 
@@ -45,6 +45,6 @@ install(TARGETS test
         CONFIGURATIONS Release
         LIBRARY DESTINATION Release/lib
         ARCHIVE DESTINATION Release/lib
-        RUNTIME DESTINATION Release/bin
+        RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )

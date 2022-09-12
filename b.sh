@@ -9,7 +9,7 @@ function build_clean()
 
 function build_all()
 {
-    cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install" -DINSTALL_GTEST=OFF
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install/Debug"
     cmake --build build
     cmake --install build
 }
@@ -26,11 +26,11 @@ function rundemo()
 
 function build_precheckin()
 {
-    cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install" -DINSTALL_GTEST=OFF
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install/Debug"
     cmake --build build
     cmake --install build
 
-    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="install" -DINSTALL_GTEST=OFF
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="install/Release"
     cmake --build build
     cmake --install build
 }

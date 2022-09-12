@@ -11,6 +11,9 @@ endif()
 set( basic_cxx17 "c++17" )
 set( str_cxx17 "${my_std_pre}${basic_cxx17}" )
 
+
+option(INSTALL_GTEST OFF)
+
 include( CheckCXXCompilerFlag )
 check_cxx_compiler_flag( "${str_cxx17}" _cpp_17_flag_supported )
 if ( _cpp_17_flag_supported )
@@ -44,43 +47,43 @@ add_subdirectory(demo)
 # install
 install(FILES assets/fontawesome/fontawesome-webfont.ttf
         CONFIGURATIONS Debug
-        DESTINATION Debug/bin
+        DESTINATION bin
         )
 
 install(FILES assets/fontawesome/fontawesome-webfont.ttf
         CONFIGURATIONS Release
-        DESTINATION Release/bin
+        DESTINATION bin
         )
 
 install(FILES assets/images/demo.png
         CONFIGURATIONS Debug
-        DESTINATION Debug/bin
+        DESTINATION bin
         )
 
 install(FILES assets/images/demo.png
         CONFIGURATIONS Release
-        DESTINATION Release/bin
+        DESTINATION bin
         )
 
 install(FILES source/uiengine/be/imguibe/imgui/misc/fonts/Roboto-Medium.ttf
         CONFIGURATIONS Debug
-        DESTINATION Debug/bin
+        DESTINATION bin
         )
 
 install(FILES source/uiengine/be/imguibe/imgui/misc/fonts/Roboto-Medium.ttf
         CONFIGURATIONS Release
-        DESTINATION Release/bin
+        DESTINATION bin
         )
 
 
 install(FILES default.toml
         CONFIGURATIONS Debug
-        DESTINATION Debug/bin
+        DESTINATION bin
         )
 
 install(FILES default.toml
         CONFIGURATIONS Release
-        DESTINATION Release/bin
+        DESTINATION bin
         )
 
 

@@ -1,10 +1,10 @@
 #include "common.h"
 
-void initconfig()
+void initconfig(std::string filename)
 {
     std::ofstream file;
 
-    file.open("test.toml");
+    file.open(filename);
     file << "name = \"hello\" " << std::endl;
     file << "id = 188 " << std::endl;
     file << "booltrue = true " << std::endl;
@@ -24,7 +24,6 @@ TEST(TOML, get)
 {
     Result r;
 
-    initconfig();
 
     sptr<IApplication> spApp;
 
@@ -35,7 +34,16 @@ TEST(TOML, get)
     r = spApp->createInstance(IID_ITOML, (void **)&spConfig);
     EXPECT_EQ(r, R_SUCCESS);
 
-    r = spConfig->initialize(spApp.get(), "test.toml");
+    Char path[256];
+    spApp->getCurrentPath(path,256);
+
+    std::string file=path;
+    file+="test.toml";
+
+    initconfig(file);
+
+
+    r = spConfig->initialize(spApp.get(), file.data());
     EXPECT_EQ(r, R_SUCCESS);
 
     char *s=new char[8];
@@ -99,7 +107,6 @@ TEST(TOML, set)
 {
     Result r;
 
-    initconfig();
 
     sptr<IApplication> spApp;
 
@@ -110,7 +117,17 @@ TEST(TOML, set)
     r = spApp->createInstance(IID_ITOML, (void **)&spConfig);
     EXPECT_EQ(r, R_SUCCESS);
 
-    r = spConfig->initialize(spApp.get(), "test.toml");
+
+    Char path[256];
+    spApp->getCurrentPath(path,256);
+
+    std::string file=path;
+    file+="test.toml";
+
+    initconfig(file);
+
+
+    r = spConfig->initialize(spApp.get(), file.data());
     EXPECT_EQ(r, R_SUCCESS);
 
     int si=18;
