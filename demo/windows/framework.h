@@ -17,6 +17,8 @@ using namespace uap;
 
 #include <IconsForkAwesome.h>
 
+
+#include "eventdispatch.h"
 #include "app.h"
 
 

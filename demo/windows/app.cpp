@@ -35,6 +35,12 @@ Result App::initApplication()
 
 
     r =initApplicationConfiguration();
+    VERIFY(r, "initial app config");
+
+
+    r =initAppEvent();
+    VERIFY(r, "initial app event");
+
 
     return r;
 }
@@ -83,6 +89,30 @@ Result App::initApplicationConfiguration()
     return r;
 }
 
+Result App::initAppEvent()
+{
+    Result r;
+
+
+    r = spApp_->createInstance(IID_IEVENT, (void **)&spEvent_);
+    VERIFY(r, "createInstance IID_IEVENT");
+
+
+    r = spEvent_->initialize(nullptr);
+    VERIFY(r, "event initialize");
+
+
+    r = EventDispatcherImpl::createInstance(spEventDispatcher_.getaddrof());
+    VERIFY(r, "event dispatch create");
+
+
+    r = spEvent_->addDispatcher(spEventDispatcher_.get());
+    VERIFY(r, "event add dispatcher");    
+
+
+
+    return r;
+}
 
 Result App::startUI()
 {
@@ -239,43 +269,63 @@ Result App::buildMenuBar()
     Result r = R_SUCCESS;
 
     // Menu
+
+    // Menu File
     static sptr<IMenu> spMenuFile;
     r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuFile);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
 
-    spMenuFile->addItem("Open", false, NULL);
-    spMenuFile->addItem("Exit", false, NULL);
+    r = spMenuFile->initialize(nullptr, spEvent_.get());
+    VERIFY(r, "menu file, initalize");
 
+    spMenuFile->addItem("Open", false, NULL, Event_FileOpen);
+    spMenuFile->addItem("Exit", false, NULL, Event_AppExit);
+
+
+    // Menu View
     static sptr<IMenu> spMenuView;
     r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuView);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
 
-    spMenuView->addItem("ToolBar", false, NULL);
-    spMenuView->addItem("StatusBar", false, NULL);
+    r = spMenuView->initialize(nullptr, spEvent_.get());
+    VERIFY(r, "menu view, initalize");
 
+
+    spMenuView->addItem("ToolBar", false, NULL, Event_ViewToolBar);
+    spMenuView->addItem("StatusBar", false, NULL,Event_ViewStatusBar);
+
+    // Menu View panel
     static sptr<IMenu> spMenuViewPanelWindow;
     r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuViewPanelWindow);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
-    spMenuViewPanelWindow->addItem("Generic", false, NULL);
-    spMenuViewPanelWindow->addItem("File Broswer", false, NULL);
-    spMenuViewPanelWindow->addItem("Log", false, NULL);
 
-    spMenuView->addItem("Panel", false, spMenuViewPanelWindow.get());
+    r = spMenuViewPanelWindow->initialize(nullptr, spEvent_.get());
+    VERIFY(r, "menu view panel, initalize");
+
+
+    spMenuViewPanelWindow->addItem("Generic", false, NULL, Event_ViewPanelGeneric);
+    spMenuViewPanelWindow->addItem("File Browser", false, NULL,Event_ViewPanelFileBrowser);
+    spMenuViewPanelWindow->addItem("Log", false, NULL,Event_ViewPanelLog);
+
+    spMenuView->addItem("Panel", false, spMenuViewPanelWindow.get(),0);
 
 
     static sptr<IMenu> spMenuHelp;
     r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuHelp);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
 
-    spMenuHelp->addItem("About", false, NULL);
+    r = spMenuHelp->initialize(nullptr, spEvent_.get());
+    VERIFY(r, "menu help, initalize");
+
+    spMenuHelp->addItem("About", false, NULL,Event_AppAbout);
 
 
     static sptr<IMenu> spMenuTop;
     r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuTop);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
-    spMenuTop->addItem("File", false, spMenuFile.get());
-    spMenuTop->addItem("View", false, spMenuView.get());
-    spMenuTop->addItem("Help", false, spMenuHelp.get());
+    spMenuTop->addItem("File", false, spMenuFile.get(),0);
+    spMenuTop->addItem("View", false, spMenuView.get(),0);
+    spMenuTop->addItem("Help", false, spMenuHelp.get(),0);
 
 
 

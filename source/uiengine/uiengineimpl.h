@@ -132,8 +132,8 @@ namespace uap
         virtual Result draw();
 
         // IMenu
-        virtual Result initialize(IAttributes *piAttributes);
-        virtual Result addItem(const Char *name, Boolean check, IMenu* submenu);
+        virtual Result initialize(IAttributes *piAttributes, IEvent* piEvent);
+        virtual Result addItem(const Char *name, Boolean check, IMenu* submenu, EventId evtId);
 
 
         static Result createInstance(IMenu **ppi)
@@ -164,10 +164,13 @@ namespace uap
             std::string name;   // display name
             Boolean check;      // check status
             IMenu* submenu;     // sub-menu
+            EventId evtId;      // event ID
         };
 
         std::vector<MenuItem> vecMenuItem_;
         Result drawMenu(IMenu* pMenu);
+
+        sptr<IEvent> spEvent_;
 
     };
 

@@ -10,6 +10,7 @@
 #include <uapunknown.h>
 #include <uapattributes.h>
 #include <uapapp.h>
+#include <uapevent.h>
 #include <uapfilesystem.h>
 #include <uaplogtrace.h>
 #include <uaptoml.h>

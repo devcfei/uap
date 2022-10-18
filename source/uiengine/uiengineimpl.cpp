@@ -694,17 +694,25 @@ namespace uap
 
                 ImGui::EndMenu();
             }
+
+            if(bMenuOpen)
+            {
+                spEvent_->postEvent(it.evtId, 0, 0);
+            }
         }
 
         return r;
     }
 
-    Result MenuImpl::initialize(IAttributes *piAttributes)
+    Result MenuImpl::initialize(IAttributes *piAttributes, IEvent* piEvent)
     {
+
+        spEvent_ =  piEvent;
+
         return R_SUCCESS;
     }
     
-    Result MenuImpl::addItem(const Char *name, Boolean check, IMenu* submenu)
+    Result MenuImpl::addItem(const Char *name, Boolean check, IMenu* submenu, EventId evtId)
     {
         Result r = R_SUCCESS;
 
@@ -713,6 +721,7 @@ namespace uap
         item.name = name;
         item.check = check;
         item.submenu = submenu;
+        item.evtId = evtId;
 
         vecMenuItem_.push_back(item);
 

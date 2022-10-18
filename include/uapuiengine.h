@@ -48,8 +48,8 @@ namespace uap
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
         // IMenu
-        virtual Result initialize(IAttributes *piAttributes) = 0;
-        virtual Result addItem(const Char *name, Boolean check, IMenu* submenu) = 0;
+        virtual Result initialize(IAttributes *piAttributes, IEvent* piEvent) = 0;
+        virtual Result addItem(const Char *name, Boolean check, IMenu* submenu, EventId evtId) = 0;
 
         // uuid
         static const Uuid uuid()

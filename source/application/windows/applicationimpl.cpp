@@ -153,6 +153,10 @@ namespace uap
         {
             r = TomlImpl::createInstance((IToml **)ppv);
         }
+        else if (uapUuidIsEqual(rUuid, IID_IEVENT))
+        {
+            r = EventImpl::createInstance((IEvent **)ppv);
+        }
 
         // if not application interface, find in component
         if (!UAP_SUCCESS(r))

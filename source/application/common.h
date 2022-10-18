@@ -36,6 +36,7 @@
 #include <uapcomponent.h>
 #include "fileloggerimpl.h"
 #include "applicationimpl.h"
+#include "eventimpl.h"
 #include "tomlimpl.h"
 #include "attributesimpl.h"
 #include "logtraceimpl.h"
