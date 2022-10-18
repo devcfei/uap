@@ -6,6 +6,7 @@ project(uap)
 # Build options
 option(INSTALL_GTEST "Install GoogleTest to CMAKE_INSTALL_PREFIX" OFF)
 option(UAP_BUILD_TEST "Build Test" ON)
+option(UAP_BUILD_DEMO "Build Demo" ON)
 
 
 
@@ -45,7 +46,10 @@ add_subdirectory(source)
 if(UAP_BUILD_TEST)
     add_subdirectory(test)
 endif()
-add_subdirectory(demo)
+
+if(UAP_BUILD_DEMO)
+    add_subdirectory(demo)
+endif()
 
 
 # install
