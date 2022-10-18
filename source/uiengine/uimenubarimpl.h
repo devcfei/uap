@@ -15,12 +15,7 @@ namespace uap
 
         // IUiMenuBar
         virtual Result initialize(IAttributes *piAttributes);
-
-        /// insert menu
-        /// \name the display name
-        ///
-        virtual Result insertMenuItem(const Char *name, Uint id, Uint flags);
-
+        virtual Result setMenu(IMenu* piMenu) ;
 
         // IDraw
         virtual Result draw();
@@ -44,14 +39,7 @@ namespace uap
         }
         Ulong refcount_;
 
-        struct UiMenuItem
-        {
-            std::string name;
-            Uint id;
-            UiMenuFlags flags;
-        };
-
-        std::vector<UiMenuItem> vecMenuItem_;
+        sptr<IMenu> spMenu_;
     }; // @class UiMenuBarImpl
 
 } // @namespace uap

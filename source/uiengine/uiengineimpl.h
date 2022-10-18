@@ -108,9 +108,66 @@ namespace uap
         std::vector<sptr<IUiTextureInspector> > spTextureInspector_;
 
 
-        
+
         std::vector<sptr<IPanelWindow> > spPanelWindow_;
 
+
+    };
+
+
+
+
+    // IMenu implementation
+    class MenuImpl : public IMenu
+        , public IDraw
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef();
+        virtual Ulong release();
+        virtual Result queryInterface(const Uuid &,void **);
+
+        // IDraw
+
+        virtual Result draw();
+
+        // IMenu
+        virtual Result initialize(IAttributes *piAttributes);
+        virtual Result addItem(const Char *name, Boolean check, IMenu* submenu);
+
+
+        static Result createInstance(IMenu **ppi)
+        {
+            MenuImpl *p = new MenuImpl();
+            if (p)
+            {
+                *ppi = p;
+                return R_SUCCESS;
+            }
+            return R_ERROR;
+        }
+
+
+    private:
+        MenuImpl()
+            : refcount_(1)
+        {
+        }
+        Ulong refcount_;
+
+        IMenu* parent_;
+
+        std::string title_;
+
+        struct MenuItem
+        {
+            std::string name;   // display name
+            Boolean check;      // check status
+            IMenu* submenu;     // sub-menu
+        };
+
+        std::vector<MenuItem> vecMenuItem_;
+        Result drawMenu(IMenu* pMenu);
 
     };
 

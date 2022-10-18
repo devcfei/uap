@@ -238,6 +238,47 @@ Result App::buildMenuBar()
 {
     Result r = R_SUCCESS;
 
+    // Menu
+    static sptr<IMenu> spMenuFile;
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuFile);
+    VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
+
+    spMenuFile->addItem("Open", false, NULL);
+    spMenuFile->addItem("Exit", false, NULL);
+
+    static sptr<IMenu> spMenuView;
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuView);
+    VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
+
+    spMenuView->addItem("ToolBar", false, NULL);
+    spMenuView->addItem("StatusBar", false, NULL);
+
+    static sptr<IMenu> spMenuViewPanelWindow;
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuViewPanelWindow);
+    VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
+    spMenuViewPanelWindow->addItem("Generic", false, NULL);
+    spMenuViewPanelWindow->addItem("File Broswer", false, NULL);
+    spMenuViewPanelWindow->addItem("Log", false, NULL);
+
+    spMenuView->addItem("Panel", false, spMenuViewPanelWindow.get());
+
+
+    static sptr<IMenu> spMenuHelp;
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuHelp);
+    VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
+
+    spMenuHelp->addItem("About", false, NULL);
+
+
+    static sptr<IMenu> spMenuTop;
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuTop);
+    VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
+    spMenuTop->addItem("File", false, spMenuFile.get());
+    spMenuTop->addItem("View", false, spMenuView.get());
+    spMenuTop->addItem("Help", false, spMenuHelp.get());
+
+
+
     // MenuBar
     sptr<IUiMenuBar> spMenuBar;
     r = spUiEngine_->createInstance(IID_IUIMENUBAR, (void **)&spMenuBar);
@@ -253,73 +294,8 @@ Result App::buildMenuBar()
     r = spMenuBar->initialize(spMenuBarAttrbutes.get());
     VERIFY(r, "initialize MenuBar");
 
-    UiMenuFlags flags;
-
-    flags.s.start = 1;
-    flags.s.checked = 0;
-    flags.s.enable = 1;
-    flags.s.end = 0;
-    r = spMenuBar->insertMenuItem("File", 0, flags.ui);
-    VERIFY(r, "insert MenuItem");
-
-    flags.s.start = 0;
-    flags.s.checked = 0;
-    flags.s.enable = 1;
-    flags.s.end = 1;
-    r = spMenuBar->insertMenuItem("Exit", 0, flags.ui);
-    VERIFY(r, "insert MenuItem");
-
-    flags.s.start = 1;
-    flags.s.checked = 0;
-    flags.s.enable = 1;
-    flags.s.end = 0;
-    r = spMenuBar->insertMenuItem("View", 1, flags.ui);
-    VERIFY(r, "insert MenuItem");
-
-    flags.s.start = 0;
-    flags.s.checked = 0;
-    flags.s.enable = 1;
-    flags.s.end = 0;
-    r = spMenuBar->insertMenuItem("ToolBar", 0, flags.ui);
-    VERIFY(r, "insert MenuItem");
-
-    flags.s.start = 0;
-    flags.s.checked = 0;
-    flags.s.enable = 1;
-    flags.s.end = 0;
-    r = spMenuBar->insertMenuItem("StatusBar", 0, flags.ui);
-    VERIFY(r, "insert MenuItem");
-
-
-    flags.s.start = 0;
-    flags.s.checked = 0;
-    flags.s.enable = 1;
-    flags.s.end = 0;
-    r = spMenuBar->insertMenuItem("Console", 0, flags.ui);
-    VERIFY(r, "insert MenuItem");
-
-    flags.s.start = 0;
-    flags.s.checked = 0;
-    flags.s.enable = 1;
-    flags.s.end = 1;
-    r = spMenuBar->insertMenuItem("Log", 0, flags.ui);
-    VERIFY(r, "insert MenuItem");
-
-
-    flags.s.start = 1;
-    flags.s.checked = 0;
-    flags.s.enable = 1;
-    flags.s.end = 1;
-    r = spMenuBar->insertMenuItem("Help", 0, flags.ui);
-    VERIFY(r, "insert MenuItem");
-
-
-    flags.s.start = 0;
-    flags.s.checked = 0;
-    flags.s.enable = 1;
-    flags.s.end = 1;
-    r = spMenuBar->insertMenuItem("About", 0, flags.ui);
-    VERIFY(r, "insert MenuItem");
+    r = spMenuBar->setMenu(spMenuTop.get());
+    VERIFY(r, "menubar setMenu");
 
 
     spUiEngine_->addMenuBar(spMenuBar.get());

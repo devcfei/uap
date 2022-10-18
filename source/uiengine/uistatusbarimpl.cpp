@@ -74,6 +74,8 @@ namespace uap
 
 
         ImGui::BeginChild("StatusBar", ImVec2(0, heightStatusBar_), false);
+
+#if 0
         ImGui::Text("status bar"); ImGui::SameLine();
 
         static float progress = 0.0f, progress_dir = 1.0f;
@@ -89,6 +91,7 @@ namespace uap
         StringCchPrintfA(buf, 32, "%d/%d", (int)(progress_saturated * 1753), 1753);
         ImGui::ProgressBar(progress, ImVec2(150.f, 0.f), buf); ImGui::SameLine();
 
+#endif 
         ImGui::EndChild();
 
         ImGui::PopStyleColor();

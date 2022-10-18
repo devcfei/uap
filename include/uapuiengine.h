@@ -33,6 +33,36 @@ namespace uap
         inline static const Uuid uuid_ = IID_IDRAW;
     }; // @class IDraw
 
+
+
+    // {1241d45a-45d6-4031-9c4e-3573e20b33dc}
+    DEFINE_UUID(IID_IMENU,
+                0x1241d45a, 0x45d6, 0x4031, 0x9c, 0x4e, 0x35, 0x73, 0xe2, 0x0b, 0x33, 0xdc);
+
+    class IMenu : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IMenu
+        virtual Result initialize(IAttributes *piAttributes) = 0;
+        virtual Result addItem(const Char *name, Boolean check, IMenu* submenu) = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IMENU;
+    }; // @class IMenu
+
+
+
     // {9b78c15e-f09c-4969-ab82-75582742306e}
     DEFINE_UUID(IID_IUIMENUBAR,
                 0x9b78c15e, 0xf09c, 0x4969, 0xab, 0x82, 0x75, 0x58, 0x27, 0x42, 0x30, 0x6e);
@@ -47,7 +77,7 @@ namespace uap
 
         // IUiMenuBar
         virtual Result initialize(IAttributes *piAttributes) = 0;
-        virtual Result insertMenuItem(const Char *name, Uint id, Uint flags) = 0;
+        virtual Result setMenu(IMenu* piMenu) = 0;
 
         // uuid
         static const Uuid uuid()
@@ -59,17 +89,6 @@ namespace uap
         inline static const Uuid uuid_ = IID_IUIMENUBAR;
     }; // @class IUiMenuBar
 
-    union UiMenuFlags
-    {
-        Uint ui;
-        struct
-        {
-            Uchar start : 1;
-            Uchar end : 1;
-            Uchar enable : 1;
-            Uchar checked : 1;
-        } s;
-    };
 
     // {9de0d6ec-59f6-4901-9d5c-5c8ef58c22a3}
     DEFINE_UUID(IID_IUITOOLBAR,
