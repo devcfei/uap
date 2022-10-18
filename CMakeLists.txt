@@ -2,6 +2,15 @@ cmake_minimum_required(VERSION 3.10)
 project(uap)
 
 
+
+# Build options
+option(INSTALL_GTEST "Install GoogleTest to CMAKE_INSTALL_PREFIX" OFF)
+option(UAP_BUILD_TEST "Build Test" ON)
+
+
+
+
+# C++ flags
 if ( CMAKE_SYSTEM_NAME MATCHES "Windows" )
     set( my_std_pre "/std:" )
 else()
@@ -12,7 +21,7 @@ set( basic_cxx17 "c++17" )
 set( str_cxx17 "${my_std_pre}${basic_cxx17}" )
 
 
-option(INSTALL_GTEST OFF)
+
 
 include( CheckCXXCompilerFlag )
 check_cxx_compiler_flag( "${str_cxx17}" _cpp_17_flag_supported )
@@ -20,15 +29,8 @@ if ( _cpp_17_flag_supported )
     set( CMAKE_CXX_STANDARD 17 )
  endif()
 
-# if( CMAKE_SYSTEM_NAME STREQUAL "Windows")  
-#     set(CMAKE_CXX_STANDARD 17 )
-# endif()
 
 
-# if( CMAKE_SYSTEM_NAME STREQUAL "Linux")
-#     set(CMAKE_CXX_STANDARD 17 )
-
-# endif()
 
 include_directories(
     "${PROJECT_SOURCE_DIR}/include"
@@ -40,7 +42,9 @@ include_directories(
 
 add_subdirectory(library)
 add_subdirectory(source)
-add_subdirectory(test)
+if(UAP_BUILD_TEST)
+    add_subdirectory(test)
+endif()
 add_subdirectory(demo)
 
 

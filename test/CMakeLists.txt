@@ -22,15 +22,16 @@ enable_testing()
 
 aux_source_directory(${PROJECT_SOURCE_DIR} SRCS)
 
-add_executable(test ${SRCS} )
-target_link_libraries(test gtest_main uap)
+add_executable(uap-test ${SRCS} )
+target_link_libraries(uap-test gtest_main uap)
+set_target_properties(uap-test PROPERTIES OUTPUT_NAME "test")
 
 include(GoogleTest)
-gtest_discover_tests(test)
+gtest_discover_tests(uap-test)
 
 
 
-install(TARGETS test
+install(TARGETS uap-test
         EXPORT uap-testTargets
         CONFIGURATIONS Debug
         LIBRARY DESTINATION Debug/lib
@@ -40,7 +41,7 @@ install(TARGETS test
         )
 
 
-install(TARGETS test 
+install(TARGETS uap-test 
         EXPORT uap-testTargets
         CONFIGURATIONS Release
         LIBRARY DESTINATION Release/lib
