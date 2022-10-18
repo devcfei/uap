@@ -67,6 +67,10 @@ namespace uap
         {
             r = UiTextureInspectorImpl::createInstance(spBackend_.get(),(IUiTextureInspector **)ppv);
         }
+        else if (uapUuidIsEqual(rUuid, IID_IUIPANELWINDOW))
+        {
+            r = UiPanelWindowImpl::createInstance((IPanelWindow **)ppv);
+        }
 
 
         return r;
@@ -286,6 +290,21 @@ namespace uap
         *ppiTextureInspector = spTextureInspector_[0].get();
         // Don't forget to add reference count
         (*ppiTextureInspector)->addRef();
+        return r;
+    }
+
+    Result UiEngineImpl::addPanelWindow(IPanelWindow* piPanelWindow)
+    {
+        Result r = R_SUCCESS;
+        spPanelWindow_.push_back(piPanelWindow);
+        return r;
+    }
+    Result UiEngineImpl::getPanelWindow(IPanelWindow** ppiPanelWindow)
+    {
+        Result r = R_SUCCESS;
+        *ppiPanelWindow = spPanelWindow_[0].get();
+        // Don't forget to add reference count
+        (*ppiPanelWindow)->addRef();
         return r;
     }
 

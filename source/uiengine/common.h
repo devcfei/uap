@@ -65,6 +65,8 @@ using namespace Microsoft::WRL;
 #include "uitextureimpl.h"
 #include "uifilebrowser.h"
 
+#include "uipanelwindowimpl.h"
+
 
 
 

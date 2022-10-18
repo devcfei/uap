@@ -222,6 +222,9 @@ Result App::setLayout()
     r = buildFileBrowserWindow();
     VERIFY(r, "build file browser");
     
+    r = buildPanelWindow();
+    VERIFY(r, "build panel window");
+    
 
 
     // build the layout
@@ -422,6 +425,40 @@ Result App::buildFileBrowserWindow()
     char path[256];
     spApp_->getCurrentPath(path,256);
     spBrowser->initialize(path);
+
+    return r;
+}
+
+Result App::buildPanelWindow()
+{
+    Result r = R_SUCCESS;
+
+    // Panel Window
+    sptr<IPanelWindow> spPanelWindow;
+    r = spUiEngine_->createInstance(IID_IUIPANELWINDOW, (void **)&spPanelWindow);
+    VERIFY(r, "spUiEngine_.createInstance(<IPanelWindow>)");
+
+
+
+
+    // create an attribute
+    sptr<IAttributes> attr;
+    r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&attr);
+    VERIFY(r, "create instance attributes");
+
+
+    std::string title = "Panel Window";
+    r = attr->setString(PANELWINDOW_ATTRIBUTE_TITLE, title.c_str(), title.length());
+    VERIFY(r, "set PANELWINDOW_ATTRIBUTE_TITLE");
+
+
+
+    r = spPanelWindow->initialize(attr.get());
+    VERIFY(r, "initialize IPanelWindow");
+
+    spUiEngine_->addPanelWindow(spPanelWindow.get());
+
+
 
     return r;
 }

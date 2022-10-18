@@ -125,6 +125,37 @@ namespace uap
         inline static const Uuid uuid_ = IID_IUISTATUSBAR;
     }; // @class IUiStatusBar
 
+    // {ec59c3b2-9342-4007-b628-f0a24c4bcb97}
+    DEFINE_UUID(IID_IUIPANELWINDOW,
+                0xec59c3b2, 0x9342, 0x4007, 0xb6, 0x28, 0xf0, 0xa2, 0x4c, 0x4b, 0xcb, 0x97);
+
+    // {0625a03e-bd52-4dec-ab3b-72c6acd2e51d}
+    DEFINE_UUID(PANELWINDOW_ATTRIBUTE_TITLE,
+                0x0625a03e, 0xbd52, 0x4dec, 0xab, 0x3b, 0x72, 0xc6, 0xac, 0xd2, 0xe5, 0x1d);
+
+    class IPanelWindow: public IDraw
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IPanelWindow
+        virtual Result initialize(IAttributes *pAttributes) = 0;
+        virtual Result drawPrimitives() = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IUIPANELWINDOW;
+    }; // @class IPanelWindow
+
+
     // {d236619b-80eb-4ecd-ae82-83d70a762ba8}
     DEFINE_UUID(IID_IUILOGWINDOW,
                 0xd236619b, 0x80eb, 0x4ecd, 0xae, 0x82, 0x83, 0xd7, 0x0a, 0x76, 0x2b, 0xa8);
@@ -289,6 +320,9 @@ namespace uap
         virtual Result getImageWindow(IUiImageWindow **ppiImageWindow) = 0;
         virtual Result addTextureInspector(IUiTextureInspector *piTextureInspector) = 0;
         virtual Result getTextureInspector(IUiTextureInspector **ppiTextureInspector) = 0;
+
+        virtual Result addPanelWindow(IPanelWindow* piPanelWindow) = 0;
+        virtual Result getPanelWindow(IPanelWindow** ppiPanelWindow) = 0;
 
         // uuid
         static const Uuid uuid()

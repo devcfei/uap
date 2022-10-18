@@ -39,6 +39,9 @@ namespace uap
         virtual Result addFileBroserWindow(IUiFileBrowser *piFileBrowserWindow);
         virtual Result getFileBroserWindow(IUiFileBrowser **ppiFileBrowserWindow);
 
+        virtual Result addPanelWindow(IPanelWindow *piPanelWindow);
+        virtual Result getPanelWindow(IPanelWindow **ppiPanelWindow);
+
         static ILogTrace* getLogTrace()
         {
             return spLogTrace_.get();
@@ -103,6 +106,10 @@ namespace uap
 
         std::vector<sptr<IUiImageWindow> > spImageWindows_;
         std::vector<sptr<IUiTextureInspector> > spTextureInspector_;
+
+
+        
+        std::vector<sptr<IPanelWindow> > spPanelWindow_;
 
 
     };

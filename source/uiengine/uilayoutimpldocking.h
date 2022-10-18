@@ -77,6 +77,8 @@ namespace uap
         Result showFileBrowserWindow();
 
 
+        // Panel Window
+        Result showPanelWindow();
 
 
     }; // @class UiLayoutImplDocking

@@ -161,6 +161,10 @@ namespace uap
         showTextureInspector();
         showFileBrowserWindow();
 
+        // panel window
+
+        showPanelWindow();
+
 
         ImGui::End();
 
@@ -304,5 +308,25 @@ namespace uap
 
         return r;  
     }
+
+    Result UiLayoutImplDocking::showPanelWindow()
+    {
+        Result r = R_SUCCESS;
+
+        sptr<IPanelWindow> spPanelWindow;
+        r = spUiEngine_->getPanelWindow(spPanelWindow.getaddrof());
+
+        sptr<IDraw> spDraw;
+        r = spPanelWindow.as(&spDraw);
+        if(UAP_SUCCESS(r))
+        {
+            r = spDraw->draw();
+        }    
+
+
+        return r;  
+    }
+
+    
 
 } // @namespace uap
