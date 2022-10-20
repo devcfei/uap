@@ -42,8 +42,12 @@ private:
     // application configuration UUID
 
     // {40930e7b-d2d4-4250-809d-ab05d5388c09}
-    DEFINE_UUID(UUID_APPLICATION_CONFIGURATION,
+    DEFINE_UUID(APPLICATION_ATTRIBUTE_CONFIGURATION,
                 0x40930e7b, 0xd2d4, 0x4250, 0x80, 0x9d, 0xab, 0x05, 0xd5, 0x38, 0x8c, 0x09);
+
+    // {4c2aa914-f1e0-4912-b32a-5751b08b2b24}
+    DEFINE_UUID(APPLICATION_ATTRIBUTE_LOGFILE_PATH,
+                0x4c2aa914, 0xf1e0, 0x4912, 0xb3, 0x2a, 0x57, 0x51, 0xb0, 0x8b, 0x2b, 0x24);
 
     // application configurations
     union ApplicationConfiguration

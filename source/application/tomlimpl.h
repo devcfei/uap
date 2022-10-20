@@ -17,23 +17,23 @@ namespace uap
 
         virtual Result getBool(const Char *k, bool& v);
         virtual Result getInt(const Char *k, int& v);
-        virtual Result getString(const Char *k,Char *v ,Ulong length, Ulong *actureLength);
+        virtual Result getString(const Char *k,Char *v ,Size_t length, Size_t *actureLength);
         virtual Result getBool(const Char* s, const Char *k, bool& v);
         virtual Result getInt(const Char* s,const Char *k, int& v);
-        virtual Result getString(const Char* s,const Char *k, Char *v, Ulong length, Ulong *actureLength);
+        virtual Result getString(const Char* s,const Char *k, Char *v, Size_t length, Size_t *actureLength);
         virtual Result getBool(const Char* s, const Char* ss,  const Char *k, bool& v);
         virtual Result getInt(const Char* s,const Char *ss, const Char *k, int& v);
-        virtual Result getString(const Char* s,const Char *ss, const Char *k, Char *v, Ulong length, Ulong *actureLength);
+        virtual Result getString(const Char* s,const Char *ss, const Char *k, Char *v, Size_t length, Size_t *actureLength);
 
         virtual Result setBool(const Char *k, bool& v);
         virtual Result setInt(const Char *k , int &v);
-        virtual Result setString(const Char *k , const Char *v, Ulong length);
+        virtual Result setString(const Char *k , const Char *v, Size_t length);
         virtual Result setBool(const Char* s,const Char *k, bool& v);
         virtual Result setInt(const Char* s,const Char *k, int& v);
-        virtual Result setString(const Char* s,const Char *k, const Char *v, Ulong length);
+        virtual Result setString(const Char* s,const Char *k, const Char *v, Size_t length);
         virtual Result setBool(const Char* s,const Char *ss, const Char *k, bool& v) ;
         virtual Result setInt(const Char* s,const Char *ss, const Char *k, int& v);
-        virtual Result setString(const Char* s,const Char *ss, const Char *k, const Char *v, Ulong length);
+        virtual Result setString(const Char* s,const Char *ss, const Char *k, const Char *v, Size_t length);
 
         static Result createInstance(IToml **ppv)
         {

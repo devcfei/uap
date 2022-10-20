@@ -4,9 +4,41 @@
 namespace uap
 {
 
+    class FrameWindowElementsImpl: public IFrameWindowElements
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef();
+        virtual Ulong release();
+        virtual Result queryInterface(const Uuid &,void **);
+
+        // IFrameWindowElements
+        virtual Result addMenuBar(IMenuBar *piMenuBar) ;
+        virtual Result getMenuBar(IMenuBar **ppiMenuBar) ;
+        virtual Result addToolBar(IToolBar *piToolBar) ;
+        virtual Result getToolBar(IToolBar **ppiToolBar) ;
+        virtual Result addStatusBar(IStatusBar *piStatusBar) ;
+        virtual Result getStatusBar(IStatusBar **ppiStatusBar);
+
+    
+        FrameWindowElementsImpl()
+            : refcount_(1)
+        {
+        }
+
+        Ulong refcount_;
+
+    protected:
+        // menubar, toolbar, status bar
+        sptr<IMenuBar> spMenuBar_;
+        sptr<IToolBar> spToolBar_;
+        sptr<IStatusBar> spStatusBar_;
+
+    };
 
 
-    class UiLayoutImplDocking: public IUiLayout
+
+    class UiLayoutImplDocking: public IUiLayout, public FrameWindowElementsImpl
     {
     public:
         // IUniversal
@@ -15,8 +47,22 @@ namespace uap
         virtual Result queryInterface(const Uuid &,void **);
 
         // IUiLayout
-        virtual Result initializeLayout(IUiEngine* piUiEngine, IAttributes* piAttributes);
+        virtual Result initializeLayout(IAttributes* piAttributes);
         virtual Result draw();
+#ifdef _DEBUG
+        virtual void openImGuiDemo(Boolean open)
+        {
+            showImGuiDemo_ = open;
+        }
+        virtual void openImPlotDemo(Boolean open)
+        {
+            showImPlotDemo_ = open;
+        }
+#endif
+
+
+        virtual Result addDraw(IUniversal *piDraw);
+        virtual Result deleteDraw(IUniversal *piDraw);
 
         static Result createInstance(void **ppv)
         {
@@ -35,7 +81,8 @@ namespace uap
             , showMenuBar_(true)
             , showToolBar_(true)
             , showStatusBar_(true)       
-            , showDemoWindow_(true)        
+            , showImGuiDemo_(false)        
+            , showImPlotDemo_(false)        
             , heightMenuBar_(FONT_SIZE+6.0f)
             , heightToolBar_(TOOLBAR_HEIGHT)
             , heightStatusBar_(FONT_SIZE+6.0f)
@@ -44,7 +91,10 @@ namespace uap
 
         Ulong refcount_;
 
-        sptr<IUiEngine> spUiEngine_;
+        //sptr<IUiEngine> spUiEngine_;
+
+        // generic draw
+        std::list<IDraw*> vecDraw_;
 
 
         //
@@ -52,8 +102,8 @@ namespace uap
         Result showToolBar(bool* p_open);
         Result showStatusBar(bool* p_open);
         
-        bool showDemoWindow_=true;
-        bool showDemoImPlot_=true;
+        bool showImGuiDemo_;
+        bool showImPlotDemo_;
         bool showMenuBar_;
         bool showToolBar_;
         bool showStatusBar_;
@@ -63,22 +113,6 @@ namespace uap
         float heightToolBar_;
         float heightStatusBar_;
 
-        // ImageWindow
-        Result showImageWindow();
-        // Texture Inspector
-        Result showTextureInspector();
-
-
-        // Log Window
-        Result showLogWindow();
-
-
-        // FileBrowser Window
-        Result showFileBrowserWindow();
-
-
-        // Panel Window
-        Result showPanelWindow();
 
 
     }; // @class UiLayoutImplDocking

@@ -78,7 +78,7 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::getString(const Char *k,Char *v ,Ulong length, Ulong *actureLength)
+    Result TomlImpl::getString(const Char *k,Char *v ,Size_t length, Size_t *actureLength)
     {
         Result r = R_SUCCESS;
 
@@ -94,7 +94,9 @@ namespace uap
                 return r;
             }
 
-            strncpy(v, as.c_str(),as.length()+1);
+            //strncpy(v, as.c_str(),as.length()+1);
+
+            StringCchCopyA(v,length,as.c_str());
         }
         catch (toml::syntax_error &e)
         {
@@ -157,7 +159,7 @@ namespace uap
         return r;
     }
     
-    Result TomlImpl::getString(const Char* s,const Char *k, Char *v, Ulong length, Ulong *actureLength)
+    Result TomlImpl::getString(const Char* s,const Char *k, Char *v, Size_t length, Size_t *actureLength)
     {
         Result r = R_SUCCESS;
 
@@ -175,7 +177,10 @@ namespace uap
                 return r;
             }
 
-            strncpy(v, as.c_str(),as.length()+1);
+            //strncpy(v, as.c_str(),as.length()+1);
+
+            StringCchCopyA(v,length,as.c_str());
+
         }
         catch (toml::syntax_error &e)
         {
@@ -238,7 +243,7 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::getString(const Char *s, const Char *ss, const Char *k, Char *v, Ulong length, Ulong *actureLength)
+    Result TomlImpl::getString(const Char *s, const Char *ss, const Char *k, Char *v, Size_t length, Size_t *actureLength)
     {
         Result r = R_SUCCESS;
 
@@ -257,7 +262,10 @@ namespace uap
                 return r;
             }
 
-            strncpy(v, as.c_str(),as.length()+1);
+            //strncpy(v, as.c_str(),as.length()+1);
+
+            StringCchCopyA(v,length,as.c_str());
+
         }
         catch (toml::syntax_error &e)
         {
@@ -336,7 +344,7 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::setString(const Char *k,const Char *v, Ulong length)
+    Result TomlImpl::setString(const Char *k,const Char *v, Size_t length)
     {
         Result r = R_SUCCESS;
 
@@ -401,7 +409,7 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::setString(const Char *s, const Char *k, const Char *v, Ulong length)
+    Result TomlImpl::setString(const Char *s, const Char *k, const Char *v, Size_t length)
     {
         Result r = R_SUCCESS;
 
@@ -464,7 +472,7 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::setString(const Char *s, const Char *ss, const Char *k, const Char *v, Ulong length)
+    Result TomlImpl::setString(const Char *s, const Char *ss, const Char *k, const Char *v, Size_t length)
     {
         Result r = R_SUCCESS;
 

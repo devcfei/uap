@@ -3,6 +3,94 @@
 namespace uap
 {
 
+    // FrameWindowElementsImpl
+    Ulong FrameWindowElementsImpl::addRef()
+    {
+        return InterlockedIncrement(&refcount_);
+    }
+    Ulong FrameWindowElementsImpl::release()
+    {
+        Ulong ref = InterlockedDecrement(&refcount_);
+        if (!ref)
+        {
+            UAP_TRACE("FrameWindowElementsImpl delete!!!!\n");
+            delete this;
+        }
+        return ref;
+    }
+    Result FrameWindowElementsImpl::queryInterface(const Uuid &rUuid, void **ppv)
+    {
+        Result r = R_NO_SUCH_INTERFACE;
+        if (uapUuidIsEqual(rUuid, IID_IFRAMEWINDOWELEMENTS))
+        {
+            FrameWindowElementsImpl *pi = static_cast<FrameWindowElementsImpl *>(this);
+            addRef();
+
+            *((FrameWindowElementsImpl **)ppv) = pi;
+            r = R_SUCCESS;
+        }
+        return r;
+    }
+
+    Result FrameWindowElementsImpl::addMenuBar(IMenuBar* piMenuBar)
+    {
+        Result r = R_SUCCESS;
+
+        spMenuBar_ = piMenuBar;
+
+        return r;
+    }
+    Result FrameWindowElementsImpl::getMenuBar(IMenuBar** ppiMenuBar)
+    {
+        Result r = R_SUCCESS;
+
+        *ppiMenuBar = spMenuBar_.get();
+        // Don't forget to add reference count
+        (*ppiMenuBar)->addRef();
+
+        return r;
+    }
+    Result FrameWindowElementsImpl::addToolBar(IToolBar *piToolBar)
+    {
+        Result r = R_SUCCESS;
+
+        spToolBar_ = piToolBar;
+
+        return r;
+    }
+
+    Result FrameWindowElementsImpl::getToolBar(IToolBar **ppiToolBar)
+    {
+        Result r = R_SUCCESS;
+
+        *ppiToolBar = spToolBar_.get();
+        // Don't forget to add reference count
+        (*ppiToolBar)->addRef();
+
+        return r;
+    }
+
+    Result FrameWindowElementsImpl::addStatusBar(IStatusBar *piStatusBar)
+    {
+        Result r = R_SUCCESS;
+
+        spStatusBar_ = piStatusBar;
+
+        return r;
+    }
+    Result FrameWindowElementsImpl::getStatusBar(IStatusBar **ppiStatusBar)
+    {
+        Result r = R_SUCCESS;
+
+        *ppiStatusBar = spStatusBar_.get();
+        // Don't forget to add reference count
+        (*ppiStatusBar)->addRef();
+
+        return r;
+    }
+
+
+    // UiLayoutImplDocking
     Ulong UiLayoutImplDocking::addRef()
     {
         return InterlockedIncrement(&refcount_);
@@ -28,14 +116,22 @@ namespace uap
             *((UiLayoutImplDocking **)ppv) = pi;
             r = R_SUCCESS;
         }
+        else if (uapUuidIsEqual(rUuid, IID_IFRAMEWINDOWELEMENTS))
+        {
+            FrameWindowElementsImpl *pi = static_cast<FrameWindowElementsImpl *>(this);
+            addRef();
+
+            *((FrameWindowElementsImpl **)ppv) = pi;
+            r = R_SUCCESS;
+        }
         return r;
     }
 
-    Result UiLayoutImplDocking::initializeLayout(IUiEngine* piUiEngine, IAttributes *piAttributes)
+    Result UiLayoutImplDocking::initializeLayout(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
 
-        spUiEngine_ = piUiEngine;
+        //spUiEngine_ = piUiEngine;
         // TODO: why need a release? :)
         //piUiEngine->release();
         INFO("UiLayoutImplDocking::initializeLayout\n");
@@ -138,14 +234,14 @@ namespace uap
 
 
 
-  #if defined(_DEBUG)
-        if (showDemoWindow_)
-            ImGui::ShowDemoWindow(&showDemoWindow_);
+#if defined(_DEBUG)
+        if (showImGuiDemo_)
+            ImGui::ShowDemoWindow(&showImGuiDemo_);
 
 
-        if(showDemoImPlot_)
+        if(showImPlotDemo_)
         {
-            ImPlot::ShowDemoWindow(&showDemoImPlot_);
+            ImPlot::ShowDemoWindow(&showImPlotDemo_);
         }
 
 #endif      
@@ -156,17 +252,45 @@ namespace uap
             showStatusBar(&showStatusBar_);
         }
 
-        showLogWindow();
-        showImageWindow();
-        showTextureInspector();
-        showFileBrowserWindow();
-
-        // panel window
-
-        showPanelWindow();
-
+        // draw
+        for(auto it: vecDraw_)
+        {
+            it->draw();
+        }
 
         ImGui::End();
+
+        return r;
+    }
+
+    Result UiLayoutImplDocking::addDraw(IUniversal *piDraw)
+    {
+        Result r = R_SUCCESS;
+        sptr<IDraw> spDraw;
+        r = piDraw->queryInterface(IID_IDRAW, (void**)spDraw.getaddrof());
+        if(UAP_SUCCESS(r))
+        {
+            vecDraw_.push_back(spDraw.get());
+        }
+        return r;
+    }
+
+
+    Result UiLayoutImplDocking::deleteDraw(IUniversal *piDraw)
+    {
+
+        Result r = R_NOT_FOUND;
+        for (std::list<IDraw*>::iterator it = vecDraw_.begin();
+            it != vecDraw_.end();
+            ++it)
+        {
+            if(*it == piDraw)
+            {
+                vecDraw_.erase(it);
+                r = R_SUCCESS;
+                break;
+            }
+        }
 
         return r;
     }
@@ -176,16 +300,12 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        sptr<IUiMenuBar> spMenuBar;
-        r = spUiEngine_->getMenuBar(spMenuBar.getaddrof());
-
         sptr<IDraw> spDraw;
-        r = spMenuBar.as(&spDraw);
+        r = spMenuBar_.as(&spDraw);
         if(UAP_SUCCESS(r))
         {
             r = spDraw->draw();
-        }
-        
+        }       
 
 
         return r;
@@ -198,135 +318,27 @@ namespace uap
 
         Result r = R_SUCCESS;
 
-        sptr<IUiToolBar> spToolBar;
-        r = spUiEngine_->getToolBar(spToolBar.getaddrof());
-
         sptr<IDraw> spDraw;
-        r = spToolBar.as(&spDraw);
+        r = spToolBar_.as(&spDraw);
         if(UAP_SUCCESS(r))
         {
             r = spDraw->draw();
-        }
-        
-
-
+        }     
         return r;
-
     }
 
     Result UiLayoutImplDocking::showStatusBar(bool* p_open)
     { 
         Result r = R_SUCCESS;
 
-        sptr<IUiStatusBar> spStatusBar;
-        r = spUiEngine_->getStatusBar(spStatusBar.getaddrof());
-
         sptr<IDraw> spDraw;
-        r = spStatusBar.as(&spDraw);
+        r = spStatusBar_.as(&spDraw);
         if(UAP_SUCCESS(r))
         {
             r = spDraw->draw();
         }    
 
         return R_SUCCESS;
-    }
-
-    Result UiLayoutImplDocking::showImageWindow()
-    {
-        Result r = R_SUCCESS;
-
-        sptr<IUiImageWindow> spImageWindow;
-        r = spUiEngine_->getImageWindow(spImageWindow.getaddrof());
-
-        sptr<IDraw> spDraw;
-        r = spImageWindow.as(&spDraw);
-        if(UAP_SUCCESS(r))
-        {
-            r = spDraw->draw();
-        }    
-
-
-        return r;
-
-    }
-
-
-    Result UiLayoutImplDocking::showTextureInspector()
-    {
-        Result r = R_SUCCESS;
-
-        sptr<IUiTextureInspector> spTextureInspector;
-        r = spUiEngine_->getTextureInspector(spTextureInspector.getaddrof());
-
-        sptr<IDraw> spDraw;
-        r = spTextureInspector.as(&spDraw);
-        if(UAP_SUCCESS(r))
-        {
-            r = spDraw->draw();
-        }    
-
-
-        return r;
-
-    }
-
-
-    Result UiLayoutImplDocking::showLogWindow()
-    {
-        Result r = R_SUCCESS;
-
-        sptr<IUiLogWindow> spLogWindow;
-        r = spUiEngine_->getLogWindow(spLogWindow.getaddrof());
-
-        sptr<IDraw> spDraw;
-        r = spLogWindow.as(&spDraw);
-        if(UAP_SUCCESS(r))
-        {
-            r = spDraw->draw();
-        }    
-
-
-        return r;
-
-    }
-
-
-    Result UiLayoutImplDocking::showFileBrowserWindow()
-    {
-        Result r = R_SUCCESS;
-
-        sptr<IUiFileBrowser> spFileBrowser;
-        r = spUiEngine_->getFileBroserWindow(spFileBrowser.getaddrof());
-
-        sptr<IDraw> spDraw;
-        r = spFileBrowser.as(&spDraw);
-        if(UAP_SUCCESS(r))
-        {
-            r = spDraw->draw();
-        }    
-
-
-        return r;  
-    }
-
-    Result UiLayoutImplDocking::showPanelWindow()
-    {
-        Result r = R_SUCCESS;
-
-        sptr<IPanelWindow> spPanelWindow;
-        r = spUiEngine_->getPanelWindow(spPanelWindow.getaddrof());
-
-        sptr<IDraw> spDraw;
-        r = spPanelWindow.as(&spDraw);
-        if(UAP_SUCCESS(r))
-        {
-            r = spDraw->draw();
-        }    
-
-
-        return r;  
-    }
-
-    
+    } 
 
 } // @namespace uap

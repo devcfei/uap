@@ -11,12 +11,29 @@
 // STL
 
 #include <vector>
+#include <list>
 
 // Windows specical
 #include <windows.h>
 #include <strsafe.h>
 #include <tchar.h>
 #include <shlobj.h>
+
+
+namespace std
+{
+    #ifdef _UNICODE
+        typedef wstring tstring;
+    #else
+        typedef string tstring;
+    #endif
+};
+
+
+// ATL
+#include <atlbase.h>
+#include <atlconv.h>
+
 
 // WRL
 #include <wrl\client.h>
@@ -35,6 +52,7 @@ using namespace Microsoft::WRL;
 #define IMGUI_ENABLE_FREETYPE
 //imgui
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_impl_dx9.h>
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
@@ -50,12 +68,10 @@ using namespace Microsoft::WRL;
 
 
 // UiEngine implementation
+#include "uimenuimpl.h"
 #include "uimenubarimpl.h"
 #include "uitoolbarimpl.h"
 #include "uistatusbarimpl.h"
-#include "uilogwindowimpl.h"
-#include "uiimagewindowimpl.h"
-#include "uitextureinspectorimpl.h"
 #include "uilayoutimplsimple.h"
 #include "uilayoutimpldocking.h"
 #include "uilayoutimpldemo.h"
@@ -63,9 +79,12 @@ using namespace Microsoft::WRL;
 #include "uienginebackenddx11impl.h"
 #include "uiengineimpl.h"
 #include "uitextureimpl.h"
-#include "uifilebrowser.h"
 
-#include "uipanelwindowimpl.h"
+#include "uiwindowimpl.h"
+#include "uilogwindowimpl.h"
+#include "uifilebrowserwindowimpl.h"
+#include "uiimagewindowimpl.h"
+#include "uitextureinspectorimpl.h"
 
 
 

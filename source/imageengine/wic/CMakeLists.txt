@@ -12,8 +12,8 @@ target_link_libraries(imageengine uap)
 install(TARGETS imageengine
         EXPORT imageengineTargets
         CONFIGURATIONS Debug
-        LIBRARY DESTINATION Debug/lib
-        ARCHIVE DESTINATION Debug/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )
@@ -22,8 +22,8 @@ install(TARGETS imageengine
 install(TARGETS imageengine 
         EXPORT imageengineTargets
         CONFIGURATIONS Release
-        LIBRARY DESTINATION Release/lib
-        ARCHIVE DESTINATION Release/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )

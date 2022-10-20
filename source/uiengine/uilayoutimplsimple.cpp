@@ -31,7 +31,7 @@ namespace uap
         return r;
     }
 
-    Result UiLayoutImplSimple::initializeLayout(IUiEngine* piUiEngine, IAttributes *piAttributes)
+    Result UiLayoutImplSimple::initializeLayout(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
 
@@ -45,5 +45,16 @@ namespace uap
 
         return r;
     }
+
+    Result UiLayoutImplSimple::addDraw(IUniversal *piDraw)
+    {
+        return R_SUCCESS;
+    }
+    
+    Result UiLayoutImplSimple::deleteDraw(IUniversal *piDraw)
+    {
+        return R_SUCCESS;
+    }
+
 
 } // @namespace uap

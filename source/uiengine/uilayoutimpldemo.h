@@ -15,9 +15,20 @@ namespace uap
         virtual Result queryInterface(const Uuid &,void **);
 
         // IUiLayout
-        virtual Result initializeLayout(IUiEngine* piUiEngine, IAttributes* piAttributes);
+        virtual Result initializeLayout(IAttributes* piAttributes);
         virtual Result draw();
 
+        virtual Result addDraw(IUniversal *piDraw);
+        virtual Result deleteDraw(IUniversal *piDraw);
+
+#ifdef _DEBUG
+        virtual void openImGuiDemo(Boolean open)
+        {
+        }
+        virtual void openImPlotDemo(Boolean open)
+        {
+        }
+#endif    
         static Result createInstance(void **ppv)
         {
             UiLayoutImplDemo *p = new UiLayoutImplDemo();

@@ -1,47 +1,7 @@
 #include "common.h"
 
-static int GetModuleFilePath(LPCTSTR lpszModuleFile, int size, LPTSTR lpszPath)
-{
-    TCHAR path[MAX_PATH] = _T("");
 
-    lstrcpy(path, lpszModuleFile);
 
-    int nSize = size;
-    for (int i = nSize - 1; i > 0; --i)
-    {
-        if (path[i] == _T('\\'))
-        {
-            path[i + 1] = 0;
-            break;
-        }
-    }
-
-    lstrcpy(lpszPath, path);
-
-    return 0;
-}
-
-static BOOL IsDll(LPCTSTR lpszName)
-{
-    BOOL bDll = FALSE;
-    LPCTSTR p;
-
-    int nSize = lstrlen(lpszName);
-    for (int i = nSize - 1; i > 0; --i)
-    {
-        if (lpszName[i] == _T('.')) // find the suffix
-        {
-            p = &lpszName[i];
-
-            if (!lstrcmp(p, _T(".dll")))
-            {
-                bDll = TRUE;
-            }
-            break;
-        }
-    }
-    return bDll;
-}
 
 namespace uap
 {
@@ -49,13 +9,13 @@ namespace uap
     // IUniversal
     Ulong ApplicationImpl::addRef()
     {
-        Ulong ref = InterlockedIncrement(&refcount_);
+        Ulong ref = interlock_increment(&refcount_);
         UAP_TRACE("ApplicationImpl::addRef- refcount=%d\n", ref);
         return ref;
     }
     Ulong ApplicationImpl::release()
     {
-        Ulong ref = InterlockedDecrement(&refcount_);
+        Ulong ref = interlock_decrement(&refcount_);
         UAP_TRACE("ApplicationImpl::release - refcount=%d\n", ref);
         if (!ref)
         {
@@ -105,7 +65,7 @@ namespace uap
         sptr<IAttributes> spAttr = piAttributes;
 
         ApplicationConfiguration ac;
-        spAttr->getUint(UUID_APPLICATION_CONFIGURATION, ac.ui);
+        spAttr->getUint(APPLICATION_ATTRIBUTE_CONFIGURATION, ac.ui);
         if (ac.s.enableLog)
         {
             UAP_TRACE("enabled application log trace\n");
@@ -185,20 +145,6 @@ namespace uap
     Result ApplicationImpl::getCurrentPath(Char *path, Ulong size)
     {
         Result r = R_SUCCESS;
-        UAP_TRACE("ApplicationImpl::getCurrentPath\n");
-
-        CHAR szModuleFileName[MAX_PATH];
-        int nSize = GetModuleFileNameA(NULL, szModuleFileName, MAX_PATH);
-        for (int i = nSize - 1; i > 0; --i)
-        {
-            if (szModuleFileName[i] == _T('\\'))
-            {
-                szModuleFileName[i + 1] = 0;
-                break;
-            }
-        }
-
-        StringCchCopyA(path, size - 1, szModuleFileName);
 
         return r;
     }
@@ -207,57 +153,6 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        HANDLE hFind = INVALID_HANDLE_VALUE;
-        WIN32_FIND_DATA ffd;
-        LARGE_INTEGER filesize;
-        TCHAR szCurDir[MAX_PATH];
-        ::GetCurrentDirectory(MAX_PATH, szCurDir);
-
-        TCHAR szFileName[MAX_PATH];
-        int nSize = GetModuleFileName(NULL, szFileName, MAX_PATH);
-
-        GetModuleFilePath(szFileName, nSize, szCurDir);
-        StringCchCat(szCurDir, MAX_PATH, TEXT("*"));
-
-        hFind = FindFirstFile(szCurDir, &ffd);
-
-        if (INVALID_HANDLE_VALUE == hFind)
-        {
-            r = R_FILE_NOT_EXIST;
-            return r;
-        }
-
-        // List all the files in the directory with some info about them.
-        do
-        {
-            if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            {
-                UAP_TRACE("%s   <DIR>\n", ffd.cFileName);
-            }
-            else
-            {
-                filesize.LowPart = ffd.nFileSizeLow;
-                filesize.HighPart = ffd.nFileSizeHigh;
-                UAP_TRACE("%s   %ld bytes\n", ffd.cFileName, filesize.QuadPart);
-
-                if (lstrcmp(ffd.cFileName, _T("application.dll")) == 0)
-                {
-                    // for a DLL which is uapbe.dll, ignore and continue
-                    continue;
-                }
-
-                // for a DLL
-
-                if (IsDll(ffd.cFileName))
-                {
-                    r = registerInterface(ffd.cFileName);
-                }
-            }
-        } while (FindNextFile(hFind, &ffd) != 0);
-
-        FindClose(hFind);
-
-        r = R_SUCCESS;
         return r;
     }
 

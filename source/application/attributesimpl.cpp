@@ -315,7 +315,7 @@ namespace uap
         return r;
     }
 
-    Result AttributesImpl::setString(const Uuid &key, const Char *s, Ulong length)
+    Result AttributesImpl::setString(const Uuid &key, const Char *s, Size_t length)
     {
         Result r = R_SUCCESS;
 
@@ -363,7 +363,7 @@ namespace uap
     }
 
 
-    Result AttributesImpl::getString(const Uuid &key, Char *s, Ulong length, Ulong *actureLength)
+    Result AttributesImpl::getString(const Uuid &key, Char *s, Size_t length, Size_t *actureLength)
     {
         Result r = R_NOT_FOUND;
 

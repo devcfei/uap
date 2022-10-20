@@ -33,14 +33,16 @@ endif()
 target_include_directories(application PRIVATE ${PROJECT_SOURCE_DIR} )
 target_compile_definitions(application PRIVATE COMPONENT_EXPORTS)
 target_link_libraries(application uap)
-
+if( CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(application shlwapi )
+endif()
 
 # install
 install(TARGETS application
         EXPORT applicationTargets
         CONFIGURATIONS Debug
-        LIBRARY DESTINATION Debug/lib
-        ARCHIVE DESTINATION Debug/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )
@@ -49,8 +51,8 @@ install(TARGETS application
 install(TARGETS application 
         EXPORT applicationTargets
         CONFIGURATIONS Release
-        LIBRARY DESTINATION Release/lib
-        ARCHIVE DESTINATION Release/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )

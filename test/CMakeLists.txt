@@ -34,8 +34,8 @@ gtest_discover_tests(uap-test)
 install(TARGETS uap-test
         EXPORT uap-testTargets
         CONFIGURATIONS Debug
-        LIBRARY DESTINATION Debug/lib
-        ARCHIVE DESTINATION Debug/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )
@@ -44,8 +44,8 @@ install(TARGETS uap-test
 install(TARGETS uap-test 
         EXPORT uap-testTargets
         CONFIGURATIONS Release
-        LIBRARY DESTINATION Release/lib
-        ARCHIVE DESTINATION Release/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )

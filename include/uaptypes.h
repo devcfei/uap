@@ -17,6 +17,8 @@ namespace uap
     typedef unsigned long Ulong;
     typedef unsigned long long UlongLong;
 
+    typedef size_t Size_t;
+
 
     typedef bool Boolean;
 

@@ -1,5 +1,5 @@
-#ifndef _UAP_UILOGWINDOW_H_
-#define _UAP_UILOGWINDOW_H_
+#ifndef _UAP_LOGWINDOW_IMPL_H_
+#define _UAP_LOGWINDOW_IMPL_H_
 
 namespace uap
 {
@@ -126,8 +126,7 @@ namespace uap
     };
 
 
-    class UiLogWindowImpl : public IUiLogWindow
-                , public IDraw
+    class LogWindowImpl : public ILogWindow, public WindowImpl
     {
     public:
         // IUniversal
@@ -135,16 +134,16 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
-        // IUiLogWindow
-        virtual Result initialize(IAttributes *piAttributes);
+
+        // IWindow
+        virtual Result drawPrimitives();
+
+        // ILogWindow
         virtual Result addMessage(Char *name) ;
 
-        // IDraw
-        virtual Result draw();
-
-        static Result createInstance(IUiLogWindow **ppv)
+        static Result createInstance(ILogWindow **ppv)
         {
-            UiLogWindowImpl *p = new UiLogWindowImpl();
+            LogWindowImpl *p = new LogWindowImpl();
             if (p)
             {
                 *ppv = p;
@@ -154,20 +153,21 @@ namespace uap
         }
 
     private:
-        UiLogWindowImpl()
-            :refcount_(1)
+        Ulong refcount_;
+
+    protected:
+        LogWindowImpl()
+            : refcount_(1)
+            , WindowImpl("Log")
         {
 
         }
-        Ulong refcount_;
-
 
         AppLog log;
 
 
-
-    }; // @class UiToolBarImpl
+    }; // @class LogWindowImpl
 
 } // @namespace uap
 
-#endif // _UAP_UILOGWINDOW_H_
+#endif // _UAP_LOGWINDOW_IMPL_H_

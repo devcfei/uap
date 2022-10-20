@@ -1,11 +1,11 @@
-#ifndef _UAP_UIIMAGEWINDOW_H_
-#define _UAP_UIIMAGEWINDOW_H_
+#ifndef _UAP_IMAGEWINDOW_IMPL_H_
+#define _UAP_IMAGEWINDOW_IMPL_H_
 
 namespace uap
 {
 
-    class UiImageWindowImpl : public IUiImageWindow
-                , public IDraw
+    class ImageWindowImpl : public IImageWindow
+                , public WindowImpl
     {
     public:
         // IUniversal
@@ -13,16 +13,17 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
-        // IUiImageWindow
-        virtual Result initialize(IAttributes *piAttributes);
-        virtual Result loadImage(Char *name);
 
-        // IDraw
-        virtual Result draw();
+        // IWindow
+        virtual Result drawPrimitives();
 
-        static Result createInstance(IUiEngineBackend * piUiEngineBackend, IUiImageWindow ** ppiUiImageWindow)
+        // IImageWindow
+        virtual Result loadImage(const Char *name);
+
+
+        static Result createInstance(IUiEngineBackend * piUiEngineBackend, IImageWindow ** ppiUiImageWindow)
         {
-            UiImageWindowImpl *p = new UiImageWindowImpl(piUiEngineBackend);
+            ImageWindowImpl *p = new ImageWindowImpl(piUiEngineBackend);
             if (p)
             {
                 *ppiUiImageWindow = p;
@@ -32,13 +33,18 @@ namespace uap
         }
 
     private:
-        UiImageWindowImpl(IUiEngineBackend * piUiEngineBackend)
+    
+        Ulong refcount_;
+
+    protected:
+
+        ImageWindowImpl(IUiEngineBackend * piUiEngineBackend)
             :refcount_(1)
             ,spUiEngineBackend_(piUiEngineBackend)
+            , WindowImpl("Image", true)
         {
 
         }
-        Ulong refcount_;
 
 
 
@@ -47,8 +53,8 @@ namespace uap
 
 
 
-    }; // @class UiImageWindowImpl
+    }; // @class ImageWindowImpl
 
 } // @namespace uap
 
-#endif // _UAP_UIIMAGEWINDOW_H_
+#endif // _UAP_IMAGEWINDOW_IMPL_H_

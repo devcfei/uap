@@ -7,11 +7,11 @@
 namespace uap
 {
 
-    Ulong UiTextureImpl::addRef()
+    Ulong TextureImpl::addRef()
     {
         return InterlockedIncrement(&refcount_);
     }
-    Ulong UiTextureImpl::release()
+    Ulong TextureImpl::release()
     {
         Ulong ref = InterlockedDecrement(&refcount_);
         if (!ref)
@@ -20,7 +20,7 @@ namespace uap
         }
         return ref;
     }
-    Result UiTextureImpl::queryInterface(const Uuid &rUuid, void **ppv)
+    Result TextureImpl::queryInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
 
@@ -38,7 +38,7 @@ namespace uap
 
 
     // IUiTexture
-    Result UiTextureImpl::loadTexture(Char* path)
+    Result TextureImpl::loadTexture(const Char* path)
     {
         Result r = R_SUCCESS;
         // Load from disk into a raw RGBA buffer

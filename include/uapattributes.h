@@ -41,8 +41,8 @@ namespace uap
         virtual Result getBlob(const Uuid & key, Uchar* buff, Ulong bufSize, Ulong* actualSize) = 0;
 
 
-        virtual Result setString(const Uuid & key, const Char* s, Ulong length) = 0;
-        virtual Result getString(const Uuid & key, Char* s, Ulong length, Ulong* actureLength) = 0;
+        virtual Result setString(const Uuid & key, const Char* s, Size_t length) = 0;
+        virtual Result getString(const Uuid & key, Char* s, Size_t length, Size_t* actureLength) = 0;
 
 
 

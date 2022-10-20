@@ -1,11 +1,10 @@
-#ifndef _UAP_UIIMAGE_TEXTURE_INSPECTOR_
-#define _UAP_UIIMAGE_TEXTURE_INSPECTOR_
+#ifndef _UAP_TEXTURE_INSPECTOR_IMPL_
+#define _UAP_TEXTURE_INSPECTOR_IMPL_
 
 namespace uap
 {
 
-    class UiTextureInspectorImpl : public IUiTextureInspector
-                , public IDraw
+    class TextureInspectorImpl : public ITextureInspector, public WindowImpl
     {
     public:
         // IUniversal
@@ -13,16 +12,15 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
-        // IUiTextureInspector
-        virtual Result initialize(IAttributes *piAttributes);
-        virtual Result loadImage(Char *name);
+        // IWindow
+        virtual Result drawPrimitives();
 
-        // IDraw
-        virtual Result draw();
+        // ITextureInspector
+        virtual Result loadImage(const Char *name);
 
-        static Result createInstance(IUiEngineBackend * piUiEngineBackend, IUiTextureInspector ** ppi)
+        static Result createInstance(IUiEngineBackend *piUiEngineBackend, ITextureInspector **ppi)
         {
-            UiTextureInspectorImpl *p = new UiTextureInspectorImpl(piUiEngineBackend);
+            TextureInspectorImpl *p = new TextureInspectorImpl(piUiEngineBackend);
             if (p)
             {
                 *ppi = p;
@@ -32,23 +30,22 @@ namespace uap
         }
 
     private:
-        UiTextureInspectorImpl(IUiEngineBackend * piUiEngineBackend)
-            :refcount_(1)
-            ,spUiEngineBackend_(piUiEngineBackend)
-        {
-
-        }
         Ulong refcount_;
 
-
+    protected:
+        TextureInspectorImpl(IUiEngineBackend *piUiEngineBackend)
+            : refcount_(1), spUiEngineBackend_(piUiEngineBackend), WindowImpl("Image", true)
+            , initCreate_(true)
+        {
+        }
 
         sptr<IUiTexture> spTexture_;
         sptr<IUiEngineBackend> spUiEngineBackend_;
 
 
-
-    }; // @class UiTextureInspectorImpl
+        Boolean initCreate_;
+    }; // @class TextureInspectorImpl
 
 } // @namespace uap
 
-#endif // _UAP_UIIMAGE_TEXTURE_INSPECTOR_
+#endif // _UAP_TEXTURE_INSPECTOR_IMPL_

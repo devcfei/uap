@@ -4,33 +4,33 @@
 namespace uap
 {
 
-    Ulong UiStatusBarImpl::addRef()
+    Ulong StatusBarImpl::addRef()
     {
         Ulong ref = InterlockedIncrement(&refcount_);
-        //UAP_TRACE("UiStatusBarImpl::addRef- refcount=%d\n", ref);
+        //UAP_TRACE("StatusBarImpl::addRef- refcount=%d\n", ref);
         return ref;
     }
-    Ulong UiStatusBarImpl::release()
+    Ulong StatusBarImpl::release()
     {
         Ulong ref = InterlockedDecrement(&refcount_);
-        //UAP_TRACE("UiStatusBarImpl::release - refcount=%d\n", ref);
+        //UAP_TRACE("StatusBarImpl::release - refcount=%d\n", ref);
         if (!ref)
         {
-            //UAP_TRACE("delete UiStatusBarImpl!!!!!\n");
+            //UAP_TRACE("delete StatusBarImpl!!!!!\n");
             delete this;
         }
         return ref;
     }
-    Result UiStatusBarImpl::queryInterface(const Uuid &rUuid, void **ppv)
+    Result StatusBarImpl::queryInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
 
-        if (uapUuidIsEqual(rUuid, IID_IUISTATUSBAR))
+        if (uapUuidIsEqual(rUuid, IID_ISTATUSBAR))
         {
-            IUiStatusBar *pi = static_cast<IUiStatusBar *>(this);
+            IStatusBar *pi = static_cast<IStatusBar *>(this);
             addRef();
 
-            *((IUiStatusBar **)ppv) = pi;
+            *((IStatusBar **)ppv) = pi;
             r = R_SUCCESS;
         }
         else if (uapUuidIsEqual(rUuid, IID_IDRAW))
@@ -45,18 +45,18 @@ namespace uap
     }
 
 
-    // IUiStatusBar
+    // IStatusBar
 
-    Result UiStatusBarImpl::initialize(IAttributes *piAttributes)
+    Result StatusBarImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
-        INFO("UiStatusBarImpl::initialize\n");
+        INFO("StatusBarImpl::initialize\n");
         return r;
     }
 
    
     // IDraw
-    Result UiStatusBarImpl::draw()
+    Result StatusBarImpl::draw()
     {
         Result r = R_SUCCESS;
 

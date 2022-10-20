@@ -1,10 +1,10 @@
-#ifndef _UAP_UIMENUBAR_H_
-#define _UAP_UIMENUBAR_H_
+#ifndef _UAP_MENUBAR_IMPL_H_
+#define _UAP_MENUBAR_IMPL_H_
 
 namespace uap
 {
 
-    class UiMenuBarImpl : public IUiMenuBar
+    class MenuBarImpl : public IMenuBar
                 , public IDraw
     {
     public:
@@ -13,26 +13,26 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
-        // IUiMenuBar
+        // IMenuBar
         virtual Result initialize(IAttributes *piAttributes);
         virtual Result setMenu(IMenu* piMenu) ;
 
         // IDraw
         virtual Result draw();
 
-        static Result createInstance(void **ppv)
+        static Result createInstance(IMenuBar **ppv)
         {
-            UiMenuBarImpl *p = new UiMenuBarImpl();
+            MenuBarImpl *p = new MenuBarImpl();
             if (p)
             {
-                *(IUiMenuBar **)ppv = p;
+                *(IMenuBar **)ppv = p;
                 return R_SUCCESS;
             }
             return R_ERROR;
         }
 
     private:
-        UiMenuBarImpl()
+        MenuBarImpl()
             :refcount_(1)
         {
 
@@ -40,8 +40,8 @@ namespace uap
         Ulong refcount_;
 
         sptr<IMenu> spMenu_;
-    }; // @class UiMenuBarImpl
+    }; // @class MenuBarImpl
 
 } // @namespace uap
 
-#endif // _UAP_UIMENUBAR_H_
+#endif // _UAP_MENUBAR_IMPL_H_

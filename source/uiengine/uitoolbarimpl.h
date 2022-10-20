@@ -1,10 +1,10 @@
-#ifndef _UAP_UITOOLBAR_H_
-#define _UAP_UITOOLBAR_H_
+#ifndef _UAP_TOOLBAR_IMPL_H_
+#define _UAP_TOOLBAR_IMPL_H_
 
 namespace uap
 {
 
-    class UiToolBarImpl : public IUiToolBar
+    class ToolBarImpl : public IToolBar
                 , public IDraw
     {
     public:
@@ -13,7 +13,7 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
-        // IUiToolBar
+        // IToolBar
         virtual Result initialize(IAttributes *piAttributes);
 
         virtual Result buildToolBarFromTTF(const Char* filename, Ushort min, Ushort max);
@@ -22,9 +22,9 @@ namespace uap
         // IDraw
         virtual Result draw();
 
-        static Result createInstance(IUiToolBar **ppv)
+        static Result createInstance(IToolBar **ppv)
         {
-            UiToolBarImpl *p = new UiToolBarImpl();
+            ToolBarImpl *p = new ToolBarImpl();
             if (p)
             {
                 *ppv = p;
@@ -34,7 +34,7 @@ namespace uap
         }
 
     private:
-        UiToolBarImpl()
+        ToolBarImpl()
             :refcount_(1)
             , heightToolBar_(TOOLBAR_HEIGHT)
         {
@@ -46,8 +46,8 @@ namespace uap
 
         float heightToolBar_;
 
-    }; // @class UiToolBarImpl
+    }; // @class ToolBarImpl
 
 } // @namespace uap
 
-#endif // _UAP_UITOOLBAR_H_
+#endif // _UAP_TOOLBAR_IMPL_H_

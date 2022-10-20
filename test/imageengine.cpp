@@ -24,7 +24,13 @@ TEST(ImageEngine, Interface)
     ac.s.enableComponent = 1;   // always enable component
 
 
-    spAttributes->setUint(UUID_APPLICATION_CONFIGURATION, ac.ui);
+    spAttributes->setUint(APPLICATION_ATTRIBUTE_CONFIGURATION, ac.ui);
+    
+    Char appPath[256];
+    spApp->getCurrentPath(appPath, 256);
+    std::string str=appPath;
+    str+="\\app.log";
+    spAttributes->setString(APPLICATION_ATTRIBUTE_LOGFILE_PATH,str.c_str(),str.length());
 
 
     r = spApp->initialize(spAttributes.get());

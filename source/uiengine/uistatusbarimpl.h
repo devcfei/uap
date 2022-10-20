@@ -1,10 +1,10 @@
-#ifndef _UAP_UISTATUSBAR_H_
-#define _UAP_UISTATUSBAR_H_
+#ifndef _UAP_STATUSBAR_IMPL_H_
+#define _UAP_STATUSBAR_IMPL_H_
 
 namespace uap
 {
 
-    class UiStatusBarImpl : public IUiStatusBar
+    class StatusBarImpl : public IStatusBar
                 , public IDraw
     {
     public:
@@ -13,16 +13,16 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
-        // IUiStatusBar
+        // IStatusBar
         virtual Result initialize(IAttributes *piAttributes);
 
 
         // IDraw
         virtual Result draw();
 
-        static Result createInstance(IUiStatusBar **ppv)
+        static Result createInstance(IStatusBar **ppv)
         {
-            UiStatusBarImpl *p = new UiStatusBarImpl();
+            StatusBarImpl *p = new StatusBarImpl();
             if (p)
             {
                 *ppv = p;
@@ -32,7 +32,7 @@ namespace uap
         }
 
     private:
-        UiStatusBarImpl()
+        StatusBarImpl()
             :refcount_(1)
             ,heightStatusBar_(FONT_SIZE+6.0f)
         {
@@ -42,8 +42,8 @@ namespace uap
 
         float heightStatusBar_;
 
-    }; // @class UiStatusBarImpl
+    }; // @class StatusBarImpl
 
 } // @namespace uap
 
-#endif // _UAP_UISTATUSBAR_H_
+#endif // _UAP_STATUSBAR_IMPL_H_

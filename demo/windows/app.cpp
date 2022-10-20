@@ -29,7 +29,7 @@ Result App::initApplication()
     r = spApp_->createInstance(IID_ITOML, (void **)&spToml_);
     VERIFY(r, "createInstance IID_ITOML");
 
-    std::string strAppConfig = strAppPath_+ "default.toml";
+    std::string strAppConfig = strAppPath_+ "\\default.toml";
     r= spToml_->initialize(spApp_.get(), strAppConfig.data());
     VERIFY(r, "initial toml");
 
@@ -66,8 +66,13 @@ Result App::initApplicationConfiguration()
     VERIFY(r, "createInstance IID_IATTRIBUTES");
 
 
-    spAttributes->setUint(UUID_APPLICATION_CONFIGURATION, ac.ui);
+    spAttributes->setUint(APPLICATION_ATTRIBUTE_CONFIGURATION, ac.ui);
 
+    Char appPath[256];
+    spApp_->getCurrentPath(appPath, 256);
+    std::string str=appPath;
+    str+="\\app.log";
+    spAttributes->setString(APPLICATION_ATTRIBUTE_LOGFILE_PATH,str.c_str(),str.length());
 
     r = spApp_->initialize(spAttributes.get());
     VERIFY(r, "app initialize");
@@ -102,14 +107,13 @@ Result App::initAppEvent()
     VERIFY(r, "event initialize");
 
 
-    r = EventDispatcherImpl::createInstance(spEventDispatcher_.getaddrof());
+    r = EventDispatcherImpl::createInstance(spEventDispatcher_.getaddrof(), this);
     VERIFY(r, "event dispatch create");
 
 
     r = spEvent_->addDispatcher(spEventDispatcher_.get());
-    VERIFY(r, "event add dispatcher");    
-
-
+    VERIFY(r, "event add dispatcher");
+    
 
     return r;
 }
@@ -234,26 +238,17 @@ Result App::setLayout()
     VERIFY(r, "build StatusBar");
 
 
-    // build the StatusBar
+    // build the Log Window
     r = buildLogWindow();
     VERIFY(r, "build LogWindow");
 
 
-    // build the ImageWindow
-    r = buildImageWindow();
-    VERIFY(r, "build ImageWindow");
-
-    // build the TextureInspector
-    r = buildTextureInspector();
-    VERIFY(r, "build TextureInspector");
-
-    // build the FileBrowseWindow
-
+    // build the File Browse Window
     r = buildFileBrowserWindow();
     VERIFY(r, "build file browser");
     
-    r = buildPanelWindow();
-    VERIFY(r, "build panel window");
+    r = buildGenericWindow();
+    VERIFY(r, "build generic window");
     
 
 
@@ -271,68 +266,65 @@ Result App::buildMenuBar()
     // Menu
 
     // Menu File
-    static sptr<IMenu> spMenuFile;
-    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuFile);
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuFile_);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
 
-    r = spMenuFile->initialize(nullptr, spEvent_.get());
+    r = spMenuFile_->initialize(nullptr, spEvent_.get());
     VERIFY(r, "menu file, initalize");
 
-    spMenuFile->addItem("Open", false, NULL, Event_FileOpen);
-    spMenuFile->addItem("Exit", false, NULL, Event_AppExit);
-
+    spMenuFile_->addItem("New", false, NULL, Event_FileNew);
+    spMenuFile_->addItem("Open File...", false, NULL, Event_FileOpen);
+    spMenuFile_->addItem("Open Folder...", false, NULL, Event_FolderOpen);
+    spMenuFile_->addItem("Save as...", false, NULL, Event_SaveAs);
+    spMenuFile_->addSeparator();
+    spMenuFile_->addItem("Exit", false, NULL, Event_AppExit);
 
     // Menu View
-    static sptr<IMenu> spMenuView;
-    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuView);
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuView_);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
 
-    r = spMenuView->initialize(nullptr, spEvent_.get());
+    r = spMenuView_->initialize(nullptr, spEvent_.get());
     VERIFY(r, "menu view, initalize");
 
-
-    spMenuView->addItem("ToolBar", false, NULL, Event_ViewToolBar);
-    spMenuView->addItem("StatusBar", false, NULL,Event_ViewStatusBar);
+    spMenuView_->addItem("ToolBar", false, NULL, Event_ViewToolBar);
+    spMenuView_->addItem("StatusBar", false, NULL, Event_ViewStatusBar);
 
     // Menu View panel
-    static sptr<IMenu> spMenuViewPanelWindow;
-    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuViewPanelWindow);
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuViewPanelWindow_);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
 
-    r = spMenuViewPanelWindow->initialize(nullptr, spEvent_.get());
+    r = spMenuViewPanelWindow_->initialize(nullptr, spEvent_.get());
     VERIFY(r, "menu view panel, initalize");
 
+    spMenuViewPanelWindow_->addItem("Generic", false, NULL, Event_ViewPanelGeneric);
+    spMenuViewPanelWindow_->addItem("File Browser", false, NULL, Event_ViewPanelFileBrowser);
+    spMenuViewPanelWindow_->addItem("Log", false, NULL, Event_ViewPanelLog);
 
-    spMenuViewPanelWindow->addItem("Generic", false, NULL, Event_ViewPanelGeneric);
-    spMenuViewPanelWindow->addItem("File Browser", false, NULL,Event_ViewPanelFileBrowser);
-    spMenuViewPanelWindow->addItem("Log", false, NULL,Event_ViewPanelLog);
+    spMenuView_->addSeparator();
+    spMenuView_->addItem("Panel", false, spMenuViewPanelWindow_.get(), 0);
 
-    spMenuView->addItem("Panel", false, spMenuViewPanelWindow.get(),0);
-
-
-    static sptr<IMenu> spMenuHelp;
-    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuHelp);
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuHelp_);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
 
-    r = spMenuHelp->initialize(nullptr, spEvent_.get());
+    r = spMenuHelp_->initialize(nullptr, spEvent_.get());
     VERIFY(r, "menu help, initalize");
 
-    spMenuHelp->addItem("About", false, NULL,Event_AppAbout);
+    spMenuHelp_->addItem("About", false, NULL, Event_AppAbout);
+#if defined(_DEBUG)
+    spMenuHelp_->addSeparator();
+    spMenuHelp_->addItem("ImGui Demo", false, NULL, Event_HelpImGuiDemo);
+    spMenuHelp_->addItem("ImPlot Demo", false, NULL, Event_HelpImPlotDemo);
+#endif
 
-
-    static sptr<IMenu> spMenuTop;
-    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuTop);
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuTop_);
     VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
-    spMenuTop->addItem("File", false, spMenuFile.get(),0);
-    spMenuTop->addItem("View", false, spMenuView.get(),0);
-    spMenuTop->addItem("Help", false, spMenuHelp.get(),0);
-
-
+    spMenuTop_->addItem("File", false, spMenuFile_.get(), 0);
+    spMenuTop_->addItem("View", false, spMenuView_.get(), 0);
+    spMenuTop_->addItem("Help", false, spMenuHelp_.get(), 0);
 
     // MenuBar
-    sptr<IUiMenuBar> spMenuBar;
-    r = spUiEngine_->createInstance(IID_IUIMENUBAR, (void **)&spMenuBar);
-    VERIFY(r, "spUiEngine_.createInstance(<IUiMenuBar>)");
+    r = spUiEngine_->createInstance(IID_IMENUBAR, (void **)&spMenuBar_);
+    VERIFY(r, "spUiEngine_.createInstance(<IMenuBar>)");
 
     sptr<IAttributes> spMenuBarAttrbutes;
 
@@ -341,14 +333,11 @@ Result App::buildMenuBar()
     VERIFY(r, "create instance attributes");
 
     // initialize MenuBar
-    r = spMenuBar->initialize(spMenuBarAttrbutes.get());
+    r = spMenuBar_->initialize(spMenuBarAttrbutes.get());
     VERIFY(r, "initialize MenuBar");
 
-    r = spMenuBar->setMenu(spMenuTop.get());
+    r = spMenuBar_->setMenu(spMenuTop_.get());
     VERIFY(r, "menubar setMenu");
-
-
-    spUiEngine_->addMenuBar(spMenuBar.get());
 
     return r;
 }
@@ -358,48 +347,35 @@ Result App::buildToolBar()
     Result r = R_SUCCESS;
 
     // ToolBar
-    sptr<IUiToolBar> spToolBar;
-    r = spUiEngine_->createInstance(IID_IUITOOLBAR, (void **)&spToolBar);
-    VERIFY(r, "spUiEngine_.createInstance(<IUiToolBar>)");
+    r = spUiEngine_->createInstance(IID_ITOOLBAR, (void **)&spToolBar_);
+    VERIFY(r, "spUiEngine_.createInstance(<IToolBar>)");
 
     char filename[MAX_PATH];
     spApp_->getCurrentPath(filename, MAX_PATH);
-    StringCchCatA(filename, MAX_PATH, "fontawesome-webfont.ttf");
+    StringCchCatA(filename, MAX_PATH, "\\fontawesome-webfont.ttf");
 
-    spToolBar->buildToolBarFromTTF(filename, ICON_MIN_FK, ICON_MAX_FK);
+    spToolBar_->buildToolBarFromTTF(filename, ICON_MIN_FK, ICON_MAX_FK);
 
     static const Char *label[] =
         {
-            ICON_FK_STAR,
-            ICON_FK_STAR,
-            ICON_FK_STAR_O,
-            ICON_FK_USER,
-            ICON_FK_TIMES,
-            ICON_FK_CHECK,
-            ICON_FK_SEARCH,
-            ICON_FK_CAMERA,
-            ICON_FK_VIDEO_CAMERA,
-            ICON_FK_PICTURE_O,
-            ICON_FK_CLOCK_O,
-            ICON_FK_MINUS_CIRCLE,
-            ICON_FK_TIMES_CIRCLE,
-            ICON_FK_CHECK_CIRCLE,
-            ICON_FK_PENCIL,
-            ICON_FK_LIST,
-            ICON_FK_DOWNLOAD,
-            ICON_FK_UPLOAD,
-            ICON_FK_USERS,
-            ICON_FK_LINK,
-            ICON_FK_BARS,
-            ICON_FK_TABLE,
+            ICON_FK_FILE_O,         // new
+            ICON_FK_FOLDER_OPEN_O,  // open
+            ICON_FK_FLOPPY_O,       // save
+            ICON_FK_SCISSORS,       // cut
+            ICON_FK_FILES_O,        // copy
+            ICON_FK_CLIPBOARD,      // paste
+            ICON_FK_SEARCH_PLUS,    // zoom in
+            ICON_FK_SEARCH_MINUS,   // zoom out
+            ICON_FK_DOWNLOAD,       // download
+            ICON_FK_UPLOAD,         // upload
+            ICON_FK_COG,            // settings
+            ICON_FK_INFO_CIRCLE,    // about info
         };
 
     for (int i = 0; i < sizeof(label) / sizeof(label[0]); ++i)
     {
-        spToolBar->addButton(label[i]);
+        spToolBar_->addButton(label[i]);
     }
-
-    spUiEngine_->addToolBar(spToolBar.get());
 
     return r;
 }
@@ -409,11 +385,9 @@ Result App::buildStatusBar()
     Result r = R_SUCCESS;
 
     // StatusBar
-    sptr<IUiStatusBar> spStatusBar;
-    r = spUiEngine_->createInstance(IID_IUISTATUSBAR, (void **)&spStatusBar);
-    VERIFY(r, "spUiEngine_.createInstance(<IUiStatusBar>)");
+    r = spUiEngine_->createInstance(IID_ISTATUSBAR, (void **)&spStatusBar_);
+    VERIFY(r, "spUiEngine_.createInstance(<IStatusBar>)");
 
-    spUiEngine_->addStatusBar(spStatusBar.get());
 
     return r;
 }
@@ -422,16 +396,12 @@ Result App::buildLogWindow()
 {
     Result r = R_SUCCESS;
 
-    // StatusBar
-    sptr<IUiLogWindow> spLogWindow;
-    r = spUiEngine_->createInstance(IID_IUILOGWINDOW, (void **)&spLogWindow);
-    VERIFY(r, "spUiEngine_.createInstance(<IUiLogWindow>)");
-
-    spUiEngine_->addLogWindow(spLogWindow.get());
+    // LogWindow
+    r = spUiEngine_->createInstance(IID_ILOGWINDOW, (void **)&spLogWindow_);
+    VERIFY(r, "spUiEngine_.createInstance(<ILogWindow>)");
 
 
-
-    spLogWindow->addMessage("first message!\n");
+    spLogWindow_->addMessage("first message!\n");
     return r;
 }
 
@@ -440,97 +410,220 @@ Result App::buildFileBrowserWindow()
 {
     Result r = R_SUCCESS;
 
-    // StatusBar
-    sptr<IUiFileBrowser> spBrowser;
-    r = spUiEngine_->createInstance(IID_IFILEBROSWER, (void **)&spBrowser);
-    VERIFY(r, "spUiEngine_.createInstance(<IUiLogWindow>)");
-
-    spUiEngine_->addFileBroserWindow(spBrowser.get());
-
+    r = spUiEngine_->createInstance(IID_IFILEBROWSERWINDOW, (void **)&spFileBrowserWindow_);
+    VERIFY(r, "spUiEngine_.createInstance(<ILogWindow>)");
 
     char path[256];
     spApp_->getCurrentPath(path,256);
-    spBrowser->initialize(path);
+    spFileBrowserWindow_->addPath(path);
 
     return r;
 }
 
-Result App::buildPanelWindow()
+Result App::buildGenericWindow()
 {
     Result r = R_SUCCESS;
 
     // Panel Window
-    sptr<IPanelWindow> spPanelWindow;
-    r = spUiEngine_->createInstance(IID_IUIPANELWINDOW, (void **)&spPanelWindow);
-    VERIFY(r, "spUiEngine_.createInstance(<IPanelWindow>)");
-
-
-
+    r = spUiEngine_->createInstance(IID_IWINDOW, (void **)&spGenericWindow_);
+    VERIFY(r, "spUiEngine_.createInstance(<IWindow>)");
 
     // create an attribute
     sptr<IAttributes> attr;
     r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&attr);
     VERIFY(r, "create instance attributes");
 
+    std::string title = "Generic Window";
+    r = attr->setString(WINDOW_ATTRIBUTE_TITLE, title.c_str(), title.length());
+    VERIFY(r, "set WINDOW_ATTRIBUTE_TITLE");
 
-    std::string title = "Panel Window";
-    r = attr->setString(PANELWINDOW_ATTRIBUTE_TITLE, title.c_str(), title.length());
-    VERIFY(r, "set PANELWINDOW_ATTRIBUTE_TITLE");
-
-
-
-    r = spPanelWindow->initialize(attr.get());
-    VERIFY(r, "initialize IPanelWindow");
-
-    spUiEngine_->addPanelWindow(spPanelWindow.get());
-
+    // initialize the panel window with attributes
+    r = spGenericWindow_->initialize(attr.get(), nullptr);
+    VERIFY(r, "initialize IWindow");
 
 
     return r;
 }
 
 
-Result App::buildImageWindow()
-{
-    Result r = R_SUCCESS;
 
-    sptr<IUiImageWindow> spImageWindow;
-    r = spUiEngine_->createInstance(IID_IUIIMAGEWINDOW, (void **)&spImageWindow);
-    VERIFY(r, "spUiEngine_.createInstance(<IUiImageWindow>)");
-
-    char filename[MAX_PATH];
-    spApp_->getCurrentPath(filename, MAX_PATH);
-    StringCchCatA(filename, MAX_PATH, "demo.png");
-
-    r = spImageWindow->loadImage(filename);
-
-    spUiEngine_->addImageWindow(spImageWindow.get());
-
-    return r;
-}
-
-Result App::buildTextureInspector()
-{
-    Result r = R_SUCCESS;
-
-    sptr<IUiTextureInspector> spTextureInspector;
-    r = spUiEngine_->createInstance(IID_IUITEXTURE_INSPECTOR, (void **)&spTextureInspector);
-    VERIFY(r, "spUiEngine_.createInstance(<IUiTextureInspector>)");
-
-    char filename[MAX_PATH];
-    spApp_->getCurrentPath(filename, MAX_PATH);
-    StringCchCatA(filename, MAX_PATH, "demo.png");
-
-    r = spTextureInspector->loadImage(filename);
-
-    spUiEngine_->addTextureInspector(spTextureInspector.get());
-
-    return r;
-}
 
 Result App::buildLayout()
 {
     Result r = R_SUCCESS;
+
+    // get layout and add the draw to the layout
+    r = spUiEngine_->getLayout(spLayout_.getaddrof());
+    VERIFY(r, "get layout");
+
+    sptr<IFrameWindowElements> spUiElement;
+    r = spLayout_.as(&spUiElement);
+    VERIFY(r, "as uielement");
+
+    // add menubar
+    r = spUiElement->addMenuBar(spMenuBar_.get());
+    VERIFY(r, "add menubar");
+
+    // add toolbar
+    r = spUiElement->addToolBar(spToolBar_.get());
+    VERIFY(r, "add menubar");
+
+    // add statusbar
+    r = spUiElement->addStatusBar(spStatusBar_.get());
+    VERIFY(r, "add statusbar");
+
+    // add generic window
+    r = spLayout_->addDraw(spGenericWindow_.get());
+    VERIFY(r, "add panel window draw to layout");
+
+    // add log window
+    r = spLayout_->addDraw(spLogWindow_.get());
+    VERIFY(r, "add log window draw to layout");
+
+
+    // add file browser window
+    r = spLayout_->addDraw(spFileBrowserWindow_.get());
+    VERIFY(r, "add file browser window draw to layout");
+    
+
+
+    return r;
+}
+
+
+
+
+Result App::openImageFile(std::tstring filename)
+{
+    Result r;
+
+
+    r = fileListManager_.addFile(filename);
+    if(UAP_SUCCESS(r))
+    {
+
+        sptr<IImageWindow> spImageWindow;
+
+        r = spUiEngine_->createInstance(IID_IIMAGEWINDOW, (void **)&spImageWindow);
+        VERIFY(r, "spUiEngine_.createInstance(<IImageWindow>)");
+
+
+        USES_CONVERSION;
+
+        std::string file = T2A(filename.c_str());
+
+
+
+        // create an attribute
+        sptr<IAttributes> attr;
+        r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&attr);
+        VERIFY(r, "create instance attributes");
+
+
+        
+        std::string title = file;
+
+        PathStripPathA(title.data());
+        
+        r = attr->setString(WINDOW_ATTRIBUTE_TITLE, title.c_str(), title.length());
+        VERIFY(r, "set WINDOW_ATTRIBUTE_TITLE");
+
+        r = attr->setUint(WINDOW_CLOSE_EVENTID, Event_WindowClosed);
+        VERIFY(r, "set WINDOW_CLOSE_EVENTID");
+
+
+        // initialize the panel window with attributes
+        sptr<IWindow> spWindow;
+        r = spImageWindow.as(&spWindow);
+        VERIFY(r, "as IWindow");
+
+        r = spWindow->initialize(attr.get(), spEvent_.get());
+        VERIFY(r, "initialize IWindow");
+
+        r = spImageWindow->loadImage(file.c_str());
+        VERIFY(r, "load image");
+
+
+        // add image window
+        r = spLayout_->addDraw(spImageWindow.get());
+        VERIFY(r, "add image window draw to layout");
+
+        vecImageWindows_.push_back(spImageWindow);
+
+
+        // map the window and file
+        mapWindowFile_.insert(std::make_pair(spWindow.get(), filename));
+
+    }
+
+
+    return r;
+}
+
+
+Result App::openImageFileByTextureInspector(std::tstring filename)
+{
+    Result r;
+
+
+    r = fileListManager_.addFile(filename);
+    if(UAP_SUCCESS(r))
+    {
+
+        sptr<ITextureInspector> spTextureInspector;
+
+        r = spUiEngine_->createInstance(IID_ITEXTURE_INSPECTOR, (void **)&spTextureInspector);
+        VERIFY(r, "spUiEngine_.createInstance(<IImageWindow>)");
+
+
+        USES_CONVERSION;
+
+        std::string file = T2A(filename.c_str());
+
+
+
+        // create an attribute
+        sptr<IAttributes> attr;
+        r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&attr);
+        VERIFY(r, "create instance attributes");
+
+
+        
+        std::string title = file;
+
+        PathStripPathA(title.data());
+        
+        r = attr->setString(WINDOW_ATTRIBUTE_TITLE, title.c_str(), title.length());
+        VERIFY(r, "set WINDOW_ATTRIBUTE_TITLE");
+
+        r = attr->setUint(WINDOW_CLOSE_EVENTID, Event_WindowClosed);
+        VERIFY(r, "set WINDOW_CLOSE_EVENTID");
+
+
+        // initialize the panel window with attributes
+        sptr<IWindow> spWindow;
+        r = spTextureInspector.as(&spWindow);
+        VERIFY(r, "as IWindow");
+
+        r = spWindow->initialize(attr.get(), spEvent_.get());
+        VERIFY(r, "initialize IWindow");
+
+        r = spTextureInspector->loadImage(file.c_str());
+        VERIFY(r, "load image");
+
+
+        // add image window
+        r = spLayout_->addDraw(spTextureInspector.get());
+        VERIFY(r, "add image window draw to layout");
+
+        vecTextureInspectorWindows_.push_back(spTextureInspector);
+
+
+        // map the window and file
+        mapWindowFile_.insert(std::make_pair(spWindow.get(), filename));
+
+    }
+
 
     return r;
 }

@@ -31,7 +31,7 @@ namespace uap
         return r;
     }
 
-    Result UiLayoutImplDemo::initializeLayout(IUiEngine* piUiEngine, IAttributes *piAttributes)
+    Result UiLayoutImplDemo::initializeLayout(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
 
@@ -42,12 +42,12 @@ namespace uap
     Result UiLayoutImplDemo::draw()
     {
         Result r = R_SUCCESS;
-        bool showDemoWindow_ = true;
+        bool showImGuiDemo_ = true;
         bool show_another_window = false;
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (showDemoWindow_)
-            ImGui::ShowDemoWindow(&showDemoWindow_);
+        if (showImGuiDemo_)
+            ImGui::ShowDemoWindow(&showImGuiDemo_);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
         {
@@ -57,7 +57,7 @@ namespace uap
             ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("This is some useful text.");          // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &showDemoWindow_); // Edit bools storing our window open/close state
+            ImGui::Checkbox("Demo Window", &showImGuiDemo_); // Edit bools storing our window open/close state
             ImGui::Checkbox("Another Window", &show_another_window);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);             // Edit 1 float using a slider from 0.0f to 1.0f
@@ -83,6 +83,17 @@ namespace uap
         }
 
         return r;
+    }
+
+
+    Result UiLayoutImplDemo::addDraw(IUniversal *piDraw)
+    {
+        return R_SUCCESS;
+    }
+
+    Result UiLayoutImplDemo::deleteDraw(IUniversal *piDraw)
+    {
+        return R_SUCCESS;
     }
 
 } // @namespace uap

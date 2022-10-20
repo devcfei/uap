@@ -36,8 +36,8 @@ namespace uap
         virtual Result getBlob(const Uuid & key, Uchar* buff, Ulong bufSize, Ulong* actualSize);
 
 
-        virtual Result setString(const Uuid & key, const Char* s, Ulong length);
-        virtual Result getString(const Uuid & key, Char* s, Ulong length, Ulong* actureLength);
+        virtual Result setString(const Uuid & key, const Char* s, Size_t length);
+        virtual Result getString(const Uuid & key, Char* s, Size_t length, Size_t* actureLength);
 
 
         virtual Result deleteKey(const Uuid & key);
@@ -87,7 +87,7 @@ namespace uap
                 struct String
                 {
                     Char *p;
-                    Ulong len;
+                    Size_t len;
                 } str;  
             };
         };

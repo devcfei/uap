@@ -2,9 +2,35 @@
 #define _FRAMEWORK_H_
 
 
+
+
+// STL
+#include <vector>
+#include <list>
+#include <string>
+#include <map>
+
+
+namespace std
+{
+    #ifdef _UNICODE
+        typedef wstring tstring;
+    #else
+        typedef string tstring;
+    #endif
+};
+
+
 #include <windows.h>
 #include <strsafe.h>
 #include <tchar.h>
+#include <shlobj.h>
+#include <shlwapi.h>
+
+
+#include <atlbase.h>
+#include <atlconv.h>
+
 
 
 
@@ -19,6 +45,7 @@ using namespace uap;
 
 
 #include "eventdispatch.h"
+#include "filelistmgr.h"
 #include "app.h"
 
 

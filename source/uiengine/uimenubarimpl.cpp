@@ -4,33 +4,33 @@
 namespace uap
 {
 
-    Ulong UiMenuBarImpl::addRef()
+    Ulong MenuBarImpl::addRef()
     {
         Ulong ref = InterlockedIncrement(&refcount_);
-        //UAP_TRACE("UiMenuBarImpl::addRef- refcount=%d\n", ref);
+        //UAP_TRACE("MenuBarImpl::addRef- refcount=%d\n", ref);
         return ref;
     }
-    Ulong UiMenuBarImpl::release()
+    Ulong MenuBarImpl::release()
     {
         Ulong ref = InterlockedDecrement(&refcount_);
-        //UAP_TRACE("UiMenuBarImpl::release - refcount=%d\n", ref);
+        //UAP_TRACE("MenuBarImpl::release - refcount=%d\n", ref);
         if (!ref)
         {
-            UAP_TRACE("UiMenuBarImpl delete!!!!\n");
+            UAP_TRACE("MenuBarImpl delete!!!!\n");
             delete this;
         }
         return ref;
     }
-    Result UiMenuBarImpl::queryInterface(const Uuid &rUuid, void **ppv)
+    Result MenuBarImpl::queryInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
 
-        if (uapUuidIsEqual(rUuid, IID_IUIMENUBAR))
+        if (uapUuidIsEqual(rUuid, IID_IMENUBAR))
         {
-            IUiMenuBar *pi = static_cast<IUiMenuBar *>(this);
+            IMenuBar *pi = static_cast<IMenuBar *>(this);
             addRef();
 
-            *((IUiMenuBar **)ppv) = pi;
+            *((IMenuBar **)ppv) = pi;
             r = R_SUCCESS;
         }
         else if (uapUuidIsEqual(rUuid, IID_IDRAW))
@@ -45,17 +45,17 @@ namespace uap
     }
 
 
-    // IUiMenuBar
+    // IMenuBar
 
-    Result UiMenuBarImpl::initialize(IAttributes *piAttributes)
+    Result MenuBarImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
-        INFO("UiMenuBarImpl::initialize\n");
+        INFO("MenuBarImpl::initialize\n");
         return r;
     }
 
 
-    Result UiMenuBarImpl::setMenu(IMenu *piMenu)
+    Result MenuBarImpl::setMenu(IMenu *piMenu)
     {
         Result r = R_SUCCESS;
         spMenu_ = piMenu;
@@ -63,7 +63,7 @@ namespace uap
     }
 
     // IDraw
-    Result UiMenuBarImpl::draw()
+    Result MenuBarImpl::draw()
     {
         Result r = R_SUCCESS;
 
@@ -71,12 +71,27 @@ namespace uap
         {
             if (ImGui::BeginMenuBar())
             {
+                // TODO: for customized menubar
+                //ImGui::Text("\xef\x80\x86"); // TODO: STAR_O as the logo
                 sptr<IDraw> spDraw;
                 r = spMenu_.as(&spDraw);
                 if (UAP_SUCCESS(r))
                 {
                     r = spDraw->draw();
                 }
+
+                // TODO: for customized menubar
+                // int width = 30;
+                // ImGui::SameLine(ImGui::GetWindowWidth()-width*4);
+                // ImGui::Button("\xef\x8b\x91");  // ICON_FK_WINDOW_MINIMIZE
+                // ImGui::SameLine(ImGui::GetWindowWidth()-width*3);
+                // ImGui::Button("\xef\x8b\x90");  // ICON_FK_WINDOW_MAXIMIZE
+                // ImGui::SameLine(ImGui::GetWindowWidth()-width*2);
+                // ImGui::Button("\xef\x8b\x92");  // ICON_FK_WINDOW_RESTORE
+                // ImGui::SameLine(ImGui::GetWindowWidth()-width*1);
+                // ImGui::Button("\xef\x80\x8d");  // ICON_FK_TIMES
+
+            
                 ImGui::EndMenuBar();
             }
         }

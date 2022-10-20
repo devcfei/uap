@@ -4,33 +4,33 @@
 namespace uap
 {
 
-    Ulong UiToolBarImpl::addRef()
+    Ulong ToolBarImpl::addRef()
     {
         Ulong ref = InterlockedIncrement(&refcount_);
-        //UAP_TRACE("UiToolBarImpl::addRef- refcount=%d\n", ref);
+        //UAP_TRACE("ToolBarImpl::addRef- refcount=%d\n", ref);
         return ref;
     }
-    Ulong UiToolBarImpl::release()
+    Ulong ToolBarImpl::release()
     {
         Ulong ref = InterlockedDecrement(&refcount_);
-        //UAP_TRACE("UiToolBarImpl::release - refcount=%d\n", ref);
+        //UAP_TRACE("ToolBarImpl::release - refcount=%d\n", ref);
         if (!ref)
         {
-            //UAP_TRACE("delete UiToolBarImpl!!!!!\n");
+            //UAP_TRACE("delete ToolBarImpl!!!!!\n");
             delete this;
         }
         return ref;
     }
-    Result UiToolBarImpl::queryInterface(const Uuid &rUuid, void **ppv)
+    Result ToolBarImpl::queryInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
 
-        if (uapUuidIsEqual(rUuid, IID_IUITOOLBAR))
+        if (uapUuidIsEqual(rUuid, IID_ITOOLBAR))
         {
-            IUiToolBar *pi = static_cast<IUiToolBar *>(this);
+            IToolBar *pi = static_cast<IToolBar *>(this);
             addRef();
 
-            *((IUiToolBar **)ppv) = pi;
+            *((IToolBar **)ppv) = pi;
             r = R_SUCCESS;
         }
         else if (uapUuidIsEqual(rUuid, IID_IDRAW))
@@ -45,17 +45,17 @@ namespace uap
     }
 
 
-    // IUiToolBar
+    // IToolBar
 
-    Result UiToolBarImpl::initialize(IAttributes *piAttributes)
+    Result ToolBarImpl::initialize(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
-        INFO("UiToolBarImpl::initialize\n");
+        INFO("ToolBarImpl::initialize\n");
         return r;
     }
 
 
-    Result UiToolBarImpl::buildToolBarFromTTF(const Char* filename, Ushort min, Ushort max)
+    Result ToolBarImpl::buildToolBarFromTTF(const Char* filename, Ushort min, Ushort max)
     {
         Result r = R_SUCCESS;
 
@@ -77,7 +77,7 @@ namespace uap
     }
 
 
-    Result UiToolBarImpl::addButton(const Char* label)
+    Result ToolBarImpl::addButton(const Char* label)
     {
         Result r = R_SUCCESS;
 
@@ -85,7 +85,7 @@ namespace uap
         return r;
     }
     // IDraw
-    Result UiToolBarImpl::draw()
+    Result ToolBarImpl::draw()
     {
         Result r = R_SUCCESS;
 

@@ -20,27 +20,7 @@ namespace uap
         virtual Result startup();
         virtual Result run();
 
-        virtual Result addMenuBar(IUiMenuBar *piMenuBar);
-        virtual Result getMenuBar(IUiMenuBar **ppiMenuBar);
-        virtual Result addToolBar(IUiToolBar *piToolBar);
-        virtual Result getToolBar(IUiToolBar **ppiToolBar);
-        virtual Result addStatusBar(IUiStatusBar *piStatusBar);
-        virtual Result getStatusBar(IUiStatusBar **ppiStatusBar);
-
-        virtual Result addLogWindow(IUiLogWindow *piLogWindow);
-        virtual Result getLogWindow(IUiLogWindow **ppiLogWindow);
-
-        virtual Result addImageWindow(IUiImageWindow *piImageWindow);
-        virtual Result getImageWindow(IUiImageWindow **ppiImageWindow);
-        virtual Result addTextureInspector(IUiTextureInspector* piTextureInspector);
-        virtual Result getTextureInspector(IUiTextureInspector** ppiTextureInspector);
-
-
-        virtual Result addFileBroserWindow(IUiFileBrowser *piFileBrowserWindow);
-        virtual Result getFileBroserWindow(IUiFileBrowser **ppiFileBrowserWindow);
-
-        virtual Result addPanelWindow(IPanelWindow *piPanelWindow);
-        virtual Result getPanelWindow(IPanelWindow **ppiPanelWindow);
+        virtual Result getLayout(IUiLayout** ppiLayout);
 
         static ILogTrace* getLogTrace()
         {
@@ -78,8 +58,6 @@ namespace uap
         static LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
-
-
         // set when initialize
         sptr<IApplication> spApp_ ;
         sptr<IAttributes> spAppAttributes_ ;
@@ -87,93 +65,23 @@ namespace uap
         inline static sptr<ILogTrace> spLogTrace_;
 
         BackendType beType_;
-        sptr<IUiEngineBackend> spBackend_;
-        
+        sptr<IUiEngineBackend> spBackend_;        
 
-        // layout attributes
+        // layout
         sptr<IUiLayout> spLayout_;
 
         // backend
-
         ImVec4 colorClear_;
 
 
-        sptr<IUiMenuBar> spMenuBar_;
-        sptr<IUiToolBar> spToolBar_;
-        sptr<IUiStatusBar> spStatusBar_;
-        sptr<IUiLogWindow> spLogWindow_;
-        sptr<IUiFileBrowser> spFileBrowserWindow_;
-
-        std::vector<sptr<IUiImageWindow> > spImageWindows_;
-        std::vector<sptr<IUiTextureInspector> > spTextureInspector_;
-
-
-
-        std::vector<sptr<IPanelWindow> > spPanelWindow_;
-
-
+        //app location path
+        std::string strAppLocation_;
     };
 
 
 
 
-    // IMenu implementation
-    class MenuImpl : public IMenu
-        , public IDraw
-    {
-    public:
-        // IUniversal
-        virtual Ulong addRef();
-        virtual Ulong release();
-        virtual Result queryInterface(const Uuid &,void **);
-
-        // IDraw
-
-        virtual Result draw();
-
-        // IMenu
-        virtual Result initialize(IAttributes *piAttributes, IEvent* piEvent);
-        virtual Result addItem(const Char *name, Boolean check, IMenu* submenu, EventId evtId);
-
-
-        static Result createInstance(IMenu **ppi)
-        {
-            MenuImpl *p = new MenuImpl();
-            if (p)
-            {
-                *ppi = p;
-                return R_SUCCESS;
-            }
-            return R_ERROR;
-        }
-
-
-    private:
-        MenuImpl()
-            : refcount_(1)
-        {
-        }
-        Ulong refcount_;
-
-        IMenu* parent_;
-
-        std::string title_;
-
-        struct MenuItem
-        {
-            std::string name;   // display name
-            Boolean check;      // check status
-            IMenu* submenu;     // sub-menu
-            EventId evtId;      // event ID
-        };
-
-        std::vector<MenuItem> vecMenuItem_;
-        Result drawMenu(IMenu* pMenu);
-
-        sptr<IEvent> spEvent_;
-
-    };
-
+    
 }
 
 #endif //_UAP_UIENGINEIMPL_H_

@@ -38,7 +38,7 @@ TEST(TOML, get)
     spApp->getCurrentPath(path,256);
 
     std::string file=path;
-    file+="test.toml";
+    file+="\\test.toml";
 
     initconfig(file);
 
@@ -47,7 +47,7 @@ TEST(TOML, get)
     EXPECT_EQ(r, R_SUCCESS);
 
     char *s=new char[8];
-    Ulong *actureLength= new Ulong();
+    Size_t *actureLength= new Size_t();
     r = spConfig->getString("name", s,8,actureLength);
     EXPECT_EQ(r, R_SUCCESS);
     std::string PStr=s;
@@ -122,7 +122,7 @@ TEST(TOML, set)
     spApp->getCurrentPath(path,256);
 
     std::string file=path;
-    file+="test.toml";
+    file+="\\test.toml";
 
     initconfig(file);
 
@@ -190,7 +190,7 @@ TEST(TOML, set)
     std::string s;
 
     char *v=new char[8];
-    Ulong *actureLength= new Ulong();
+    Size_t *actureLength= new Size_t();
     r = spConfig->getString("name", v,8,actureLength);
     EXPECT_EQ(r, R_SUCCESS);
     std::string PStr=v;

@@ -7,7 +7,7 @@ project(uap-demo)
 
 if( CMAKE_SYSTEM_NAME STREQUAL "Windows")
     aux_source_directory(${PROJECT_SOURCE_DIR}/windows SRCS)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")    
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")  
 endif()
 
 
@@ -18,7 +18,7 @@ endif()
 
 add_executable(demo ${SRCS})
 target_link_libraries(demo uap)
-
+target_compile_definitions(demo PRIVATE UNICODE _UNICODE)
 
 
 
@@ -26,8 +26,8 @@ target_link_libraries(demo uap)
 install(TARGETS demo
         EXPORT demoTargets
         CONFIGURATIONS Debug
-        LIBRARY DESTINATION Debug/lib
-        ARCHIVE DESTINATION Debug/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )
@@ -36,8 +36,8 @@ install(TARGETS demo
 install(TARGETS demo 
         EXPORT demoTargets
         CONFIGURATIONS Release
-        LIBRARY DESTINATION Release/lib
-        ARCHIVE DESTINATION Release/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )

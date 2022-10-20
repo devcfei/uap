@@ -39,42 +39,44 @@ namespace uap
     Result UiEngineImpl::createInstance(const Uuid& rUuid, void ** ppv)
     {
         Result r = R_INVALID_PARAMETERS;
-        if (uapUuidIsEqual(rUuid, IID_IUIMENUBAR))
+
+        if (uapUuidIsEqual(rUuid, IID_IWINDOW))
         {
-            r = UiMenuBarImpl::createInstance(ppv);
-        }
-        else if (uapUuidIsEqual(rUuid, IID_IUITOOLBAR))
-        {
-            r = UiToolBarImpl::createInstance((IUiToolBar **)ppv);
-        }          
-        else if (uapUuidIsEqual(rUuid, IID_IUISTATUSBAR))
-        {
-            r = UiStatusBarImpl::createInstance((IUiStatusBar **)ppv);
-        }       
-        else if (uapUuidIsEqual(rUuid, IID_IUILOGWINDOW))
-        {
-            r = UiLogWindowImpl::createInstance((IUiLogWindow **)ppv);
-        } 
-        else if (uapUuidIsEqual(rUuid, IID_IFILEBROSWER))
-        {
-            r = UiFileBrowser::createInstance((IUiFileBrowser **)ppv);
-        } 
-        else if (uapUuidIsEqual(rUuid, IID_IUIIMAGEWINDOW))
-        {
-            r = UiImageWindowImpl::createInstance(spBackend_.get(),(IUiImageWindow **)ppv);
-        }
-        else if (uapUuidIsEqual(rUuid, IID_IUITEXTURE_INSPECTOR))
-        {
-            r = UiTextureInspectorImpl::createInstance(spBackend_.get(),(IUiTextureInspector **)ppv);
-        }
-        else if (uapUuidIsEqual(rUuid, IID_IUIPANELWINDOW))
-        {
-            r = UiPanelWindowImpl::createInstance((IPanelWindow **)ppv);
+            r = WindowImpl::createInstance((IWindow **)ppv);
         }
         else if (uapUuidIsEqual(rUuid, IID_IMENU))
         {
             r = MenuImpl::createInstance((IMenu **)ppv);
         }
+        else if (uapUuidIsEqual(rUuid, IID_IMENUBAR))
+        {
+            r = MenuBarImpl::createInstance((IMenuBar**)ppv);
+        }
+        else if (uapUuidIsEqual(rUuid, IID_ITOOLBAR))
+        {
+            r = ToolBarImpl::createInstance((IToolBar **)ppv);
+        }          
+        else if (uapUuidIsEqual(rUuid, IID_ISTATUSBAR))
+        {
+            r = StatusBarImpl::createInstance((IStatusBar **)ppv);
+        }    
+        else if (uapUuidIsEqual(rUuid, IID_ILOGWINDOW))
+        {
+            r = LogWindowImpl::createInstance((ILogWindow **)ppv);
+        } 
+        else if (uapUuidIsEqual(rUuid, IID_IFILEBROWSERWINDOW))
+        {
+            r = FileBrowserWindowImpl::createInstance((IFileBrowserWindow **)ppv);
+        } 
+        else if (uapUuidIsEqual(rUuid, IID_IIMAGEWINDOW))
+        {
+            r = ImageWindowImpl::createInstance(spBackend_.get(),(IImageWindow **)ppv);
+        }
+        else if (uapUuidIsEqual(rUuid, IID_ITEXTURE_INSPECTOR))
+        {
+            r = TextureInspectorImpl::createInstance(spBackend_.get(),(ITextureInspector **)ppv);
+        }
+
 
 
         return r;
@@ -201,21 +203,15 @@ namespace uap
     }
 
 
-    Result UiEngineImpl::addMenuBar(IUiMenuBar* piMenuBar)
+  
+
+    Result UiEngineImpl::getLayout(IUiLayout** ppiLayout)
     {
         Result r = R_SUCCESS;
 
-        spMenuBar_ = piMenuBar;
-
-        return r;
-    }
-    Result UiEngineImpl::getMenuBar(IUiMenuBar** ppiMenuBar)
-    {
-        Result r = R_SUCCESS;
-
-        *ppiMenuBar = spMenuBar_.get();
+        *ppiLayout = spLayout_.get();
         // Don't forget to add reference count
-        (*ppiMenuBar)->addRef();
+        (*ppiLayout)->addRef();
 
         return r;
     }
@@ -223,127 +219,6 @@ namespace uap
 
 
 
-    Result UiEngineImpl::addToolBar(IUiToolBar *piToolBar)
-    {
-        Result r = R_SUCCESS;
-
-        spToolBar_ = piToolBar;
-
-        return r;
-    }
-
-    Result UiEngineImpl::getToolBar(IUiToolBar **ppiToolBar)
-    {
-        Result r = R_SUCCESS;
-
-        *ppiToolBar = spToolBar_.get();
-        // Don't forget to add reference count
-        (*ppiToolBar)->addRef();
-
-        return r;
-    }
-
-    Result UiEngineImpl::addStatusBar(IUiStatusBar *piStatusBar)
-    {
-        Result r = R_SUCCESS;
-
-        spStatusBar_ = piStatusBar;
-
-        return r;
-    }
-    Result UiEngineImpl::getStatusBar(IUiStatusBar **ppiStatusBar)
-    {
-        Result r = R_SUCCESS;
-
-        *ppiStatusBar = spStatusBar_.get();
-        // Don't forget to add reference count
-        (*ppiStatusBar)->addRef();
-
-        return r;
-    }
-
-
-
-    Result UiEngineImpl::addImageWindow(IUiImageWindow* piImageWindow)
-    {
-        Result r = R_SUCCESS;
-        spImageWindows_.push_back(piImageWindow);
-        return r;
-    }
-
-    Result UiEngineImpl::getImageWindow(IUiImageWindow** ppiImageWindow)
-    {
-        Result r = R_SUCCESS;
-        *ppiImageWindow = spImageWindows_[0].get();
-        // Don't forget to add reference count
-        (*ppiImageWindow)->addRef();
-        return r;
-    }
-
-
-    Result UiEngineImpl::addTextureInspector(IUiTextureInspector* piTextureInspector)
-    {
-        Result r = R_SUCCESS;
-        spTextureInspector_.push_back(piTextureInspector);
-        return r;
-    }
-
-    Result UiEngineImpl::getTextureInspector(IUiTextureInspector** ppiTextureInspector)
-    {
-        Result r = R_SUCCESS;
-        *ppiTextureInspector = spTextureInspector_[0].get();
-        // Don't forget to add reference count
-        (*ppiTextureInspector)->addRef();
-        return r;
-    }
-
-    Result UiEngineImpl::addPanelWindow(IPanelWindow* piPanelWindow)
-    {
-        Result r = R_SUCCESS;
-        spPanelWindow_.push_back(piPanelWindow);
-        return r;
-    }
-    Result UiEngineImpl::getPanelWindow(IPanelWindow** ppiPanelWindow)
-    {
-        Result r = R_SUCCESS;
-        *ppiPanelWindow = spPanelWindow_[0].get();
-        // Don't forget to add reference count
-        (*ppiPanelWindow)->addRef();
-        return r;
-    }
-
-
-    Result UiEngineImpl::addLogWindow(IUiLogWindow *piLogWindow)
-    {
-        Result r = R_SUCCESS;
-        spLogWindow_ = piLogWindow;
-        return r;
-    }
-    Result UiEngineImpl::getLogWindow(IUiLogWindow **ppiLogWindow)
-    {
-        Result r = R_SUCCESS;
-
-        *ppiLogWindow = spLogWindow_.get();
-        // Don't forget to add reference count
-        (*ppiLogWindow)->addRef();
-        return r;
-    }
-
-    Result UiEngineImpl::addFileBroserWindow(IUiFileBrowser *piFileBrowserWindow)
-    {
-        Result r = R_SUCCESS;
-        spFileBrowserWindow_ = piFileBrowserWindow;
-        return r;
-    }
-    Result UiEngineImpl::getFileBroserWindow(IUiFileBrowser **ppiFileBrowserWindow)
-    {
-        Result r = R_SUCCESS;
-
-        *ppiFileBrowserWindow = spFileBrowserWindow_.get();
-        // Don't forget to add reference count
-        (*ppiFileBrowserWindow)->addRef();
-        return r;
-    }
 
     // private member functions
     Result UiEngineImpl::initializeWindow()
@@ -358,10 +233,11 @@ namespace uap
         Char appName[256];
         spAppAttributes_->getString(UUID_APP_NAME, appName,256,nullptr);
 
+        USES_CONVERSION;
 
         wc_ = wc;
         ::RegisterClassEx(&wc);
-        hWnd_ = ::CreateWindow(wc.lpszClassName, appName,
+        hWnd_ = ::CreateWindow(wc.lpszClassName, A2T(appName),
                                WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800,
                                 NULL, NULL, wc.hInstance, (LPVOID)this);
 
@@ -420,49 +296,19 @@ namespace uap
         float fontSize =FONT_SIZE;
         float fonScaler =1.0f;
 
-        //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeui.ttf", fontSize*fonScaler, &font_cfg);
-        //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeuib.ttf", 17.0f, &font_cfg);
         io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeuisl.ttf", fontSize * fonScaler, &font_cfg);
-
-        //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\calibri.ttf", fontSize*fonScaler , &font_cfg);
-        //io.Fonts->AddFontFromFileTTF("Roboto-Medium.ttf", fontSize*fonScaler , &font_cfg);
 
         
         io.FontGlobalScale /= fonScaler;
-
         io.Fonts->Build();
 
-        // char path[MAX_PATH];
-        // spApp_->getCurrentPath(path,MAX_PATH);
-        // StringCbCatA(path,MAX_PATH,"fontawesome-webfont.ttf");
 
-
-        // INFO("front path = %s\n",path);
-        
-
-        // ImFontConfig config;
-        // config.MergeMode = true;
-        // config.GlyphMinAdvanceX = 18.0f; // Use if you want to make the icon monospaced
-        // static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
-        // io.Fonts->AddFontFromFileTTF(path, 18.0f, &config, icon_ranges);
-
-
-
-        // static CHAR path[MAX_PATH];
-
-        // if (SUCCEEDED(SHGetFolderPathA(NULL,
-        //     CSIDL_PERSONAL | CSIDL_FLAG_CREATE,
-        //     NULL,
-        //     0,
-        //     path)))
-        // {
-        //     StringCchCatA(path, MAX_PATH - 1, "\\demo\\");
-        // }
-
-        // StringCchCatA(path, MAX_PATH - 1, "demo.ini");
-
-
-        //io.IniFilename = path; 
+        // config file path
+        Char szPath[256];
+        spApp_->getCurrentPath(szPath, 256);
+        strAppLocation_ = szPath;
+        strAppLocation_+="\\imgui.ini";
+        io.IniFilename = strAppLocation_.c_str(); 
 
 
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
@@ -525,7 +371,7 @@ namespace uap
                 r = UiLayoutImplDocking::createInstance((void**)&spLayout_);
                 VERIFY(r, "create docking style layout");
 
-                r = spLayout_->initializeLayout(this, nullptr);
+                r = spLayout_->initializeLayout(nullptr);
                 VERIFY(r, "nitialize the layout");
             }
             else if(style == LAYOUT_STYLE_DEMO)
@@ -611,122 +457,7 @@ namespace uap
 
 
 
-    // IMenu implementation
-    Ulong MenuImpl::addRef()
-    {
-        return InterlockedIncrement(&refcount_);
-    }
-
-    Ulong MenuImpl::release()
-    {
-        Ulong ref = InterlockedDecrement(&refcount_);
-        if (!ref)
-        {
-            delete this;
-        }
-        return ref;
-    }
-
-    Result MenuImpl::queryInterface(const Uuid &rUuid, void **ppv)
-    {
-        Result r = R_NO_SUCH_INTERFACE;
-
-        if (uapUuidIsEqual(rUuid, IID_IMENU))
-        {
-            IMenu *pi = static_cast<IMenu *>(this);
-            addRef();
-
-            *((IMenu **)ppv) = pi;
-            r = R_SUCCESS;
-        }
-        else if (uapUuidIsEqual(rUuid, IID_IDRAW))
-        {
-            IDraw *pi = static_cast<IDraw *>(this);
-            addRef();
-
-            *((IDraw **)ppv) = pi;
-            r = R_SUCCESS;
-        }
-
-        return r;
-    }
-
-    Result MenuImpl::drawMenu(IMenu *pMenu)
-    {
-        Result r;
-        sptr<IMenu> spMenu = pMenu;
-        sptr<IDraw> spDraw;
-
-        r = spMenu.as(&spDraw);
-        if (UAP_SUCCESS(r))
-        {
-            r = spDraw->draw();
-        }
-        return r;
-    }
-
-    Result MenuImpl::draw()
-    {
-        Result r = R_SUCCESS;
-        bool bMenuBegin = false;
-        bool bMenuOpen = false;
-
-        for (auto it : vecMenuItem_)
-        {
-            if (it.submenu)
-            {
-                bMenuBegin = ImGui::BeginMenu(it.name.c_str());
-
-            }
-            else
-                bMenuOpen = ImGui::MenuItem(it.name.c_str(), NULL);
-
-            if (bMenuBegin)
-            {
-                ImGui::Indent( 16.0f );
-
-                if (it.submenu)
-                {
-                    r = drawMenu(it.submenu);
-                }
-
-                ImGui::Unindent( 16.0f );
-
-                ImGui::EndMenu();
-            }
-
-            if(bMenuOpen)
-            {
-                spEvent_->postEvent(it.evtId, 0, 0);
-            }
-        }
-
-        return r;
-    }
-
-    Result MenuImpl::initialize(IAttributes *piAttributes, IEvent* piEvent)
-    {
-
-        spEvent_ =  piEvent;
-
-        return R_SUCCESS;
-    }
-    
-    Result MenuImpl::addItem(const Char *name, Boolean check, IMenu* submenu, EventId evtId)
-    {
-        Result r = R_SUCCESS;
-
-        MenuItem item;
-
-        item.name = name;
-        item.check = check;
-        item.submenu = submenu;
-        item.evtId = evtId;
-
-        vecMenuItem_.push_back(item);
-
-        return r;
-    }
+ 
 
 
 }; //@namespace uap

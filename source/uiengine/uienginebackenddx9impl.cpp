@@ -184,12 +184,12 @@ namespace uap
         return r;
     }
 
-    Result UiEngineBackendDx9Impl::createTexture(Char* filename, IUiTexture** ppiTexture)
+    Result UiEngineBackendDx9Impl::createTexture(const Char* filename, IUiTexture** ppiTexture)
     {
         Result r = R_NOT_IMPL;
         // IUiTexture* piTexture;
 
-        // r = UiTextureImpl::createInstance((void**)piTexture);
+        // r = TextureImpl::createInstance((void**)piTexture);
         
       
 

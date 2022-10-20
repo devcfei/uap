@@ -24,23 +24,23 @@ namespace uap
 
         virtual Result getBool(const Char *k, bool& v) = 0;       
         virtual Result getInt(const Char *k, int& v) = 0;
-        virtual Result getString(const Char *k,Char *v ,Ulong length, Ulong *actureLength) = 0;      
+        virtual Result getString(const Char *k,Char *v ,Size_t length, Size_t *actureLength) = 0;      
         virtual Result getBool(const Char* s, const Char *k, bool& v) = 0;        
         virtual Result getInt(const Char* s,const Char *k, int& v) = 0;
-        virtual Result getString(const Char* s, const Char *k, Char *v, Ulong length, Ulong *actureLength) = 0;
+        virtual Result getString(const Char* s, const Char *k, Char *v, Size_t length, Size_t *actureLength) = 0;
         virtual Result getBool(const Char* s, const Char* ss,  const Char *k, bool& v) = 0;
         virtual Result getInt(const Char* s,const Char *ss, const Char *k, int& v) = 0;
-        virtual Result getString(const Char* s,const Char *ss, const Char *k, Char *v, Ulong length, Ulong *actureLength) = 0;
+        virtual Result getString(const Char* s,const Char *ss, const Char *k, Char *v, Size_t length, Size_t *actureLength) = 0;
 
         virtual Result setBool(const Char *k, bool& v) = 0;
         virtual Result setInt(const Char *k , int &v) = 0;
-        virtual Result setString(const Char *k , const Char *v, Ulong length) = 0;
+        virtual Result setString(const Char *k , const Char *v, Size_t length) = 0;
         virtual Result setBool(const Char* s,const Char *k, bool& v) = 0;
         virtual Result setInt(const Char* s,const Char *k, int& v) = 0;
-        virtual Result setString(const Char* s,const Char *k, const Char *v, Ulong length) = 0;
+        virtual Result setString(const Char* s,const Char *k, const Char *v, Size_t length) = 0;
         virtual Result setBool(const Char* s,const Char *ss, const Char *k, bool& v) = 0;
         virtual Result setInt(const Char* s,const Char *ss, const Char *k, int& v) = 0;
-        virtual Result setString(const Char* s,const Char *ss, const Char *k, const Char *v, Ulong length)= 0;
+        virtual Result setString(const Char* s,const Char *ss, const Char *k, const Char *v, Size_t length)= 0;
 
         // uuid
         static const Uuid uuid()

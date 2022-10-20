@@ -1,25 +1,5 @@
 #include "common.h"
 
-static int GetModuleFilePath(LPCTSTR lpszModuleFile, int size, LPTSTR lpszPath)
-{
-    TCHAR path[MAX_PATH] = _T("");
-
-    lstrcpy(path, lpszModuleFile);
-
-    int nSize = size;
-    for (int i = nSize - 1; i > 0; --i)
-    {
-        if (path[i] == _T('\\'))
-        {
-            path[i + 1] = 0;
-            break;
-        }
-    }
-
-    lstrcpy(lpszPath, path);
-
-    return 0;
-}
 
 static BOOL IsDll(LPCTSTR lpszName)
 {
@@ -105,23 +85,23 @@ namespace uap
         sptr<IAttributes> spAttr = piAttributes;
 
         ApplicationConfiguration ac;
-        spAttr->getUint(UUID_APPLICATION_CONFIGURATION, ac.ui);
+        spAttr->getUint(APPLICATION_ATTRIBUTE_CONFIGURATION, ac.ui);
         if (ac.s.enableLog)
         {
             UAP_TRACE("enabled application log trace\n");
             //
-            FileLoggerImpl::initialize("app.log");
-            
-            // r = FileLoggerImpl::createInstance(fileLogger_.getaddrof());
-            // if(!UAP_SUCCESS(r))
-            // {
-            //     UAP_TRACE("ERROR: create file logger failed\n");
-
-            // }
-            // if(UAP_SUCCESS(r))
-            // {    
-            //     fileLogger_->initialize("app.log");
-            // }
+            Char filenameLog[256];
+            Size_t len;
+            r = spAttr->getString(APPLICATION_ATTRIBUTE_LOGFILE_PATH,filenameLog,256,&len);
+            if(UAP_SUCCESS(r))
+            {
+                FileLoggerImpl::initialize(filenameLog);
+            }
+            else
+            {
+                FileLoggerImpl::initialize("app.log");
+                r = R_SUCCESS;
+            }
         }
         if (ac.s.enableComponent)
         {
@@ -193,14 +173,8 @@ namespace uap
 
         CHAR szModuleFileName[MAX_PATH];
         int nSize = GetModuleFileNameA(NULL, szModuleFileName, MAX_PATH);
-        for (int i = nSize - 1; i > 0; --i)
-        {
-            if (szModuleFileName[i] == _T('\\'))
-            {
-                szModuleFileName[i + 1] = 0;
-                break;
-            }
-        }
+
+        PathRemoveFileSpecA(szModuleFileName);
 
         StringCchCopyA(path, size - 1, szModuleFileName);
 
@@ -219,9 +193,9 @@ namespace uap
 
         TCHAR szFileName[MAX_PATH];
         int nSize = GetModuleFileName(NULL, szFileName, MAX_PATH);
-
-        GetModuleFilePath(szFileName, nSize, szCurDir);
-        StringCchCat(szCurDir, MAX_PATH, TEXT("*"));
+        PathRemoveFileSpec(szFileName);
+        StringCchCopy(szCurDir, MAX_PATH, szFileName);
+        StringCchCat(szCurDir, MAX_PATH, TEXT("\\*"));
 
         hFind = FindFirstFile(szCurDir, &ffd);
 

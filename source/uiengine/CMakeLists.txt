@@ -64,6 +64,7 @@ add_library(uiengine SHARED ${SRCS} ${SRC_EXTRA} )
 target_compile_definitions(uiengine PRIVATE COMPONENT_EXPORTS)
 target_link_libraries(uiengine uap d3d9 d3d11 d3dcompiler dxgi)
 target_link_libraries(uiengine freetype)
+target_compile_definitions(uiengine PRIVATE UNICODE _UNICODE)
 
 # backends
 
@@ -72,8 +73,8 @@ target_link_libraries(uiengine freetype)
 install(TARGETS uiengine
         EXPORT uiengineTargets
         CONFIGURATIONS Debug
-        LIBRARY DESTINATION Debug/lib
-        ARCHIVE DESTINATION Debug/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )
@@ -82,8 +83,8 @@ install(TARGETS uiengine
 install(TARGETS uiengine 
         EXPORT uiengineTargets
         CONFIGURATIONS Release
-        LIBRARY DESTINATION Release/lib
-        ARCHIVE DESTINATION Release/lib
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         )

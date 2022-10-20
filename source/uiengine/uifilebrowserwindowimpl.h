@@ -1,51 +1,12 @@
-#ifndef _UAP_UIFILEBROWSER_H_
-#define _UAP_UIFILEBROWSER_H_
-
-
+#ifndef _UAP_FILWBROWSERWINDOW_IMPL_H_
+#define _UAP_FILWBROWSERWINDOW_IMPL_H_
 
 namespace uap
 {
 
-    class UiFileBrowser:  public IUiFileBrowser,
-            public IDraw
+    class FileBrowserIcons
     {
     public:
-        // IUniversal
-        virtual Ulong addRef();
-        virtual Ulong release();
-        virtual Result queryInterface(const Uuid &rUuid, void **ppv);
-
-
-        // IDraw
-        virtual Result draw();
-
-        // IUiFileBrowser
-
-        virtual Result initialize(char* path);
-
-
-
-        static Result createInstance(IUiFileBrowser **ppi)
-        {
-            UiFileBrowser *p = new UiFileBrowser();
-            if (p)
-            {
-                *ppi = p;
-                return R_SUCCESS;
-            }
-            return R_ERROR;
-        }
-
-
-    private:
-        UiFileBrowser()
-            : refcount_(1)
-        {
-        }
-        Ulong refcount_;
-
-
-        //
         void draw_none_icon(float width, float height) const noexcept;
 
         void draw_home_icon(float width, float height, uint32_t color) const noexcept;
@@ -75,15 +36,55 @@ namespace uap
         void show_side_menu() noexcept;
         void show_dir_browser_list() noexcept;
 
+    };
 
-	    uint32_t m_selected_item_id = 0xffffffff;
 
-	    void unselect_item() noexcept;
 
-        std::string m_current_dir;
 
-    }; // @class UiTextureImpl
+
+    class FileBrowserWindowImpl : public IFileBrowserWindow, public WindowImpl, FileBrowserIcons
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef();
+        virtual Ulong release();
+        virtual Result queryInterface(const Uuid &rUuid, void **ppv);
+
+
+        // IWindow
+        virtual Result drawPrimitives();
+
+        // ILogWindow
+        virtual Result addPath(Char *name) ;
+
+        static Result createInstance(IFileBrowserWindow **ppv)
+        {
+            FileBrowserWindowImpl *p = new FileBrowserWindowImpl();
+            if (p)
+            {
+                *ppv = p;
+                return R_SUCCESS;
+            }
+            return R_ERROR;
+        }
+
+    private:
+        Ulong refcount_;
+
+    protected:
+        FileBrowserWindowImpl()
+            : refcount_(1)
+            , WindowImpl("File Browser")
+        {
+
+        }
+
+        void drawFiles(std::tstring path);
+
+        std::vector<std::tstring> vecPath_;
+
+    }; // @class LogWindowImpl
 
 } // @namespace uap
 
-#endif // _UAP_UIFILEBROWSER_H_
+#endif // _UAP_FILWBROWSERWINDOW_IMPL_H_
