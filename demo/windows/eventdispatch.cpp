@@ -120,6 +120,16 @@ Result EventDispatcherImpl::dispatch(EventId eventId, EventArg a, EventArg b)
     }
 
 
+    case Event_FileBrowserClicked:
+    {
+        TCHAR* p = (TCHAR*)a;
+
+        std::tstring str =p;
+        pApp->onFileBrowserClicked(str);
+
+    }
+
+
     default:
         break;
 

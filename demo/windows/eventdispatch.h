@@ -25,6 +25,8 @@ enum EventIdEnum
     Event_HelpImGuiDemo,
     Event_HelpImPlotDemo,
 #endif
+
+    Event_FileBrowserClicked,
 };
 
 

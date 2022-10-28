@@ -53,7 +53,7 @@ namespace uap
         r = pAttributes->getString(WINDOW_ATTRIBUTE_TITLE,title,256,&len);
         if(!UAP_SUCCESS(r))
         {
-            return r;
+            r = R_SUCCESS; // ignore if window no title
         }
 
         if(len>0)

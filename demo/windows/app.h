@@ -84,6 +84,19 @@ public:
                     USES_CONVERSION;
                     spLogWindow_->addMessage(W2A(pszFilePath));
 
+
+                    spFileBrowserWindow_->addPath(W2A(pszFilePath));
+
+                    Result r;
+                    sptr<IWindow> spWindow;
+                    r = spFileBrowserWindow_.as(&spWindow);
+                    if(UAP_SUCCESS(r))
+                    {
+                        spWindow->setOpen(true);
+                    }
+
+                    
+
                     CoTaskMemFree(pszFilePath);
                 }
                 pSelItem->Release();
@@ -201,6 +214,13 @@ public:
             mapWindowFile_.erase(it++);
 
         }
+
+    }
+
+
+    void onFileBrowserClicked(std::tstring& file)
+    {
+        openImageFileByTextureInspector(file);
 
     }
 

@@ -52,9 +52,10 @@ namespace uap
 
 
         // IWindow
+        virtual Result initialize(IAttributes* pAttributes, IEvent* piEvent);
         virtual Result drawPrimitives();
 
-        // ILogWindow
+        // IFileBrowserWindow
         virtual Result addPath(Char *name) ;
 
         static Result createInstance(IFileBrowserWindow **ppv)
@@ -83,7 +84,12 @@ namespace uap
 
         std::vector<std::tstring> vecPath_;
 
-    }; // @class LogWindowImpl
+        std::tstring strFileLastClicked_;
+
+        Uint evtIdFileClicked_;
+
+
+    }; // @class FileBrowserWindowImpl
 
 } // @namespace uap
 

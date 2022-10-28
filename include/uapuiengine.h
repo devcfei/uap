@@ -210,6 +210,11 @@ namespace uap
     DEFINE_UUID(IID_IFILEBROWSERWINDOW,
                 0x426c6e1a, 0xee9d, 0x4381, 0xb0, 0xc3, 0xbe, 0xd1, 0x69, 0xe2, 0x3b, 0xd0);
 
+
+    // {90ebcd23-0322-4a95-a5ae-98aa7d5ffb26}
+    DEFINE_UUID(FILEBROWSERWINDOW_ATTRBUTE_FILECLICKED_EVENT_ID,
+                0x90ebcd23, 0x0322, 0x4a95, 0xa5, 0xae, 0x98, 0xaa, 0x7d, 0x5f, 0xfb, 0x26);
+
     class IFileBrowserWindow : public IUniversal
     {
     public:

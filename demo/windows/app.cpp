@@ -413,9 +413,31 @@ Result App::buildFileBrowserWindow()
     r = spUiEngine_->createInstance(IID_IFILEBROWSERWINDOW, (void **)&spFileBrowserWindow_);
     VERIFY(r, "spUiEngine_.createInstance(<ILogWindow>)");
 
-    char path[256];
-    spApp_->getCurrentPath(path,256);
-    spFileBrowserWindow_->addPath(path);
+    // char path[256];
+    // spApp_->getCurrentPath(path,256);
+    // spFileBrowserWindow_->addPath(path);
+
+
+
+    // create an attribute
+    sptr<IAttributes> attr;
+    r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&attr);
+    VERIFY(r, "create instance attributes");
+
+
+    r = attr->setUint(FILEBROWSERWINDOW_ATTRBUTE_FILECLICKED_EVENT_ID, Event_FileBrowserClicked);
+    VERIFY(r, "set FILEBROWSERWINDOW_ATTRBUTE_FILECLICKED_EVENT_ID");
+
+
+
+    // initialize the panel window with attributes
+    sptr<IWindow> spWindow;
+    r = spFileBrowserWindow_.as(&spWindow);
+    VERIFY(r, "as IWindow");
+
+    r = spWindow->initialize(attr.get(), spEvent_.get());
+    VERIFY(r, "initialize IWindow");
+
 
     return r;
 }

@@ -373,6 +373,27 @@ namespace uap
     }
 
     // IWindow
+    Result FileBrowserWindowImpl::initialize(IAttributes* pAttributes, IEvent* piEvent)
+    {
+        Result r;
+
+        r = WindowImpl::initialize(pAttributes,piEvent );
+        if(!UAP_SUCCESS(r))
+        {
+            return r;
+        }
+
+        r = pAttributes->getUint(FILEBROWSERWINDOW_ATTRBUTE_FILECLICKED_EVENT_ID, evtIdFileClicked_);
+        if(!UAP_SUCCESS(r))
+        {
+            r = R_SUCCESS; // ignore error for WINDOW_CLOSE_EVENTID not set
+        }
+
+        return r;
+
+    }
+
+
     Result FileBrowserWindowImpl::drawPrimitives()
     {
         Result r = R_SUCCESS;
@@ -449,8 +470,8 @@ namespace uap
 
             if(isDir)
             {
-                draw_dir_icon(icon_size, icon_size, icon_color);
-                ImGui::SameLine();
+                //draw_dir_icon(icon_size, icon_size, icon_color);
+                //ImGui::SameLine();
 
 
                 if (ImGui::TreeNodeEx(filename.c_str()))
@@ -464,8 +485,8 @@ namespace uap
             }
             else if(isNormal)
             {
-                draw_file_icon(icon_size, icon_size, icon_color);
-                ImGui::SameLine();
+                //draw_file_icon(icon_size, icon_size, icon_color);
+                //ImGui::SameLine();
 
                 ImGui::TreeNodeEx(filename.c_str(), ImGuiTreeNodeFlags_Leaf|ImGuiTreeNodeFlags_NoTreePushOnOpen);
 
@@ -475,7 +496,15 @@ namespace uap
                     file = path;
                     file+=_T("\\");
                     file+=ffd.cFileName;
-                    UAP_TRACE("file clicked: %s\n",file.c_str());
+
+                    USES_CONVERSION;
+                    UAP_TRACE("file clicked: %s\n",T2A(file.c_str()));
+
+
+                    strFileLastClicked_ = file;
+
+
+                    spEvent_->postEvent(evtIdFileClicked_, (EventArg)strFileLastClicked_.c_str(), 0);
                     
                 }
             }
