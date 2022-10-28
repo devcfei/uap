@@ -386,7 +386,7 @@ namespace uap
         virtual Result createInstance(const Uuid &, void **) = 0;
 
         // IUiEngine
-        virtual Result initialize(IApplication *piApp, IAttributes *piAttributes) = 0;
+        virtual Result initialize(IApplication *piApp, IAttributes *piAttributes, BackendType bt) = 0;
         virtual Result startup() = 0;
         virtual Result run() = 0;
         virtual Result getLayout(IUiLayout** ppiLayout) = 0;

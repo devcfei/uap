@@ -34,7 +34,7 @@ namespace uap
         return r;
     }
 
-    Result TomlImpl::initialize(IApplication *piApp, Char *filename)
+    Result TomlImpl::initialize(IApplication *piApp, const Char *filename)
     {
         Result r = R_SUCCESS;
 

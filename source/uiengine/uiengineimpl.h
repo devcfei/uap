@@ -16,7 +16,7 @@ namespace uap
 
 
         // IUiEngine
-        virtual Result initialize(IApplication* piApp, IAttributes* piAttributes);
+        virtual Result initialize(IApplication* piApp, IAttributes* piAttributes, BackendType bt);
         virtual Result startup();
         virtual Result run();
 

@@ -8,6 +8,7 @@ log = true # true-enable app logging
 
 [uiengine]
 layout = 1 # 0-simple, 1-studio, 2-demo(only debug version)
+backend = 1 # 0-d3d9, 1-d3d11
 
 
 [uiengine.log]
@@ -17,5 +18,4 @@ todebugger = true  # messsge send to debugger
 tag = true  # message with tag
 
 
-[uiengine.backend]
 

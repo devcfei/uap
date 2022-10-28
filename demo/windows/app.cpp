@@ -30,7 +30,7 @@ Result App::initApplication()
     VERIFY(r, "createInstance IID_ITOML");
 
     std::string strAppConfig = strAppPath_+ "\\default.toml";
-    r= spToml_->initialize(spApp_.get(), strAppConfig.data());
+    r= spToml_->initialize(spApp_.get(), strAppConfig.c_str());
     VERIFY(r, "initial toml");
 
 
@@ -160,7 +160,9 @@ Result App::initUiEngine()
     spUiAttributes_->setString(UUID_APP_NAME, "Demo", 4);
 
     int layout = 0;
+    int backend = 0;
     spToml_->getInt("uiengine", "layout", layout);
+    spToml_->getInt("uiengine", "backend", backend);
 
     // set application layout style
     LayoutStyle style;
@@ -214,7 +216,14 @@ Result App::initUiEngine()
     spUiAttributes_->setUlong(UUID_LOGTRACE_ATTRIBUTES, logAttr.ul);
 
     // initialize the UI engine
-    r = spUiEngine_->initialize(spApp_.get(), spUiAttributes_.get());
+    BackendType betype;
+    switch(backend)
+    {
+    case 0: betype = BT_D3D9; break;
+    case 1: betype = BT_D3D11; break;
+    default: betype = BT_D3D9; break;
+    }
+    r = spUiEngine_->initialize(spApp_.get(), spUiAttributes_.get(), betype);
     VERIFY(r, "initialze UI engine");
 
     return r;

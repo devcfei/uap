@@ -83,7 +83,7 @@ namespace uap
     }
 
 
-    Result UiEngineImpl::initialize(IApplication *piApp, IAttributes *piAttributes)
+    Result UiEngineImpl::initialize(IApplication *piApp, IAttributes *piAttributes, BackendType bt)
     {
         Result r = R_SUCCESS;
 
@@ -106,9 +106,7 @@ namespace uap
 
 
         // create the backend
-
-        beType_ = BT_D3D9;
-        beType_ = BT_D3D11;
+        beType_ = bt;
 
         if (beType_ == BT_D3D9)
         {

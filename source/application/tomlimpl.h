@@ -13,7 +13,7 @@ namespace uap
         virtual Result queryInterface(const Uuid &, void **);
 
         // IToml
-        virtual Result initialize(IApplication *piApp, Char *filename);
+        virtual Result initialize(IApplication *piApp, const Char *filename);
 
         virtual Result getBool(const Char *k, bool& v);
         virtual Result getInt(const Char *k, int& v);

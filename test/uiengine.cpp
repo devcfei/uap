@@ -64,7 +64,7 @@ TEST(UiEngine, createInstance)
 
 
     // initialize the UI engine
-    r = spUiEngine->initialize(spApp.get(), spUiAttributes.get());
+    r = spUiEngine->initialize(spApp.get(), spUiAttributes.get(), BT_D3D11);
 
 
 
