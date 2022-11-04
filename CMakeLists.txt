@@ -2,37 +2,21 @@ cmake_minimum_required(VERSION 3.10)
 project(uap)
 
 
-
 # Build options
-option(INSTALL_GTEST "Install GoogleTest to CMAKE_INSTALL_PREFIX" OFF)
-option(UAP_BUILD_TEST "Build Test" ON)
-option(UAP_BUILD_DEMO "Build Demo" ON)
-
-
+option(BUILD_TEST "Build Test" ON)
+option(BUILD_DEMO "Build Demo" ON)
 
 
 # C++ flags
-if ( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-    set( my_std_pre "/std:" )
-else()
-    set( my_std_pre "-std=" )
-endif()
-
-set( basic_cxx17 "c++17" )
-set( str_cxx17 "${my_std_pre}${basic_cxx17}" )
-
-
-
-
 include( CheckCXXCompilerFlag )
 check_cxx_compiler_flag( "${str_cxx17}" _cpp_17_flag_supported )
 if ( _cpp_17_flag_supported )
     set( CMAKE_CXX_STANDARD 17 )
- endif()
+endif()
 
 
 
-
+# global include
 include_directories(
     "${PROJECT_SOURCE_DIR}/include"
     "${PROJECT_SOURCE_DIR}/assets/fontawesome"
@@ -41,13 +25,16 @@ include_directories(
     )
 
 
+
+# subdirectories
 add_subdirectory(library)
 add_subdirectory(source)
-if(UAP_BUILD_TEST)
+
+if(BUILD_TEST)
     add_subdirectory(test)
 endif()
 
-if(UAP_BUILD_DEMO)
+if(BUILD_DEMO)
     add_subdirectory(demo)
 endif()
 
