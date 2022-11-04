@@ -146,6 +146,12 @@ public:
         pdf->Release();
     }
 
+    void onFileSettings()
+    {
+        spSettingWindow_->setOpen(!spSettingWindow_->isOpen());
+    }
+
+
     void onViewPanelGenericClicked()
     {
         spGenericWindow_->setOpen(!spGenericWindow_->isOpen());
@@ -195,11 +201,11 @@ public:
     {
         // remove the draw from layout
         sptr<IWindow> spWindow=piWindow;
-        sptr<IDraw> spDraw;
+        sptr<IFrame> spFrame;
 
-        spWindow.as(&spDraw);
+        spWindow.as(&spFrame);
 
-        spLayout_->deleteDraw(spDraw.get());
+        spLayout_->deleteFrame(spFrame.get());
 
         // delete the file from file list manager
 
@@ -231,6 +237,7 @@ private:
     Result initAppEvent();
 
     sptr<IUiEngine> spUiEngine_;
+    sptr<IDraw> spDraw_;
     sptr<IAttributes> spUiAttributes_;
     sptr<IEventDispatcher> spEventDispatcher_;
     sptr<IEvent> spEvent_;
@@ -238,7 +245,7 @@ private:
 
     Result initUiEngine();
 
-    sptr<IUiLayout> spLayout_;
+    sptr<ILayout> spLayout_;
     sptr<IAttributes> spLayoutAttributes_;
 
     std::string strAppPath_;
@@ -249,7 +256,7 @@ private:
     Result buildLogWindow();
     Result buildFileBrowserWindow();
     Result buildGenericWindow();
-
+    Result buildSettingWindow();
 
     // UI element
 
@@ -267,14 +274,19 @@ private:
     // statusbar
     sptr<IStatusBar> spStatusBar_;
 
-
+    sptr<IFrame> spGenericWindowFrame_;
     sptr<IWindow> spGenericWindow_;
+
     sptr<ILogWindow> spLogWindow_;
     sptr<IFileBrowserWindow> spFileBrowserWindow_;
 
 
     std::vector<sptr<IImageWindow> > vecImageWindows_;
     std::vector<sptr<ITextureInspector> > vecTextureInspectorWindows_;
+
+
+    sptr<IFrame> spSettingWindowFrame_;
+    sptr<IWindow> spSettingWindow_;
 
 private:
     FileListManager fileListManager_;

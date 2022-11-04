@@ -1,5 +1,5 @@
-#ifndef _UAP_LOGWINDOW_IMPL_H_
-#define _UAP_LOGWINDOW_IMPL_H_
+#ifndef _UAP_UI_LOGWINDOW_IMPL_H_
+#define _UAP_UI_LOGWINDOW_IMPL_H_
 
 namespace uap
 {
@@ -170,4 +170,4 @@ namespace uap
 
 } // @namespace uap
 
-#endif // _UAP_LOGWINDOW_IMPL_H_
+#endif // _UAP_UI_LOGWINDOW_IMPL_H_

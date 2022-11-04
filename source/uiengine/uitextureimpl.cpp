@@ -26,10 +26,10 @@ namespace uap
 
         if (uapUuidIsEqual(rUuid, IID_ITEXTURE))
         {
-            IUiTexture *pi = static_cast<IUiTexture *>(this);
+            ITexture *pi = static_cast<ITexture *>(this);
             addRef();
 
-            *((IUiTexture **)ppv) = pi;
+            *((ITexture **)ppv) = pi;
             r = R_SUCCESS;
         }
 
@@ -37,7 +37,7 @@ namespace uap
     }
 
 
-    // IUiTexture
+    // ITexture
     Result TextureImpl::loadTexture(const Char* path)
     {
         Result r = R_SUCCESS;

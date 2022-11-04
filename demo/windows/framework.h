@@ -46,6 +46,8 @@ using namespace uap;
 
 #include "eventdispatch.h"
 #include "filelistmgr.h"
+#include "genericframeimpl.h"
+#include "settingframeimpl.h"
 #include "app.h"
 
 

@@ -1,10 +1,10 @@
-#ifndef _UAP_TEXTURE_IMPL_H_
-#define _UAP_TEXTURE_IMPL_H_
+#ifndef _UAP_UI_TEXTURE_IMPL_H_
+#define _UAP_UI_TEXTURE_IMPL_H_
 
 namespace uap
 {
 
-    class TextureImpl : public IUiTexture
+    class TextureImpl : public ITexture
     {
     public:
         // IUniversal
@@ -12,7 +12,7 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
-        // IUiTexture
+        // ITexture
         virtual Result loadTexture(const Char* path);
         virtual int width()
         {
@@ -28,7 +28,7 @@ namespace uap
             return (void*)srv_;
         }
 
-        static Result createInstance(ID3D11Device *d3dDevice, IUiTexture **ppiTexture)
+        static Result createInstance(ID3D11Device *d3dDevice, ITexture **ppiTexture)
         {
             TextureImpl *p = new TextureImpl(d3dDevice);
             if (p)
@@ -59,4 +59,4 @@ namespace uap
 
 } // @namespace uap
 
-#endif // _UAP_TEXTURE_IMPL_H_
+#endif // _UAP_UI_TEXTURE_IMPL_H_

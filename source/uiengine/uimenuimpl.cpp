@@ -30,12 +30,12 @@ namespace uap
             *((IMenu **)ppv) = pi;
             r = R_SUCCESS;
         }
-        else if (uapUuidIsEqual(rUuid, IID_IDRAW))
+        else if (uapUuidIsEqual(rUuid, IID_IFRAME))
         {
-            IDraw *pi = static_cast<IDraw *>(this);
+            IFrame *pi = static_cast<IFrame *>(this);
             addRef();
 
-            *((IDraw **)ppv) = pi;
+            *((IFrame **)ppv) = pi;
             r = R_SUCCESS;
         }
 
@@ -46,17 +46,17 @@ namespace uap
     {
         Result r;
         sptr<IMenu> spMenu = pMenu;
-        sptr<IDraw> spDraw;
+        sptr<IFrame> spFrame;
 
-        r = spMenu.as(&spDraw);
+        r = spMenu.as(&spFrame);
         if (UAP_SUCCESS(r))
         {
-            r = spDraw->draw();
+            r = spFrame->drawFrame();
         }
         return r;
     }
 
-    Result MenuImpl::draw()
+    Result MenuImpl::drawFrame()
     {
         Result r = R_SUCCESS;
         bool bMenuBegin = false;

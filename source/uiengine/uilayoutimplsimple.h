@@ -6,7 +6,7 @@ namespace uap
 
 
 
-    class UiLayoutImplSimple: public IUiLayout
+    class UiLayoutImplSimple: public ILayout
     {
     public:
         // IUniversal
@@ -14,12 +14,12 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &,void **);
 
-        // IUiLayout
+        // ILayout
         virtual Result initializeLayout(IAttributes* piAttributes);
-        virtual Result draw();
+        virtual Result drawLayout();
 
-        virtual Result addDraw(IUniversal *piDraw);
-        virtual Result deleteDraw(IUniversal *piDraw);
+        virtual Result addFrame(IUniversal *piDraw);
+        virtual Result deleteFrame(IUniversal *piDraw);
 #ifdef _DEBUG
         virtual void openImGuiDemo(Boolean open)
         {
@@ -33,7 +33,7 @@ namespace uap
             UiLayoutImplSimple *p = new UiLayoutImplSimple();
             if (p)
             {
-                *(IUiLayout **)ppv = p;
+                *(ILayout **)ppv = p;
                 return R_SUCCESS;
             }
             return R_ERROR;

@@ -108,7 +108,7 @@ namespace uap
     Result UiLayoutImplDocking::queryInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
-        if (uapUuidIsEqual(rUuid, IID_IUILAYOUT))
+        if (uapUuidIsEqual(rUuid, IID_ILAYOUT))
         {
             UiLayoutImplDocking *pi = static_cast<UiLayoutImplDocking *>(this);
             addRef();
@@ -139,7 +139,7 @@ namespace uap
         return r;
     }
 
-    Result UiLayoutImplDocking::draw()
+    Result UiLayoutImplDocking::drawLayout()
     {
 
         Result r = R_SUCCESS;
@@ -255,7 +255,7 @@ namespace uap
         // draw
         for(auto it: vecDraw_)
         {
-            it->draw();
+            it->drawFrame();
         }
 
         ImGui::End();
@@ -263,24 +263,24 @@ namespace uap
         return r;
     }
 
-    Result UiLayoutImplDocking::addDraw(IUniversal *piDraw)
+    Result UiLayoutImplDocking::addFrame(IUniversal *piDraw)
     {
         Result r = R_SUCCESS;
-        sptr<IDraw> spDraw;
-        r = piDraw->queryInterface(IID_IDRAW, (void**)spDraw.getaddrof());
+        sptr<IFrame> spFrame;
+        r = piDraw->queryInterface(IID_IFRAME, (void**)spFrame.getaddrof());
         if(UAP_SUCCESS(r))
         {
-            vecDraw_.push_back(spDraw.get());
+            vecDraw_.push_back(spFrame.get());
         }
         return r;
     }
 
 
-    Result UiLayoutImplDocking::deleteDraw(IUniversal *piDraw)
+    Result UiLayoutImplDocking::deleteFrame(IUniversal *piDraw)
     {
 
         Result r = R_NOT_FOUND;
-        for (std::list<IDraw*>::iterator it = vecDraw_.begin();
+        for (std::list<IFrame*>::iterator it = vecDraw_.begin();
             it != vecDraw_.end();
             ++it)
         {
@@ -300,11 +300,11 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        sptr<IDraw> spDraw;
-        r = spMenuBar_.as(&spDraw);
+        sptr<IFrame> spFrame;
+        r = spMenuBar_.as(&spFrame);
         if(UAP_SUCCESS(r))
         {
-            r = spDraw->draw();
+            r = spFrame->drawFrame();
         }       
 
 
@@ -318,11 +318,11 @@ namespace uap
 
         Result r = R_SUCCESS;
 
-        sptr<IDraw> spDraw;
-        r = spToolBar_.as(&spDraw);
+        sptr<IFrame> spFrame;
+        r = spToolBar_.as(&spFrame);
         if(UAP_SUCCESS(r))
         {
-            r = spDraw->draw();
+            r = spFrame->drawFrame();
         }     
         return r;
     }
@@ -331,11 +331,11 @@ namespace uap
     { 
         Result r = R_SUCCESS;
 
-        sptr<IDraw> spDraw;
-        r = spStatusBar_.as(&spDraw);
+        sptr<IFrame> spFrame;
+        r = spStatusBar_.as(&spFrame);
         if(UAP_SUCCESS(r))
         {
-            r = spDraw->draw();
+            r = spFrame->drawFrame();
         }    
 
         return R_SUCCESS;

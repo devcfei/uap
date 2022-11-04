@@ -77,6 +77,15 @@ Result EventDispatcherImpl::dispatch(EventId eventId, EventArg a, EventArg b)
         pApp->onFileSaveAsClicked();
         break;
     }
+
+    case Event_OpenSettings:
+    {
+        pApp->onFileSettings();
+        break;
+    }
+    
+
+
     case Event_ViewPanelGeneric:
     {
         pApp->onViewPanelGenericClicked();

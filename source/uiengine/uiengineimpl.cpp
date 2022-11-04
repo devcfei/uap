@@ -40,10 +40,14 @@ namespace uap
     {
         Result r = R_INVALID_PARAMETERS;
 
-        if (uapUuidIsEqual(rUuid, IID_IWINDOW))
+        if (uapUuidIsEqual(rUuid, IID_IDRAW))
+        {
+            r = DrawImpl::createInstance((IDraw **)ppv);
+        } 
+        else if (uapUuidIsEqual(rUuid, IID_IWINDOW))
         {
             r = WindowImpl::createInstance((IWindow **)ppv);
-        }
+        }      
         else if (uapUuidIsEqual(rUuid, IID_IMENU))
         {
             r = MenuImpl::createInstance((IMenu **)ppv);
@@ -205,7 +209,7 @@ namespace uap
 
   
 
-    Result UiEngineImpl::getLayout(IUiLayout** ppiLayout)
+    Result UiEngineImpl::getLayout(ILayout** ppiLayout)
     {
         Result r = R_SUCCESS;
 
@@ -389,7 +393,7 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        r = spLayout_->draw();
+        r = spLayout_->drawLayout();
 
         return r;
     }

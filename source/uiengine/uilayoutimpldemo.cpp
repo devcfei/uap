@@ -20,7 +20,7 @@ namespace uap
     Result UiLayoutImplDemo::queryInterface(const Uuid &rUuid, void **ppv)
     {
         Result r = R_NO_SUCH_INTERFACE;
-        if (uapUuidIsEqual(rUuid, IID_IUILAYOUT))
+        if (uapUuidIsEqual(rUuid, IID_ILAYOUT))
         {
             UiLayoutImplDemo *pi = static_cast<UiLayoutImplDemo *>(this);
             addRef();
@@ -39,7 +39,7 @@ namespace uap
         return r;
     }
 
-    Result UiLayoutImplDemo::draw()
+    Result UiLayoutImplDemo::drawLayout()
     {
         Result r = R_SUCCESS;
         bool showImGuiDemo_ = true;
@@ -86,12 +86,12 @@ namespace uap
     }
 
 
-    Result UiLayoutImplDemo::addDraw(IUniversal *piDraw)
+    Result UiLayoutImplDemo::addFrame(IUniversal *piDraw)
     {
         return R_SUCCESS;
     }
 
-    Result UiLayoutImplDemo::deleteDraw(IUniversal *piDraw)
+    Result UiLayoutImplDemo::deleteFrame(IUniversal *piDraw)
     {
         return R_SUCCESS;
     }

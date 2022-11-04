@@ -287,10 +287,10 @@ namespace uap
         return r;
     }
 
-    Result UiEngineBackendDx11Impl::createTexture(const Char* filename, IUiTexture** ppiTexture)
+    Result UiEngineBackendDx11Impl::createTexture(const Char* filename, ITexture** ppiTexture)
     {
         Result r = R_SUCCESS;
-        IUiTexture* piTexture=nullptr;
+        ITexture* piTexture=nullptr;
 
         r = TextureImpl::createInstance(g_pd3dDevice, &piTexture);
         if(!UAP_SUCCESS(r))

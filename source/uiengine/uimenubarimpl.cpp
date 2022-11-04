@@ -33,12 +33,12 @@ namespace uap
             *((IMenuBar **)ppv) = pi;
             r = R_SUCCESS;
         }
-        else if (uapUuidIsEqual(rUuid, IID_IDRAW))
+        else if (uapUuidIsEqual(rUuid, IID_IFRAME))
         {
-            IDraw *pi = static_cast<IDraw *>(this);
+            IFrame *pi = static_cast<IFrame *>(this);
             addRef();
 
-            *((IDraw **)ppv) = pi;
+            *((IFrame **)ppv) = pi;
             r = R_SUCCESS;
         }
         return r;
@@ -62,8 +62,8 @@ namespace uap
         return r;
     }
 
-    // IDraw
-    Result MenuBarImpl::draw()
+    // IFrame
+    Result MenuBarImpl::drawFrame()
     {
         Result r = R_SUCCESS;
 
@@ -73,11 +73,11 @@ namespace uap
             {
                 // TODO: for customized menubar
                 //ImGui::Text("\xef\x80\x86"); // TODO: STAR_O as the logo
-                sptr<IDraw> spDraw;
-                r = spMenu_.as(&spDraw);
+                sptr<IFrame> spFrame;
+                r = spMenu_.as(&spFrame);
                 if (UAP_SUCCESS(r))
                 {
-                    r = spDraw->draw();
+                    r = spFrame->drawFrame();
                 }
 
                 // TODO: for customized menubar

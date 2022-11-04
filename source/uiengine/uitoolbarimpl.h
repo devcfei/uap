@@ -1,11 +1,11 @@
-#ifndef _UAP_TOOLBAR_IMPL_H_
-#define _UAP_TOOLBAR_IMPL_H_
+#ifndef _UAP_UI_TOOLBAR_IMPL_H_
+#define _UAP_UI_TOOLBAR_IMPL_H_
 
 namespace uap
 {
 
     class ToolBarImpl : public IToolBar
-                , public IDraw
+                , public IFrame
     {
     public:
         // IUniversal
@@ -19,8 +19,8 @@ namespace uap
         virtual Result buildToolBarFromTTF(const Char* filename, Ushort min, Ushort max);
         virtual Result addButton(const Char* label);
 
-        // IDraw
-        virtual Result draw();
+        // IFrame
+        virtual Result drawFrame();
 
         static Result createInstance(IToolBar **ppv)
         {
@@ -50,4 +50,4 @@ namespace uap
 
 } // @namespace uap
 
-#endif // _UAP_TOOLBAR_IMPL_H_
+#endif // _UAP_UI_TOOLBAR_IMPL_H_

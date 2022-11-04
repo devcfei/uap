@@ -1,5 +1,5 @@
-#ifndef _UAP_UIENGINE_H_
-#define _UAP_UIENGINE_H_
+#ifndef _UAP_UI_H_
+#define _UAP_UI_H_
 
 #ifndef _UAP_H_
 #error uapuiengine.h requires uap.h to be included first
@@ -8,9 +8,10 @@
 namespace uap
 {
 
-    // {e28c7ea9-40ec-4dd9-92b1-c9fb9db0258f}
+
+    // {9bd9c561-5b9b-4ab5-a42c-faa5503172ca}
     DEFINE_UUID(IID_IDRAW,
-                0xe28c7ea9, 0x40ec, 0x4dd9, 0x92, 0xb1, 0xc9, 0xfb, 0x9d, 0xb0, 0x25, 0x8f);
+                0x9bd9c561, 0x5b9b, 0x4ab5, 0xa4, 0x2c, 0xfa, 0xa5, 0x50, 0x31, 0x72, 0xca);
 
     class IDraw : public IUniversal
     {
@@ -21,7 +22,10 @@ namespace uap
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
         // IDraw
-        virtual Result draw() = 0;
+        virtual Result addText(Char* label,Boolean sameline) = 0;
+        virtual Result addButton(Char* label,Boolean sameline) = 0;
+        virtual Result addCheckBox(Char* label,Boolean sameline, Boolean* value) = 0;
+        virtual Result addEdit(Char* label, Boolean sameline, Char* buf, Size_t buf_size) = 0;
 
         // uuid
         static const Uuid uuid()
@@ -32,6 +36,32 @@ namespace uap
     private:
         inline static const Uuid uuid_ = IID_IDRAW;
     }; // @class IDraw
+
+
+    // {e28c7ea9-40ec-4dd9-92b1-c9fb9db0258f}
+    DEFINE_UUID(IID_IFRAME,
+                0xe28c7ea9, 0x40ec, 0x4dd9, 0x92, 0xb1, 0xc9, 0xfb, 0x9d, 0xb0, 0x25, 0x8f);
+
+    class IFrame : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IFrame
+        virtual Result drawFrame() = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IFRAME;
+    }; // @class IFrame
 
 
 
@@ -157,7 +187,7 @@ namespace uap
     DEFINE_UUID(WINDOW_CLOSE_EVENTID,
                 0xff6031d6, 0xdb9b, 0x4622, 0xac, 0xd1, 0x60, 0x98, 0x12, 0xdd, 0x8a, 0x95);
 
-    class IWindow: public IDraw
+    class IWindow: public IFrame
     {
     public:
         // IUniversal
@@ -170,6 +200,8 @@ namespace uap
         virtual Result drawPrimitives() = 0;
         virtual Boolean isOpen() const = 0;
         virtual Boolean setOpen(Boolean open) = 0;
+
+        virtual Result setFrame(IFrame* pFrame) = 0;
         // uuid
         static const Uuid uuid()
         {
@@ -289,10 +321,10 @@ namespace uap
 
 
     // {2e55c329-30cc-4b52-9af9-b2d0a5eeebcf}
-    DEFINE_UUID(IID_IUILAYOUT,
+    DEFINE_UUID(IID_ILAYOUT,
                 0x2e55c329, 0x30cc, 0x4b52, 0x9a, 0xf9, 0xb2, 0xd0, 0xa5, 0xee, 0xeb, 0xcf);
 
-    class IUiLayout : public IUniversal
+    class ILayout : public IUniversal
     {
     public:
         // IUniversal
@@ -300,12 +332,12 @@ namespace uap
         virtual Ulong release() = 0;
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
-        // IUiLayout
+        // ILayout
         virtual Result initializeLayout(IAttributes *piAttributes) = 0;
-        virtual Result draw() = 0;
+        virtual Result drawLayout() = 0;
 
-        virtual Result addDraw(IUniversal *piDraw) = 0;
-        virtual Result deleteDraw(IUniversal *piDraw) = 0;
+        virtual Result addFrame(IUniversal *piDraw) = 0;
+        virtual Result deleteFrame(IUniversal *piDraw) = 0;
 
 #ifdef _DEBUG
         virtual void openImGuiDemo(Boolean open) = 0;
@@ -319,8 +351,8 @@ namespace uap
         }
 
     private:
-        inline static const Uuid uuid_ = IID_IUILAYOUT;
-    }; // @class IUiLayout
+        inline static const Uuid uuid_ = IID_ILAYOUT;
+    }; // @class ILayout
 
     // {bf4ad520-db64-401a-af3c-b0d7b19ddc94}
     DEFINE_UUID(IID_IFRAMEWINDOWELEMENTS,
@@ -389,7 +421,9 @@ namespace uap
         virtual Result initialize(IApplication *piApp, IAttributes *piAttributes, BackendType bt) = 0;
         virtual Result startup() = 0;
         virtual Result run() = 0;
-        virtual Result getLayout(IUiLayout** ppiLayout) = 0;
+        virtual Result getLayout(ILayout** ppiLayout) = 0;
+
+
 
         // uuid
         static const Uuid uuid()
@@ -403,12 +437,15 @@ namespace uap
     }; // @class IUiEngine
 
 
+    
+
+
 
     // {88fc8602-d006-443b-8562-6f337843b402}
     DEFINE_UUID(IID_ITEXTURE,
                 0x88fc8602, 0xd006, 0x443b, 0x85, 0x62, 0x6f, 0x33, 0x78, 0x43, 0xb4, 0x02);
 
-    class IUiTexture : public IUniversal
+    class ITexture : public IUniversal
     {
     public:
         // IUniversal
@@ -416,7 +453,7 @@ namespace uap
         virtual Ulong release() = 0;
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
-        // IUiTexture
+        // ITexture
         virtual Result loadTexture(const Char *path) = 0;
         virtual int width() = 0;
         virtual int height() = 0;
@@ -430,7 +467,7 @@ namespace uap
 
     private:
         inline static const Uuid uuid_ = IID_ITEXTURE;
-    }; // @class IUiTexture
+    }; // @class ITexture
 
 
 
@@ -461,7 +498,7 @@ namespace uap
         virtual Result shutdown() = 0;
         virtual Result resize(Uint width, Uint height) = 0;
 
-        virtual Result createTexture(const Char *filename, IUiTexture **ppiTexture) = 0;
+        virtual Result createTexture(const Char *filename, ITexture **ppiTexture) = 0;
 
         // uuid
         static const Uuid uuid()
@@ -473,6 +510,12 @@ namespace uap
         inline static const Uuid uuid_ = IID_IUIENGINE_BACKEND;
     }; // @class IUiEngineBackend
 
+
+
+
+
+
+
 } // @namespace uap
 
-#endif // _UAP_UIENGINE_H_
+#endif // _UAP_UI_H_

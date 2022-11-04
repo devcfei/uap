@@ -1,5 +1,5 @@
-#ifndef _UIENGINEBACKENDDX11IMPL_
-#define _UIENGINEBACKENDDX11IMPL_
+#ifndef _UAP_UI_BACKENDDX11IMPL_H_
+#define _UAP_UI_BACKENDDX11IMPL_H_
 
 // TODO: why ComPtr doesn't work?
 //#define USE_COMPTR
@@ -29,7 +29,7 @@ namespace uap
         virtual Result shutdown();
         virtual Result resize(Uint width, Uint height);
 
-        virtual Result createTexture(const Char* filename, IUiTexture** ppiTexture) ;
+        virtual Result createTexture(const Char* filename, ITexture** ppiTexture) ;
         
 
         static Result createInstance(void **ppv)
@@ -77,4 +77,4 @@ namespace uap
 
 } //@namespace uap
 
-#endif // _UIENGINEBACKENDDX11IMPL_
+#endif // _UAP_UI_BACKENDDX11IMPL_H_

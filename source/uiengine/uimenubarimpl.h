@@ -1,11 +1,11 @@
-#ifndef _UAP_MENUBAR_IMPL_H_
-#define _UAP_MENUBAR_IMPL_H_
+#ifndef _UAP_UI_MENUBAR_IMPL_H_
+#define _UAP_UI_MENUBAR_IMPL_H_
 
 namespace uap
 {
 
     class MenuBarImpl : public IMenuBar
-                , public IDraw
+                , public IFrame
     {
     public:
         // IUniversal
@@ -17,8 +17,8 @@ namespace uap
         virtual Result initialize(IAttributes *piAttributes);
         virtual Result setMenu(IMenu* piMenu) ;
 
-        // IDraw
-        virtual Result draw();
+        // IFrame
+        virtual Result drawFrame();
 
         static Result createInstance(IMenuBar **ppv)
         {
@@ -44,4 +44,4 @@ namespace uap
 
 } // @namespace uap
 
-#endif // _UAP_MENUBAR_IMPL_H_
+#endif // _UAP_UI_MENUBAR_IMPL_H_

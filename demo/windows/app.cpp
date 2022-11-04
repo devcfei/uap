@@ -129,7 +129,11 @@ Result App::startUI()
 
     // init UiEngine
     r = initUiEngine();
+    VERIFY(r, "initial the engine");
 
+    // create the draw
+    r = spUiEngine_->createInstance(IID_IDRAW, (void **)&spDraw_);
+    VERIFY(r, "create instance UI engine draw");
 
     // startup
     r = spUiEngine_->startup();
@@ -143,7 +147,6 @@ Result App::startUI()
     return r;
 }
 
-
 Result App::initUiEngine()
 {
     Result r = R_SUCCESS;
@@ -152,9 +155,6 @@ Result App::initUiEngine()
     r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&spUiAttributes_);
     VERIFY(r, "create instance attributes");
 
-    //
-    //
-    //
 
     // set application name
     spUiAttributes_->setString(UUID_APP_NAME, "Demo", 4);
@@ -165,11 +165,7 @@ Result App::initUiEngine()
     spToml_->getInt("uiengine", "backend", backend);
 
     // set application layout style
-    LayoutStyle style;
-    // style = LAYOUT_STYLE_SIMPLE;
-    // style = LAYOUT_STYLE_DOCKING;
-    //  style = LAYOUT_STYLE_DEMO;
-
+    LayoutStyle style = LAYOUT_STYLE_SIMPLE;
     switch (layout)
     {
     case 0:
@@ -230,6 +226,8 @@ Result App::initUiEngine()
 }
 
 
+
+
 Result App::setLayout()
 {
     Result r = R_SUCCESS;
@@ -260,6 +258,9 @@ Result App::setLayout()
     VERIFY(r, "build generic window");
     
 
+    r = buildSettingWindow();
+    VERIFY(r, "build setting window");
+
 
     // build the layout
     r = buildLayout();
@@ -285,6 +286,9 @@ Result App::buildMenuBar()
     spMenuFile_->addItem("Open File...", false, NULL, Event_FileOpen);
     spMenuFile_->addItem("Open Folder...", false, NULL, Event_FolderOpen);
     spMenuFile_->addItem("Save as...", false, NULL, Event_SaveAs);
+    spMenuFile_->addSeparator();
+    spMenuFile_->addItem("Settings ...", false, NULL, Event_OpenSettings);
+
     spMenuFile_->addSeparator();
     spMenuFile_->addItem("Exit", false, NULL, Event_AppExit);
 
@@ -473,10 +477,44 @@ Result App::buildGenericWindow()
     VERIFY(r, "initialize IWindow");
 
 
+    r = GenericFrameImpl::createInstance(spGenericWindowFrame_.getaddrof(), spDraw_.get());
+    VERIFY(r, "create generic window frame");
+
+    spGenericWindow_->setFrame(spGenericWindowFrame_.get());
+
+
     return r;
 }
 
 
+Result App::buildSettingWindow()
+{
+    Result r = R_SUCCESS;
+    r = spUiEngine_->createInstance(IID_IWINDOW, (void **)&spSettingWindow_);
+    VERIFY(r, "spUiEngine_.createInstance(<IWindow>)");
+
+    // create an attribute
+    sptr<IAttributes> attr;
+    r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&attr);
+    VERIFY(r, "create instance attributes");
+
+    std::string title = "Settings";
+    r = attr->setString(WINDOW_ATTRIBUTE_TITLE, title.c_str(), title.length());
+    VERIFY(r, "set WINDOW_ATTRIBUTE_TITLE");
+
+
+    // initialize the setting window with attributes
+    r = spSettingWindow_->initialize(attr.get(), nullptr);
+    VERIFY(r, "initialize IWindow");
+
+
+    r = SettingFrameImpl::createInstance(spSettingWindowFrame_.getaddrof(), spDraw_.get());
+    VERIFY(r, "create setting window frame");
+    spSettingWindow_->setFrame(spSettingWindowFrame_.get());
+
+
+    return r;
+}
 
 
 Result App::buildLayout()
@@ -504,18 +542,22 @@ Result App::buildLayout()
     VERIFY(r, "add statusbar");
 
     // add generic window
-    r = spLayout_->addDraw(spGenericWindow_.get());
+    r = spLayout_->addFrame(spGenericWindow_.get());
     VERIFY(r, "add panel window draw to layout");
 
     // add log window
-    r = spLayout_->addDraw(spLogWindow_.get());
+    r = spLayout_->addFrame(spLogWindow_.get());
     VERIFY(r, "add log window draw to layout");
 
 
     // add file browser window
-    r = spLayout_->addDraw(spFileBrowserWindow_.get());
+    r = spLayout_->addFrame(spFileBrowserWindow_.get());
     VERIFY(r, "add file browser window draw to layout");
-    
+
+
+    // add setting window
+    r = spLayout_->addFrame(spSettingWindow_.get());
+    VERIFY(r, "add setting window draw to layout");
 
 
     return r;
@@ -576,7 +618,7 @@ Result App::openImageFile(std::tstring filename)
 
 
         // add image window
-        r = spLayout_->addDraw(spImageWindow.get());
+        r = spLayout_->addFrame(spImageWindow.get());
         VERIFY(r, "add image window draw to layout");
 
         vecImageWindows_.push_back(spImageWindow);
@@ -644,7 +686,7 @@ Result App::openImageFileByTextureInspector(std::tstring filename)
 
 
         // add image window
-        r = spLayout_->addDraw(spTextureInspector.get());
+        r = spLayout_->addFrame(spTextureInspector.get());
         VERIFY(r, "add image window draw to layout");
 
         vecTextureInspectorWindows_.push_back(spTextureInspector);

@@ -1,5 +1,5 @@
-#ifndef _UAP_TEXTURE_INSPECTOR_IMPL_
-#define _UAP_TEXTURE_INSPECTOR_IMPL_
+#ifndef _UAP_UI_TEXTURE_INSPECTOR_IMPL_
+#define _UAP_UI_TEXTURE_INSPECTOR_IMPL_
 
 namespace uap
 {
@@ -39,7 +39,7 @@ namespace uap
         {
         }
 
-        sptr<IUiTexture> spTexture_;
+        sptr<ITexture> spTexture_;
         sptr<IUiEngineBackend> spUiEngineBackend_;
 
 
@@ -48,4 +48,4 @@ namespace uap
 
 } // @namespace uap
 
-#endif // _UAP_TEXTURE_INSPECTOR_IMPL_
+#endif // _UAP_UI_TEXTURE_INSPECTOR_IMPL_

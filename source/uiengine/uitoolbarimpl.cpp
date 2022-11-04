@@ -33,12 +33,12 @@ namespace uap
             *((IToolBar **)ppv) = pi;
             r = R_SUCCESS;
         }
-        else if (uapUuidIsEqual(rUuid, IID_IDRAW))
+        else if (uapUuidIsEqual(rUuid, IID_IFRAME))
         {
-            IDraw *pi = static_cast<IDraw *>(this);
+            IFrame *pi = static_cast<IFrame *>(this);
             addRef();
 
-            *((IDraw **)ppv) = pi;
+            *((IFrame **)ppv) = pi;
             r = R_SUCCESS;
         }
         return r;
@@ -84,8 +84,8 @@ namespace uap
         vecLabel_.push_back(label);
         return r;
     }
-    // IDraw
-    Result ToolBarImpl::draw()
+    // IFrame
+    Result ToolBarImpl::drawFrame()
     {
         Result r = R_SUCCESS;
 

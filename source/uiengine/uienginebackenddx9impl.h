@@ -1,5 +1,8 @@
-#ifndef _UIENGINEBACKENDDX9IMPL_
-#define _UIENGINEBACKENDDX9IMPL_
+#ifndef _UAP_UI_BACKENDDX9IMPL_H_
+#define _UAP_UI_BACKENDDX9IMPL_H_
+
+
+
 
 namespace uap
 {
@@ -24,7 +27,7 @@ namespace uap
         virtual Result reset();
         virtual Result shutdown();
         virtual Result resize(Uint width, Uint height);
-        virtual Result createTexture(const Char* filename, IUiTexture** ppiTexture);
+        virtual Result createTexture(const Char* filename, ITexture** ppiTexture);
 
         static Result createInstance(void **ppv)
         {
@@ -58,4 +61,4 @@ namespace uap
 
 } //@namespace uap
 
-#endif // _UIENGINEBACKENDDX9IMPL_
+#endif // _UAP_UI_BACKENDDX9IMPL_H_

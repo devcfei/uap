@@ -12,6 +12,7 @@ enum EventIdEnum
     Event_FileNew,
     Event_FileOpen,
     Event_FolderOpen,
+    Event_OpenSettings,
     Event_SaveAs,
     Event_AppExit,
     Event_AppAbout,

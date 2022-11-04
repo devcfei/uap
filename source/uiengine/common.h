@@ -1,5 +1,5 @@
-#ifndef _COMP_H_
-#define _COMP_H_
+#ifndef _UAP_UI_COMMON_H_
+#define _UAP_UI_COMMON_H_
 
 
 // uap
@@ -68,6 +68,7 @@ using namespace Microsoft::WRL;
 
 
 // UiEngine implementation
+#include "uidrawimpl.h"
 #include "uimenuimpl.h"
 #include "uimenubarimpl.h"
 #include "uitoolbarimpl.h"
@@ -126,4 +127,4 @@ using namespace Microsoft::WRL;
 
 
 
-#endif // _COMP_H_
+#endif // _UAP_UI_COMMON_H_

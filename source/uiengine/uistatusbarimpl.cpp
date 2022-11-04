@@ -33,12 +33,12 @@ namespace uap
             *((IStatusBar **)ppv) = pi;
             r = R_SUCCESS;
         }
-        else if (uapUuidIsEqual(rUuid, IID_IDRAW))
+        else if (uapUuidIsEqual(rUuid, IID_IFRAME))
         {
-            IDraw *pi = static_cast<IDraw *>(this);
+            IFrame *pi = static_cast<IFrame *>(this);
             addRef();
 
-            *((IDraw **)ppv) = pi;
+            *((IFrame **)ppv) = pi;
             r = R_SUCCESS;
         }
         return r;
@@ -55,8 +55,8 @@ namespace uap
     }
 
    
-    // IDraw
-    Result StatusBarImpl::draw()
+    // IFrame
+    Result StatusBarImpl::drawFrame()
     {
         Result r = R_SUCCESS;
 

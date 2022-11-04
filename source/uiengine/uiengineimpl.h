@@ -1,5 +1,5 @@
-#ifndef _UAP_UIENGINEIMPL_H_
-#define _UAP_UIENGINEIMPL_H_
+#ifndef _UAP_UI_ENGINEIMPL_H_
+#define _UAP_UI_ENGINEIMPL_H_
 
 
 namespace uap
@@ -20,7 +20,8 @@ namespace uap
         virtual Result startup();
         virtual Result run();
 
-        virtual Result getLayout(IUiLayout** ppiLayout);
+        virtual Result getLayout(ILayout** ppiLayout);
+
 
         static ILogTrace* getLogTrace()
         {
@@ -68,7 +69,7 @@ namespace uap
         sptr<IUiEngineBackend> spBackend_;        
 
         // layout
-        sptr<IUiLayout> spLayout_;
+        sptr<ILayout> spLayout_;
 
         // backend
         ImVec4 colorClear_;

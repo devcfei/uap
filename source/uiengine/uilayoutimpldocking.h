@@ -38,7 +38,7 @@ namespace uap
 
 
 
-    class UiLayoutImplDocking: public IUiLayout, public FrameWindowElementsImpl
+    class UiLayoutImplDocking: public ILayout, public FrameWindowElementsImpl
     {
     public:
         // IUniversal
@@ -46,9 +46,9 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &,void **);
 
-        // IUiLayout
+        // ILayout
         virtual Result initializeLayout(IAttributes* piAttributes);
-        virtual Result draw();
+        virtual Result drawLayout();
 #ifdef _DEBUG
         virtual void openImGuiDemo(Boolean open)
         {
@@ -61,15 +61,15 @@ namespace uap
 #endif
 
 
-        virtual Result addDraw(IUniversal *piDraw);
-        virtual Result deleteDraw(IUniversal *piDraw);
+        virtual Result addFrame(IUniversal *piDraw);
+        virtual Result deleteFrame(IUniversal *piDraw);
 
         static Result createInstance(void **ppv)
         {
             UiLayoutImplDocking *p = new UiLayoutImplDocking();
             if (p)
             {
-                *(IUiLayout **)ppv = p;
+                *(ILayout **)ppv = p;
                 return R_SUCCESS;
             }
             return R_ERROR;
@@ -94,7 +94,7 @@ namespace uap
         //sptr<IUiEngine> spUiEngine_;
 
         // generic draw
-        std::list<IDraw*> vecDraw_;
+        std::list<IFrame*> vecDraw_;
 
 
         //

@@ -1,5 +1,5 @@
-#ifndef _UAP_IMAGEWINDOW_IMPL_H_
-#define _UAP_IMAGEWINDOW_IMPL_H_
+#ifndef _UAP_UI_IMAGEWINDOW_IMPL_H_
+#define _UAP_UI_IMAGEWINDOW_IMPL_H_
 
 namespace uap
 {
@@ -48,7 +48,7 @@ namespace uap
 
 
 
-        sptr<IUiTexture> spTexture_;
+        sptr<ITexture> spTexture_;
         sptr<IUiEngineBackend> spUiEngineBackend_;
 
 
@@ -57,4 +57,4 @@ namespace uap
 
 } // @namespace uap
 
-#endif // _UAP_IMAGEWINDOW_IMPL_H_
+#endif // _UAP_UI_IMAGEWINDOW_IMPL_H_

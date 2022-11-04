@@ -1,11 +1,11 @@
-#ifndef _UAP_STATUSBAR_IMPL_H_
-#define _UAP_STATUSBAR_IMPL_H_
+#ifndef _UAP_UI_STATUSBAR_IMPL_H_
+#define _UAP_UI_STATUSBAR_IMPL_H_
 
 namespace uap
 {
 
     class StatusBarImpl : public IStatusBar
-                , public IDraw
+                , public IFrame
     {
     public:
         // IUniversal
@@ -17,8 +17,8 @@ namespace uap
         virtual Result initialize(IAttributes *piAttributes);
 
 
-        // IDraw
-        virtual Result draw();
+        // IFrame
+        virtual Result drawFrame();
 
         static Result createInstance(IStatusBar **ppv)
         {

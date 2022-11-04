@@ -33,12 +33,12 @@ namespace uap
             *((IWindow **)ppv) = pi;
             r = R_SUCCESS;
         }
-        else if (uapUuidIsEqual(rUuid, IID_IDRAW))
+        else if (uapUuidIsEqual(rUuid, IID_IFRAME))
         {
-            IDraw *pi = static_cast<IDraw *>(this);
+            IFrame *pi = static_cast<IFrame *>(this);
             addRef();
 
-            *((IDraw **)ppv) = pi;
+            *((IFrame **)ppv) = pi;
             r = R_SUCCESS;
         }
         return r;
@@ -72,8 +72,8 @@ namespace uap
     }
 
     
-    // IDraw
-    Result WindowImpl::draw()
+    // IFrame
+    Result WindowImpl::drawFrame()
     {
         Result r = R_SUCCESS;
         if (open_)
@@ -110,6 +110,12 @@ namespace uap
     Result WindowImpl::drawPrimitives()
     {
         Result r = R_SUCCESS;
+
+        if(spFrame_.get())
+        {
+            spFrame_->drawFrame();
+        }
+
         return r;
     }
 

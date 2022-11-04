@@ -1,11 +1,11 @@
-#ifndef _UAP_MENU_IMPL_H_
-#define _UAP_MENU_IMPL_H_
+#ifndef _UAP_UI_MENU_IMPL_H_
+#define _UAP_UI_MENU_IMPL_H_
 
 namespace uap
 {
     // IMenu implementation
     class MenuImpl : public IMenu
-        , public IDraw
+        , public IFrame
     {
     public:
         // IUniversal
@@ -13,8 +13,8 @@ namespace uap
         virtual Ulong release();
         virtual Result queryInterface(const Uuid &,void **);
 
-        // IDraw
-        virtual Result draw();
+        // IFrame
+        virtual Result drawFrame();
 
         // IMenu
         virtual Result initialize(IAttributes *piAttributes, IEvent* piEvent);
@@ -61,4 +61,4 @@ namespace uap
 }
 
 
-#endif //_UAP_MENU_IMPL_H_
+#endif //_UAP_UI_MENU_IMPL_H_
