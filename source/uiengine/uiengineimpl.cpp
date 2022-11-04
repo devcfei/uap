@@ -90,20 +90,22 @@ namespace uap
         spApp_ = piApp;
         spAppAttributes_ = piAttributes;
 
-
-        spAppAttributes_->getUlong(UUID_LOGTRACE_ATTRIBUTES, logAttributes_.ul);
-
-        // initialize the log trace
-        r = spApp_->createInstance(IID_LOGTRACE, (void **)&spLogTrace_);
-        if (!UAP_SUCCESS(r))
+        // if need log
+        r = spAppAttributes_->getUlong(UUID_LOGTRACE_ATTRIBUTES, logAttributes_.ul);
+        if (UAP_SUCCESS(r) && logAttributes_.s.enable)
         {
-            UAP_TRACE("createInstance failed! r = 0x%8.8x\n", r);
-            return r;
+
+            // initialize the log trace
+            r = spApp_->createInstance(IID_LOGTRACE, (void **)&spLogTrace_);
+            if (!UAP_SUCCESS(r))
+            {
+                UAP_TRACE("createInstance failed! r = 0x%8.8x\n", r);
+                return r;
+            }
+
+            r = spLogTrace_->initialize(spApp_.get(), MODULE_NAME, spAppAttributes_.get());
+            VERIFY(r, "initialize ILogTrace");
         }
-
-        r = spLogTrace_->initialize(spApp_.get(), MODULE_NAME, spAppAttributes_.get());
-        VERIFY(r, "initialize ILogTrace");
-
 
         // create the backend
         beType_ = bt;
