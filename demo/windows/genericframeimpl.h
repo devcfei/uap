@@ -40,6 +40,11 @@ namespace uap
 
         sptr<IDraw> spDraw_;
 
+        //std::tstring strPath_;
+
+
+        char path_[MAX_PATH]={0};
+
     };
 
 }

@@ -1,6 +1,8 @@
 #ifndef _UAP_UI_H_
 #define _UAP_UI_H_
 
+
+#include <functional>
 #ifndef _UAP_H_
 #error uapuiengine.h requires uap.h to be included first
 #endif
@@ -13,6 +15,10 @@ namespace uap
     DEFINE_UUID(IID_IDRAW,
                 0x9bd9c561, 0x5b9b, 0x4ab5, 0xa4, 0x2c, 0xfa, 0xa5, 0x50, 0x31, 0x72, 0xca);
 
+
+
+
+
     class IDraw : public IUniversal
     {
     public:
@@ -23,7 +29,7 @@ namespace uap
 
         // IDraw
         virtual Result addText(Char* label,Boolean sameline) = 0;
-        virtual Result addButton(Char* label,Boolean sameline) = 0;
+        virtual Result addButton(Char* label,Boolean sameline, std::function<void()> onclick=nullptr ) = 0;
         virtual Result addCheckBox(Char* label,Boolean sameline, Boolean* value) = 0;
         virtual Result addEdit(Char* label, Boolean sameline, Char* buf, Size_t buf_size) = 0;
 

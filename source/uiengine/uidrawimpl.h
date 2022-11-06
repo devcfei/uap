@@ -21,12 +21,16 @@ namespace uap
             return r;
         }
 
-        virtual Result addButton(Char *label, Boolean sameline)
+        virtual Result addButton(Char *label, Boolean sameline,std::function<void()> onclick)
         {
             Result r = R_SUCCESS;
             if (sameline)
                 ImGui::SameLine();
-            ImGui::Button(label);
+            if(ImGui::Button(label))
+            {
+                if(onclick)
+                    onclick();
+            }
             return r;
         }
 
