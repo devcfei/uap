@@ -91,7 +91,7 @@ namespace uap
 
         Ulong refcount_;
 
-        //sptr<IUiEngine> spUiEngine_;
+        sptr<IAttributes> spAttributes_;
 
         // generic draw
         std::list<IFrame*> vecDraw_;

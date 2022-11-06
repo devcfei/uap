@@ -298,6 +298,10 @@ private:
     Result openImageFile(std::tstring filename);
     Result openImageFileByTextureInspector(std::tstring filename);
 
+
+private:
+    bool notitlebar_=false;
+
 };
 
 #endif //@_APP_H_

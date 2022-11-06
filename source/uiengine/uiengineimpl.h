@@ -42,6 +42,7 @@ namespace uap
     private:
         UiEngineImpl()
             : refcount_(1)
+            , disableSystemTitleBar_(0)
         {
         }
         Ulong refcount_;
@@ -57,11 +58,12 @@ namespace uap
         WNDCLASSEX wc_;
         HWND hWnd_;
         static LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        static inline bool dragWindow_ = false;
 
 
         // set when initialize
         sptr<IApplication> spApp_ ;
-        sptr<IAttributes> spAppAttributes_ ;
+        sptr<IAttributes> spUiAttributes_ ;
         LogAttributes logAttributes_;
         inline static sptr<ILogTrace> spLogTrace_;
 
@@ -77,6 +79,8 @@ namespace uap
 
         //app location path
         std::string strAppLocation_;
+
+        Uint disableSystemTitleBar_ ;
     };
 
 

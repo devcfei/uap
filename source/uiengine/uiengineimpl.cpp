@@ -54,7 +54,7 @@ namespace uap
         }
         else if (uapUuidIsEqual(rUuid, IID_IMENUBAR))
         {
-            r = MenuBarImpl::createInstance((IMenuBar**)ppv);
+            r = MenuBarImpl::createInstance(spBackend_.get(), (IMenuBar**)ppv);
         }
         else if (uapUuidIsEqual(rUuid, IID_ITOOLBAR))
         {
@@ -92,10 +92,11 @@ namespace uap
         Result r = R_SUCCESS;
 
         spApp_ = piApp;
-        spAppAttributes_ = piAttributes;
+        spUiAttributes_ = piAttributes;
+
 
         // if need log
-        r = spAppAttributes_->getUlong(UUID_LOGTRACE_ATTRIBUTES, logAttributes_.ul);
+        r = spUiAttributes_->getUlong(UUID_LOGTRACE_ATTRIBUTES, logAttributes_.ul);
         if (UAP_SUCCESS(r) && logAttributes_.s.enable)
         {
 
@@ -107,9 +108,12 @@ namespace uap
                 return r;
             }
 
-            r = spLogTrace_->initialize(spApp_.get(), MODULE_NAME, spAppAttributes_.get());
+            r = spLogTrace_->initialize(spApp_.get(), MODULE_NAME, spUiAttributes_.get());
             VERIFY(r, "initialize ILogTrace");
         }
+
+        // get system title bar setting
+        spUiAttributes_->getUint(UUID_UILAYOUT_DISABLE_SYSTEM_TITLEBAR,disableSystemTitleBar_);
 
         // create the backend
         beType_ = bt;
@@ -235,15 +239,18 @@ namespace uap
 
 
         Char appName[256];
-        spAppAttributes_->getString(UUID_APP_NAME, appName,256,nullptr);
+        spUiAttributes_->getString(UUID_APP_NAME, appName,256,nullptr);
+
 
         USES_CONVERSION;
 
         wc_ = wc;
         ::RegisterClassEx(&wc);
+
         hWnd_ = ::CreateWindow(wc.lpszClassName, A2T(appName),
-                               WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800,
-                                NULL, NULL, wc.hInstance, (LPVOID)this);
+                               disableSystemTitleBar_==1 ?WS_POPUPWINDOW: WS_OVERLAPPEDWINDOW,
+                               100, 100, 1280, 800,
+                               NULL, NULL, wc.hInstance, (LPVOID)this);
 
         INFO("UiEngineImpl instance, this=0x%p\n", this);
 
@@ -357,7 +364,7 @@ namespace uap
 
         // get layout style
         LayoutStyle style;
-        r = spAppAttributes_->getUint(UUID_UILAYOUT_STYLE, (Uint&)style);
+        r = spUiAttributes_->getUint(UUID_UILAYOUT_STYLE, (Uint&)style);
         if(!UAP_SUCCESS(r))
         {
             WARN("unknown layout style to create, fallback to create demo!\n");         
@@ -410,7 +417,6 @@ namespace uap
 
 
 
-
     // Win32 message handler
     // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
     // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
@@ -426,8 +432,57 @@ namespace uap
         pThis = (UiEngineImpl *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
         // UAP_TRACE("UiEngineImpl instance, this=0x%p",pThis);
 
+        static POINT startPos;
+
         switch (msg)
         {
+        case WM_LBUTTONDOWN:
+            if (pThis->disableSystemTitleBar_)
+            {
+                startPos.x = (int)(short)LOWORD(lParam);
+                startPos.y = (int)(short)HIWORD(lParam);
+
+                if (startPos.y < (FONT_SIZE + 6.0))
+                {
+                    dragWindow_ = true;
+                    SetCapture(hWnd);
+                }
+            }
+
+            break;
+        case WM_LBUTTONUP:
+            if (pThis->disableSystemTitleBar_)
+            {
+                if (dragWindow_)
+                {
+                    dragWindow_ = false;
+                    ReleaseCapture();
+                }
+            }
+            break;
+        case WM_MOUSEMOVE:
+            if (pThis->disableSystemTitleBar_)
+            {
+
+                if (dragWindow_ && (wParam & MK_LBUTTON))
+                {
+                    RECT mainWindowRect;
+                    POINT pos;
+                    int windowWidth, windowHeight;
+
+                    pos.x = (int)(short)LOWORD(lParam);
+                    pos.y = (int)(short)HIWORD(lParam);
+
+                    GetWindowRect(hWnd, &mainWindowRect);
+                    windowHeight = mainWindowRect.bottom - mainWindowRect.top;
+                    windowWidth = mainWindowRect.right - mainWindowRect.left;
+
+                    ClientToScreen(hWnd, &pos);
+                    MoveWindow(hWnd, pos.x - startPos.x, pos.y - startPos.y, windowWidth, windowHeight, TRUE);
+                }
+            }
+            break;
+
         case WM_NCCREATE:
             SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)(((CREATESTRUCT *)lParam)->lpCreateParams));
             // UAP_TRACE("UiEngineImpl instance, this=0x%p", ( (CREATESTRUCT *) lParam)->lpCreateParams);

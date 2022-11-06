@@ -14,15 +14,15 @@ namespace uap
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
         // IMenuBar
-        virtual Result initialize(IAttributes *piAttributes);
+        virtual Result initialize(Boolean asTitleBar, const Char* logoPath, IAttributes *piAttributes);
         virtual Result setMenu(IMenu* piMenu) ;
 
         // IFrame
         virtual Result drawFrame();
 
-        static Result createInstance(IMenuBar **ppv)
+        static Result createInstance(IUiEngineBackend * piUiEngineBackend,IMenuBar **ppv)
         {
-            MenuBarImpl *p = new MenuBarImpl();
+            MenuBarImpl *p = new MenuBarImpl(piUiEngineBackend);
             if (p)
             {
                 *(IMenuBar **)ppv = p;
@@ -32,14 +32,24 @@ namespace uap
         }
 
     private:
-        MenuBarImpl()
+        MenuBarImpl(IUiEngineBackend * piUiEngineBackend)
             :refcount_(1)
+            ,spUiEngineBackend_(piUiEngineBackend)
+            ,asTitleBar_(false)
         {
 
         }
         Ulong refcount_;
 
         sptr<IMenu> spMenu_;
+
+        sptr<IUiEngineBackend> spUiEngineBackend_;
+
+        sptr<ITexture> spTextureLogo_;
+        sptr<ITexture> spTextureMin_;
+        sptr<ITexture> spTextureMax_;
+        sptr<ITexture> spTextureClose_;
+        Boolean asTitleBar_;
     }; // @class MenuBarImpl
 
 } // @namespace uap

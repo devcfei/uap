@@ -40,22 +40,21 @@ endif()
 
 
 # install
-install(FILES assets/fontawesome/fontawesome-webfont.ttf
+set(INSTALL_FILES
+        assets/fontawesome/fontawesome-webfont.ttf
+        assets/images/logo.png
+        assets/images/min.png
+        assets/images/max.png
+        assets/images/close.png
+        assets/images/demo.png
+        )
+
+install(FILES ${INSTALL_FILES}
         CONFIGURATIONS Debug
         DESTINATION bin
         )
 
-install(FILES assets/fontawesome/fontawesome-webfont.ttf
-        CONFIGURATIONS Release
-        DESTINATION bin
-        )
-
-install(FILES assets/images/demo.png
-        CONFIGURATIONS Debug
-        DESTINATION bin
-        )
-
-install(FILES assets/images/demo.png
+install(FILES ${INSTALL_FILES}
         CONFIGURATIONS Release
         DESTINATION bin
         )

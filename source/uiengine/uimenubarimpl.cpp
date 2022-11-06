@@ -47,10 +47,37 @@ namespace uap
 
     // IMenuBar
 
-    Result MenuBarImpl::initialize(IAttributes *piAttributes)
+    Result MenuBarImpl::initialize(Boolean asTitleBar, const Char* logoPath, IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
         INFO("MenuBarImpl::initialize\n");
+        asTitleBar_ = asTitleBar;
+
+        if(logoPath!=nullptr)
+            spUiEngineBackend_->createTexture(logoPath, spTextureLogo_.getaddrof());
+
+
+        // load system buttons texture
+        // TODO: currently hardcode to use the png icon located in app folder
+        //    - need a better design
+
+        CHAR path[MAX_PATH];
+        ::GetModuleFileNameA(NULL, path, MAX_PATH);
+        ::PathRemoveFileSpecA(path);
+        CHAR temp[MAX_PATH];
+
+        StringCchCopyA(temp, MAX_PATH, path);
+        StringCchCatA(temp, MAX_PATH, "\\min.png");
+        spUiEngineBackend_->createTexture(temp, spTextureMin_.getaddrof());
+
+        StringCchCopyA(temp, MAX_PATH, path);
+        StringCchCatA(temp, MAX_PATH, "\\max.png");
+        spUiEngineBackend_->createTexture(temp, spTextureMax_.getaddrof());
+
+        StringCchCopyA(temp, MAX_PATH, path);
+        StringCchCatA(temp, MAX_PATH, "\\close.png");
+        spUiEngineBackend_->createTexture(temp, spTextureClose_.getaddrof());
+
         return r;
     }
 
@@ -67,12 +94,29 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
+
+
+
+
+
         if (spMenu_.get())
         {
+
             if (ImGui::BeginMenuBar())
             {
-                // TODO: for customized menubar
-                //ImGui::Text("\xef\x80\x86"); // TODO: STAR_O as the logo
+                // draw the logo
+                if (spTextureLogo_.get())
+                {
+
+                    float h = ImGui::GetFrameHeight();
+                    ImVec2 size(h,h);
+                    ImGui::Image((void *)spTextureLogo_->texture(), size);
+                    ImGui::SameLine();
+                    ImGui::Indent(h+12);
+
+                }
+
+                // draw the menu frame
                 sptr<IFrame> spFrame;
                 r = spMenu_.as(&spFrame);
                 if (UAP_SUCCESS(r))
@@ -80,16 +124,45 @@ namespace uap
                     r = spFrame->drawFrame();
                 }
 
-                // TODO: for customized menubar
-                // int width = 30;
-                // ImGui::SameLine(ImGui::GetWindowWidth()-width*4);
-                // ImGui::Button("\xef\x8b\x91");  // ICON_FK_WINDOW_MINIMIZE
-                // ImGui::SameLine(ImGui::GetWindowWidth()-width*3);
-                // ImGui::Button("\xef\x8b\x90");  // ICON_FK_WINDOW_MAXIMIZE
-                // ImGui::SameLine(ImGui::GetWindowWidth()-width*2);
-                // ImGui::Button("\xef\x8b\x92");  // ICON_FK_WINDOW_RESTORE
-                // ImGui::SameLine(ImGui::GetWindowWidth()-width*1);
-                // ImGui::Button("\xef\x80\x8d");  // ICON_FK_TIMES
+
+                // draw the system system button
+                if(asTitleBar_)
+                {
+                    // if the menubar work as a title bar, need to add system buttons to the right
+
+                    ImGuiStyle& style = ImGui::GetStyle();
+                    float fbs= style.FrameBorderSize;
+                    style.FrameBorderSize = 0;
+                    float th = ImGui::GetTextLineHeight();
+                    float fh = ImGui::GetFrameHeight();
+                    ImVec2 size(th,th);
+
+                    int width = fh+2;                   
+
+
+                    ImGui::SameLine(ImGui::GetWindowWidth()-width*3);
+                    if(spTextureMin_.get())
+                        ImGui::ImageButton(spTextureMin_->texture(),size);
+                    else
+                        ImGui::Button("\xef\x8b\x91",size);  // ICON_FK_WINDOW_MINIMIZE
+
+                    ImGui::SameLine(ImGui::GetWindowWidth()-width*2);
+                    if(spTextureMax_.get())
+                        ImGui::ImageButton(spTextureMax_->texture(),size);
+                    else
+                        ImGui::Button("\xef\x8b\x92",size);  // ICON_FK_WINDOW_RESTORE
+
+
+                    ImGui::SameLine(ImGui::GetWindowWidth()-width*1);
+                    if(spTextureClose_.get())
+                        ImGui::ImageButton(spTextureClose_->texture(),size);
+                    else
+                        ImGui::Button("\xef\x80\x8d",size);  // ICON_FK_TIMES
+
+
+                    style.FrameBorderSize = fbs;
+
+                }
 
             
                 ImGui::EndMenuBar();

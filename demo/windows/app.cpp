@@ -59,7 +59,7 @@ Result App::initApplicationConfiguration()
         ac.s.enableLog = 1;
 
     ac.s.enableComponent = 1;   // always enable component
-    ac.s.logLevel = 4;  // not impl    
+    ac.s.logLevel = 4;  // not impl 
 
     sptr<IAttributes> spAttributes;
     r = spApp_->createInstance(IID_IATTRIBUTES, (void **)&spAttributes);
@@ -163,6 +163,7 @@ Result App::initUiEngine()
     int backend = 0;
     spToml_->getInt("uiengine", "layout", layout);
     spToml_->getInt("uiengine", "backend", backend);
+    spToml_->getBool("uiengine", "notitlebar", notitlebar_);
 
     // set application layout style
     LayoutStyle style = LAYOUT_STYLE_SIMPLE;
@@ -183,6 +184,11 @@ Result App::initUiEngine()
     }
 
     spUiAttributes_->setUint(UUID_UILAYOUT_STYLE, style);
+    if(notitlebar_)
+        spUiAttributes_->setUint(UUID_UILAYOUT_DISABLE_SYSTEM_TITLEBAR, 1);
+
+
+    
 
 
     // set log
@@ -346,7 +352,8 @@ Result App::buildMenuBar()
     VERIFY(r, "create instance attributes");
 
     // initialize MenuBar
-    r = spMenuBar_->initialize(spMenuBarAttrbutes.get());
+    std::string logoPath = strAppPath_ + "\\logo.png";
+    r = spMenuBar_->initialize(notitlebar_ ==1? true:false, logoPath.c_str() ,  spMenuBarAttrbutes.get());
     VERIFY(r, "initialize MenuBar");
 
     r = spMenuBar_->setMenu(spMenuTop_.get());

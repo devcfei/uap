@@ -113,7 +113,7 @@ namespace uap
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
         // IMenuBar
-        virtual Result initialize(IAttributes *piAttributes) = 0;
+        virtual Result initialize(Boolean asTitleBar, const Char* logoPath, IAttributes *piAttributes) = 0;
         virtual Result setMenu(IMenu* piMenu) = 0;
 
         // uuid
@@ -407,11 +407,21 @@ namespace uap
 
     };
 
+    // Backend type
     enum BackendType
     {
         BT_D3D9,
         BT_D3D11,
     };
+
+
+    // UUID_UILAYOUT_DISABLE_SYSTEM_TITLEBAR - Uint
+    //  1 - Disable system titlebar
+
+    // {0e1f3f71-148e-43af-9c5c-23232b2c4be7}
+    DEFINE_UUID(UUID_UILAYOUT_DISABLE_SYSTEM_TITLEBAR, 
+        0x0e1f3f71, 0x148e, 0x43af, 0x9c, 0x5c, 0x23, 0x23, 0x2b, 0x2c, 0x4b, 0xe7);
+
 
     class IUiEngine : public IUniversal
     {
