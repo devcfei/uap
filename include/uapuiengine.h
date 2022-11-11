@@ -32,7 +32,7 @@ namespace uap
         virtual Result addButton(Char* label,Boolean sameline, std::function<void()> onclick=nullptr ) = 0;
         virtual Result addCheckBox(Char* label,Boolean sameline, Boolean* value) = 0;
         virtual Result addEdit(Char* label, Boolean sameline, Char* buf, Size_t buf_size) = 0;
-
+        virtual Result addTreeNode(Char *label, bool Sub, std::function<void()> onclick=nullptr) = 0;
         // uuid
         static const Uuid uuid()
         {

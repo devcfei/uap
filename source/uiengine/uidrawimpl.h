@@ -52,6 +52,35 @@ namespace uap
             return r;
         }
 
+
+        virtual Result addTreeNode(Char *label, bool Sub, std::function<void()> onclick)
+        {
+            Result r = R_SUCCESS;
+
+            if(Sub)
+            {
+                if (ImGui::TreeNodeEx(label) )
+                {
+                    if(onclick)
+                        onclick();
+
+                    ImGui::TreePop();
+                }
+            }
+            else
+            {
+                ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_Leaf|ImGuiTreeNodeFlags_NoTreePushOnOpen);
+
+                if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+                {
+                    if(onclick)
+                        onclick();
+                }
+            }
+
+            return r;
+        }  
+
         static Result createInstance(IDraw **ppv)
         {
             DrawImpl *p = new DrawImpl();
