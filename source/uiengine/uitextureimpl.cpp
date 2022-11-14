@@ -58,7 +58,12 @@ namespace uap
         ID3D11Texture2D *pTexture = NULL;
         D3D11_SUBRESOURCE_DATA subResource;
         subResource.pSysMem = pdata;
-        subResource.SysMemPitch = desc.Width * 4;
+        if(format ==DXGI_FORMAT_BC1_UNORM)
+            subResource.SysMemPitch = desc.Width *2;
+        else if(DXGI_FORMAT_BC2_UNORM ==format)
+            subResource.SysMemPitch = desc.Width*4;
+        else
+            subResource.SysMemPitch = desc.Width*4;
         subResource.SysMemSlicePitch = 0;
         d3dDevice_->CreateTexture2D(&desc, &subResource, &pTexture);
 
