@@ -43,7 +43,7 @@ namespace uap
         if (uapUuidIsEqual(rUuid, IID_IDRAW))
         {
             r = DrawImpl::createInstance((IDraw **)ppv);
-        } 
+        }
         else if (uapUuidIsEqual(rUuid, IID_IWINDOW))
         {
             r = WindowImpl::createInstance((IWindow **)ppv);
@@ -127,7 +127,7 @@ namespace uap
 
 
         // initialize the backend
-        r = spBackend_->initializeBackend(this, nullptr);
+        r = spBackend_->initializeBackend(nullptr);
         VERIFY(r, "initiaize the backend!");
 
 
@@ -217,6 +217,16 @@ namespace uap
         // Don't forget to add reference count
         (*ppiLayout)->addRef();
 
+        return r;
+    }
+
+
+    Result UiEngineImpl::getBackend(IUiEngineBackend ** ppiBackend)
+    {
+        Result r = R_SUCCESS;
+        *ppiBackend = spBackend_.get();
+        // Don't forget to add reference count
+        (*ppiBackend)->addRef(); 
         return r;
     }
 

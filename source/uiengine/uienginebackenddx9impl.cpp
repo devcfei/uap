@@ -36,7 +36,7 @@ namespace uap
 
 
 
-    Result UiEngineBackendDx9Impl::initializeBackend(IUiEngine *piUiEngine, IAttributes *piAttributes)
+    Result UiEngineBackendDx9Impl::initializeBackend(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
         return r;
@@ -198,6 +198,12 @@ namespace uap
 
         // *(void**)ppv = piTexture;
 
+        return r;
+    }
+
+    Result UiEngineBackendDx9Impl::createTexture(Uint width, Uint height, Uint format, void* pdata, ITexture **ppiTexture)
+    {
+        Result r = R_NOT_IMPL;
         return r;
     }
 

@@ -13,6 +13,7 @@ namespace uap
         virtual Result queryInterface(const Uuid &rUuid, void **ppv);
 
         // ITexture
+        virtual Result createTexture(Uint width, Uint height, Uint format, void* pdata);
         virtual Result loadTexture(const Char* path);
         virtual int width()
         {

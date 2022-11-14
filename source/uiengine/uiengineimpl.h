@@ -21,6 +21,7 @@ namespace uap
         virtual Result run();
 
         virtual Result getLayout(ILayout** ppiLayout);
+        virtual Result getBackend(IUiEngineBackend ** ppiBackend);
 
 
         static ILogTrace* getLogTrace()
