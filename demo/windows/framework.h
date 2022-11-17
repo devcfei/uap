@@ -41,7 +41,7 @@ namespace std
 using namespace uap;
 
 
-#include <IconsForkAwesome.h>
+#include <IconsFontAwesome5.h>
 
 
 #include "eventdispatch.h"

@@ -365,24 +365,24 @@ Result App::buildToolBar()
 
     char filename[MAX_PATH];
     spApp_->getCurrentPath(filename, MAX_PATH);
-    StringCchCatA(filename, MAX_PATH, "\\fontawesome-webfont.ttf");
+    StringCchCatA(filename, MAX_PATH, "\\fa-solid-900.ttf");
 
-    spToolBar_->buildToolBarFromTTF(filename, ICON_MIN_FK, ICON_MAX_FK);
+    spToolBar_->buildToolBarFromTTF(filename, ICON_MIN_FA, ICON_MAX_FA);
 
     static const Char *label[] =
         {
-            ICON_FK_FILE_O,         // new
-            ICON_FK_FOLDER_OPEN_O,  // open
-            ICON_FK_FLOPPY_O,       // save
-            ICON_FK_SCISSORS,       // cut
-            ICON_FK_FILES_O,        // copy
-            ICON_FK_CLIPBOARD,      // paste
-            ICON_FK_SEARCH_PLUS,    // zoom in
-            ICON_FK_SEARCH_MINUS,   // zoom out
-            ICON_FK_DOWNLOAD,       // download
-            ICON_FK_UPLOAD,         // upload
-            ICON_FK_COG,            // settings
-            ICON_FK_INFO_CIRCLE,    // about info
+            ICON_FA_FILE,         // new
+            ICON_FA_FOLDER_OPEN,  // open
+            ICON_FA_SAVE,  // save
+            ICON_FA_CUT,   // cut
+            ICON_FA_CLONE,        // copy
+            ICON_FA_PASTE,      // paste
+            ICON_FA_SEARCH_MINUS,    // zoom in
+            ICON_FA_SEARCH_PLUS,   // zoom out
+            ICON_FA_DOWNLOAD,       // download
+            ICON_FA_UPLOAD,         // upload
+            ICON_FA_COG,            // settings
+            ICON_FA_INFO,    // about info
         };
 
     for (int i = 0; i < sizeof(label) / sizeof(label[0]); ++i)
