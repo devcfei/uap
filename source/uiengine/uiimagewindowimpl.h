@@ -19,6 +19,7 @@ namespace uap
 
         // IImageWindow
         virtual Result loadImage(const Char *name);
+        virtual Result setTexture(ITexture* pTexture);
 
 
         static Result createInstance(IUiEngineBackend * piUiEngineBackend, IImageWindow ** ppiUiImageWindow)

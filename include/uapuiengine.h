@@ -44,6 +44,37 @@ namespace uap
     }; // @class IDraw
 
 
+    // {88fc8602-d006-443b-8562-6f337843b402}
+    DEFINE_UUID(IID_ITEXTURE,
+                0x88fc8602, 0xd006, 0x443b, 0x85, 0x62, 0x6f, 0x33, 0x78, 0x43, 0xb4, 0x02);
+
+    class ITexture : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // ITexture
+        virtual Result createTexture(Uint width, Uint height, Uint format, void *pdata) = 0;
+        virtual Result loadTexture(const Char *path) = 0;
+        virtual int width() = 0;
+        virtual int height() = 0;
+        virtual void *texture() = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_ITEXTURE;
+    }; // @class ITexture
+
+
+
     // {e28c7ea9-40ec-4dd9-92b1-c9fb9db0258f}
     DEFINE_UUID(IID_IFRAME,
                 0xe28c7ea9, 0x40ec, 0x4dd9, 0x92, 0xb1, 0xc9, 0xfb, 0x9d, 0xb0, 0x25, 0x8f);
@@ -288,6 +319,7 @@ namespace uap
 
         // IImageWindow
         virtual Result loadImage(const Char *name) = 0;
+        virtual Result setTexture(ITexture* pTexture) = 0;
 
         // uuid
         static const Uuid uuid()
@@ -391,6 +423,52 @@ namespace uap
     }; // @class IFrameWindowElements
 
 
+
+
+    // {cbba6aeb-a57c-45b7-81e1-0f0882ae4547}
+    DEFINE_UUID(IID_IUIENGINE_BACKEND,
+                0xcbba6aeb, 0xa57c, 0x45b7, 0x81, 0xe1, 0x0f, 0x08, 0x82, 0xae, 0x45, 0x47);
+
+    // {937cb490-66f9-4d24-82ca-058a8c166712}
+    DEFINE_UUID(UUID_IUIENGINE_BACKEND_HWND,
+                0x937cb490, 0x66f9, 0x4d24, 0x82, 0xca, 0x05, 0x8a, 0x8c, 0x16, 0x67, 0x12);
+
+    class IUiEngineBackend : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // UiEngineBackend
+        virtual Result initializeBackend(IAttributes *piAttributes) = 0;
+        virtual Result createDevice(IAttributes *piAttributes) = 0;
+        virtual Result destoryDevice() = 0;
+        virtual Result setup() = 0;
+        virtual Result newFrame() = 0;
+        virtual Result render() = 0;
+        virtual Result reset() = 0;
+        virtual Result shutdown() = 0;
+        virtual Result resize(Uint width, Uint height) = 0;
+
+        virtual Result createTexture(const Char *filename, ITexture **ppiTexture) = 0;
+        virtual Result createTexture(Uint width, Uint height, Uint format, void* pdata, ITexture **ppiTexture) = 0;
+
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IUIENGINE_BACKEND;
+    }; // @class IUiEngineBackend
+
+
+
+
+
     // {7f8d5daf-f386-430d-ac32-5578ec6078a0}
     DEFINE_UUID(IID_UIENGINE,
                 0x7f8d5daf, 0xf386, 0x430d, 0xac, 0x32, 0x55, 0x78, 0xec, 0x60, 0x78, 0xa0);
@@ -438,8 +516,7 @@ namespace uap
         virtual Result startup() = 0;
         virtual Result run() = 0;
         virtual Result getLayout(ILayout** ppiLayout) = 0;
-
-
+        virtual Result getBackend(IUiEngineBackend **ppiBackend) = 0;
 
         // uuid
         static const Uuid uuid()
@@ -457,74 +534,7 @@ namespace uap
 
 
 
-    // {88fc8602-d006-443b-8562-6f337843b402}
-    DEFINE_UUID(IID_ITEXTURE,
-                0x88fc8602, 0xd006, 0x443b, 0x85, 0x62, 0x6f, 0x33, 0x78, 0x43, 0xb4, 0x02);
 
-    class ITexture : public IUniversal
-    {
-    public:
-        // IUniversal
-        virtual Ulong addRef() = 0;
-        virtual Ulong release() = 0;
-        virtual Result queryInterface(const Uuid &, void **) = 0;
-
-        // ITexture
-        virtual Result loadTexture(const Char *path) = 0;
-        virtual int width() = 0;
-        virtual int height() = 0;
-        virtual void *texture() = 0;
-
-        // uuid
-        static const Uuid uuid()
-        {
-            return uuid_;
-        }
-
-    private:
-        inline static const Uuid uuid_ = IID_ITEXTURE;
-    }; // @class ITexture
-
-
-
-    // {cbba6aeb-a57c-45b7-81e1-0f0882ae4547}
-    DEFINE_UUID(IID_IUIENGINE_BACKEND,
-                0xcbba6aeb, 0xa57c, 0x45b7, 0x81, 0xe1, 0x0f, 0x08, 0x82, 0xae, 0x45, 0x47);
-
-    // {937cb490-66f9-4d24-82ca-058a8c166712}
-    DEFINE_UUID(UUID_IUIENGINE_BACKEND_HWND,
-                0x937cb490, 0x66f9, 0x4d24, 0x82, 0xca, 0x05, 0x8a, 0x8c, 0x16, 0x67, 0x12);
-
-    class IUiEngineBackend : public IUniversal
-    {
-    public:
-        // IUniversal
-        virtual Ulong addRef() = 0;
-        virtual Ulong release() = 0;
-        virtual Result queryInterface(const Uuid &, void **) = 0;
-
-        // UiEngineBackend
-        virtual Result initializeBackend(IUiEngine *piUiEngine, IAttributes *piAttributes) = 0;
-        virtual Result createDevice(IAttributes *piAttributes) = 0;
-        virtual Result destoryDevice() = 0;
-        virtual Result setup() = 0;
-        virtual Result newFrame() = 0;
-        virtual Result render() = 0;
-        virtual Result reset() = 0;
-        virtual Result shutdown() = 0;
-        virtual Result resize(Uint width, Uint height) = 0;
-
-        virtual Result createTexture(const Char *filename, ITexture **ppiTexture) = 0;
-
-        // uuid
-        static const Uuid uuid()
-        {
-            return uuid_;
-        }
-
-    private:
-        inline static const Uuid uuid_ = IID_IUIENGINE_BACKEND;
-    }; // @class IUiEngineBackend
 
 
 

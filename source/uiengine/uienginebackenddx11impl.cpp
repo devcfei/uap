@@ -37,7 +37,7 @@ namespace uap
 
 
 
-    Result UiEngineBackendDx11Impl::initializeBackend(IUiEngine *piUiEngine, IAttributes *piAttributes)
+    Result UiEngineBackendDx11Impl::initializeBackend(IAttributes *piAttributes)
     {
         Result r = R_SUCCESS;
 
@@ -309,6 +309,31 @@ namespace uap
 
         return r;
     }
+
+
+    Result UiEngineBackendDx11Impl::createTexture(Uint width, Uint height, Uint format, void* pdata, ITexture **ppiTexture)
+    {
+        Result r = R_SUCCESS;
+        ITexture* piTexture=nullptr;
+
+        r = TextureImpl::createInstance(g_pd3dDevice, &piTexture);
+        if(!UAP_SUCCESS(r))
+        {
+            return r;
+        }
+      
+
+        r = piTexture->createTexture(width,height, format, pdata);
+        if(!UAP_SUCCESS(r))
+        {
+            return r;
+        }
+
+        *ppiTexture= piTexture;
+
+        return r;
+    }
+
 
 
 } //@namespace uap

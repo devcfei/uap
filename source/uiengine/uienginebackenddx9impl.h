@@ -17,7 +17,7 @@ namespace uap
         virtual Result queryInterface(const Uuid &, void **);
 
         // UiEngineBackend
-        virtual Result initializeBackend(IUiEngine *piUiEngine, IAttributes *piAttributes);
+        virtual Result initializeBackend(IAttributes *piAttributes);
 
         virtual Result createDevice(IAttributes *piAttributes);
         virtual Result destoryDevice();
@@ -28,6 +28,7 @@ namespace uap
         virtual Result shutdown();
         virtual Result resize(Uint width, Uint height);
         virtual Result createTexture(const Char* filename, ITexture** ppiTexture);
+        virtual Result createTexture(Uint width, Uint height, Uint format, void* pdata, ITexture **ppiTexture);
 
         static Result createInstance(void **ppv)
         {

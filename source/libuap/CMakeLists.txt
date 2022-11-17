@@ -9,17 +9,6 @@ add_library(uap STATIC ${SRCS})
 # install
 install(TARGETS uap
         EXPORT uapTargets
-        CONFIGURATIONS Debug
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        RUNTIME DESTINATION bin
-        PUBLIC_HEADER DESTINATION include
-        )
-
-
-install(TARGETS uap 
-        EXPORT uapTargets
-        CONFIGURATIONS Release
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin

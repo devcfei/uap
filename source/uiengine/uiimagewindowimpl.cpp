@@ -76,4 +76,12 @@ namespace uap
         return r;
     }
 
+    
+    Result ImageWindowImpl::setTexture(ITexture* pTexture)
+    {
+        Result r = R_SUCCESS;
+        spTexture_ = pTexture;
+        return r;
+    }
+
 }

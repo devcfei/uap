@@ -47,23 +47,26 @@ namespace uap
     // IWindow
     Result WindowImpl::initialize(IAttributes* pAttributes, IEvent* piEvent)
     {
-        Result r;
+        Result r = R_SUCCESS;
         Char title[256];
         Size_t len=0;
-        r = pAttributes->getString(WINDOW_ATTRIBUTE_TITLE,title,256,&len);
-        if(!UAP_SUCCESS(r))
+        if(pAttributes)
         {
-            r = R_SUCCESS; // ignore if window no title
-        }
+            r = pAttributes->getString(WINDOW_ATTRIBUTE_TITLE,title,256,&len);
+            if(!UAP_SUCCESS(r))
+            {
+                r = R_SUCCESS; // ignore if window no title
+            }
 
-        if(len>0)
-            title_ = title;
+            if(len>0)
+                title_ = title;
 
 
-        r = pAttributes->getUint(WINDOW_CLOSE_EVENTID,evtIdWindowClose_);
-        if(!UAP_SUCCESS(r))
-        {
-            r = R_SUCCESS; // ignore error for WINDOW_CLOSE_EVENTID not set
+            r = pAttributes->getUint(WINDOW_CLOSE_EVENTID,evtIdWindowClose_);
+            if(!UAP_SUCCESS(r))
+            {
+                r = R_SUCCESS; // ignore error for WINDOW_CLOSE_EVENTID not set
+            }
         }
 
         spEvent_ = piEvent;

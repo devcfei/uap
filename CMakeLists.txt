@@ -18,11 +18,13 @@ endif()
 
 # global include
 include_directories(
-    "${PROJECT_SOURCE_DIR}/include"
-    "${PROJECT_SOURCE_DIR}/assets/fontawesome"
-    "${PROJECT_SOURCE_DIR}/library/toml11"
-    "${PROJECT_SOURCE_DIR}/library/freetype/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/fontawesome/5.15.4"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/toml11"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/freetype/include"
     )
+
+    
 
 
 
@@ -41,43 +43,18 @@ endif()
 
 # install
 set(INSTALL_FILES
-        assets/fontawesome/fontawesome-webfont.ttf
+        assets/fontawesome/5.15.4/fa-solid-900.ttf
         assets/images/logo.png
         assets/images/min.png
         assets/images/max.png
         assets/images/close.png
         assets/images/demo.png
+        default.toml
         )
 
 install(FILES ${INSTALL_FILES}
-        CONFIGURATIONS Debug
         DESTINATION bin
         )
 
-install(FILES ${INSTALL_FILES}
-        CONFIGURATIONS Release
-        DESTINATION bin
-        )
-
-install(FILES source/uiengine/be/imguibe/imgui/misc/fonts/Roboto-Medium.ttf
-        CONFIGURATIONS Debug
-        DESTINATION bin
-        )
-
-install(FILES source/uiengine/be/imguibe/imgui/misc/fonts/Roboto-Medium.ttf
-        CONFIGURATIONS Release
-        DESTINATION bin
-        )
-
-
-install(FILES default.toml
-        CONFIGURATIONS Debug
-        DESTINATION bin
-        )
-
-install(FILES default.toml
-        CONFIGURATIONS Release
-        DESTINATION bin
-        )
 
 
