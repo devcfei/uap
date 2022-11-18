@@ -233,7 +233,7 @@ namespace uap
         // virtual Result queryInterface(const Uuid &, void **) = 0;
 
         // IWindow
-        virtual Result initialize(IAttributes *pAttributes, IEvent* piEvent) = 0;
+        virtual Result initialize(const Char* title, IAttributes *pAttributes, IEvent* piEvent) = 0;
         virtual Result drawPrimitives() = 0;
         virtual Boolean isOpen() const = 0;
         virtual Boolean setOpen(Boolean open) = 0;
@@ -345,6 +345,7 @@ namespace uap
 
         // ITextureInspector
         virtual Result loadImage(const Char *name) = 0;
+        virtual Result setTexture(ITexture* pTexture) = 0;
 
         // uuid
         static const Uuid uuid()

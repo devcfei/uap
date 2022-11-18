@@ -448,7 +448,7 @@ Result App::buildFileBrowserWindow()
     r = spFileBrowserWindow_.as(&spWindow);
     VERIFY(r, "as IWindow");
 
-    r = spWindow->initialize(attr.get(), spEvent_.get());
+    r = spWindow->initialize("File Browser", attr.get(), spEvent_.get());
     VERIFY(r, "initialize IWindow");
 
 
@@ -473,7 +473,7 @@ Result App::buildGenericWindow()
     VERIFY(r, "set WINDOW_ATTRIBUTE_TITLE");
 
     // initialize the panel window with attributes
-    r = spGenericWindow_->initialize(attr.get(), nullptr);
+    r = spGenericWindow_->initialize(nullptr,attr.get(), nullptr);
     VERIFY(r, "initialize IWindow");
 
 
@@ -504,7 +504,7 @@ Result App::buildSettingWindow()
 
 
     // initialize the setting window with attributes
-    r = spSettingWindow_->initialize(attr.get(), nullptr);
+    r = spSettingWindow_->initialize(nullptr,attr.get(), nullptr);
     VERIFY(r, "initialize IWindow");
 
 
@@ -610,7 +610,7 @@ Result App::openImageFile(std::tstring filename)
         r = spImageWindow.as(&spWindow);
         VERIFY(r, "as IWindow");
 
-        r = spWindow->initialize(attr.get(), spEvent_.get());
+        r = spWindow->initialize(title.c_str() ,attr.get(), spEvent_.get());
         VERIFY(r, "initialize IWindow");
 
         r = spImageWindow->loadImage(file.c_str());
@@ -678,7 +678,7 @@ Result App::openImageFileByTextureInspector(std::tstring filename)
         r = spTextureInspector.as(&spWindow);
         VERIFY(r, "as IWindow");
 
-        r = spWindow->initialize(attr.get(), spEvent_.get());
+        r = spWindow->initialize(title.c_str(),attr.get(), spEvent_.get());
         VERIFY(r, "initialize IWindow");
 
         r = spTextureInspector->loadImage(file.c_str());

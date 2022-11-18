@@ -16,7 +16,7 @@ namespace uap
         virtual Result drawFrame();
 
         // IWindow
-        virtual Result initialize(IAttributes *pAttributes, IEvent* piEvent);
+        virtual Result initialize(const Char* title, IAttributes *pAttributes, IEvent* piEvent);
         virtual Result drawPrimitives();
 
         virtual Boolean isOpen() const

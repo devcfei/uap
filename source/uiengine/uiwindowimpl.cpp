@@ -45,13 +45,15 @@ namespace uap
     }
 
     // IWindow
-    Result WindowImpl::initialize(IAttributes* pAttributes, IEvent* piEvent)
+    Result WindowImpl::initialize(const Char* title, IAttributes* pAttributes, IEvent* piEvent)
     {
         Result r = R_SUCCESS;
-        Char title[256];
-        Size_t len=0;
+
+        title_ = title;
         if(pAttributes)
         {
+            Size_t len=0;
+            Char title[256];
             r = pAttributes->getString(WINDOW_ATTRIBUTE_TITLE,title,256,&len);
             if(!UAP_SUCCESS(r))
             {

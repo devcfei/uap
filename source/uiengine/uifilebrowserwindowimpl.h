@@ -52,7 +52,7 @@ namespace uap
 
 
         // IWindow
-        virtual Result initialize(IAttributes* pAttributes, IEvent* piEvent);
+        virtual Result initialize(const Char* title, IAttributes* pAttributes, IEvent* piEvent);
         virtual Result drawPrimitives();
 
         // IFileBrowserWindow

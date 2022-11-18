@@ -96,4 +96,11 @@ namespace uap
         r = spUiEngineBackend_->createTexture(name, spTexture_.getaddrof());
         return r;
     }
+
+    Result TextureInspectorImpl::setTexture(ITexture* pTexture)
+    {
+        Result r = R_SUCCESS;
+        spTexture_ = pTexture;
+        return r;
+    }
 }

@@ -373,20 +373,24 @@ namespace uap
     }
 
     // IWindow
-    Result FileBrowserWindowImpl::initialize(IAttributes* pAttributes, IEvent* piEvent)
+    Result FileBrowserWindowImpl::initialize(const Char* title, IAttributes* pAttributes, IEvent* piEvent)
     {
         Result r;
 
-        r = WindowImpl::initialize(pAttributes,piEvent );
+        r = WindowImpl::initialize(title, pAttributes,piEvent );
         if(!UAP_SUCCESS(r))
         {
             return r;
         }
 
-        r = pAttributes->getUint(FILEBROWSERWINDOW_ATTRBUTE_FILECLICKED_EVENT_ID, evtIdFileClicked_);
-        if(!UAP_SUCCESS(r))
+        if(pAttributes)
         {
-            r = R_SUCCESS; // ignore error for WINDOW_CLOSE_EVENTID not set
+
+            r = pAttributes->getUint(FILEBROWSERWINDOW_ATTRBUTE_FILECLICKED_EVENT_ID, evtIdFileClicked_);
+            if(!UAP_SUCCESS(r))
+            {
+                r = R_SUCCESS; // ignore error for WINDOW_CLOSE_EVENTID not set
+            }
         }
 
         return r;
