@@ -28,11 +28,11 @@ namespace uap
         virtual Result queryInterface(const Uuid &, void **) = 0;
 
         // IDraw
-        virtual Result addText(Char* label,Boolean sameline) = 0;
-        virtual Result addButton(Char* label,Boolean sameline, std::function<void()> onclick=nullptr ) = 0;
-        virtual Result addCheckBox(Char* label,Boolean sameline, Boolean* value) = 0;
-        virtual Result addEdit(Char* label, Boolean sameline, Char* buf, Size_t buf_size) = 0;
-        virtual Result addTreeNode(Char *label, bool Sub, std::function<void()> onclick=nullptr) = 0;
+        virtual Result addText(const Char* label,Boolean sameline) = 0;
+        virtual Result addButton(const Char* label,Boolean sameline, std::function<void()> onclick=nullptr ) = 0;
+        virtual Result addCheckBox(const Char* label,Boolean sameline, Boolean* value) = 0;
+        virtual Result addEdit(const Char* label, Boolean sameline, Char* buf, Size_t buf_size) = 0;
+        virtual Result addTreeNode(const Char *label, bool Sub, std::function<void()> onclick=nullptr) = 0;
         // uuid
         static const Uuid uuid()
         {

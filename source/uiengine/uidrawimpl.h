@@ -12,7 +12,7 @@ namespace uap
         virtual Result queryInterface(const Uuid &, void **);
 
         // IDraw
-        virtual Result addText(Char *label, Boolean sameline)
+        virtual Result addText(const Char *label, Boolean sameline)
         {
             Result r = R_SUCCESS;
             if (sameline)
@@ -21,7 +21,7 @@ namespace uap
             return r;
         }
 
-        virtual Result addButton(Char *label, Boolean sameline,std::function<void()> onclick)
+        virtual Result addButton(const Char *label, Boolean sameline,std::function<void()> onclick)
         {
             Result r = R_SUCCESS;
             if (sameline)
@@ -34,7 +34,7 @@ namespace uap
             return r;
         }
 
-        virtual Result addCheckBox(Char *label, Boolean sameline, Boolean *value)
+        virtual Result addCheckBox(const Char *label, Boolean sameline, Boolean *value)
         {
             Result r = R_SUCCESS;
             if (sameline)
@@ -43,7 +43,7 @@ namespace uap
             return r;
         }
 
-        virtual Result addEdit(Char *label, Boolean sameline, Char *buf, Size_t buf_size)
+        virtual Result addEdit(const Char *label, Boolean sameline, Char *buf, Size_t buf_size)
         {
             Result r = R_SUCCESS;
             if (sameline)
@@ -53,7 +53,7 @@ namespace uap
         }
 
 
-        virtual Result addTreeNode(Char *label, bool Sub, std::function<void()> onclick)
+        virtual Result addTreeNode(const Char *label, bool Sub, std::function<void()> onclick)
         {
             Result r = R_SUCCESS;
 
