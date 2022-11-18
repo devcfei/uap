@@ -19,8 +19,7 @@ goto end
 cmake --build build --target clean
 :buildAll
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install/Debug"
-cmake --build build
-cmake --install build --config Debug
+cmake --build build --config Debug --target install
 
 goto end
 
@@ -30,8 +29,7 @@ goto end
 cmake --build build --target clean
 :buildAllTest
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install/Debug"
-cmake --build build
-cmake --install build --config Debug
+cmake --build build --config Debug --target install
 :runTest
 .\install\Debug\bin\test.exe
 goto end
@@ -43,12 +41,9 @@ goto end
 
 :buildPrecheckin
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="install/Debug"
-cmake --build build
-cmake --install build --config Debug
+cmake --build build --config Debug --target install
 
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="install/Release"
-
-cmake --build build --config Release
-cmake --install build --config Release
+cmake --build build --config Release --target install
 
 :end
