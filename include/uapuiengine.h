@@ -11,38 +11,6 @@ namespace uap
 {
 
 
-    // {9bd9c561-5b9b-4ab5-a42c-faa5503172ca}
-    DEFINE_UUID(IID_IDRAW,
-                0x9bd9c561, 0x5b9b, 0x4ab5, 0xa4, 0x2c, 0xfa, 0xa5, 0x50, 0x31, 0x72, 0xca);
-
-
-
-
-
-    class IDraw : public IUniversal
-    {
-    public:
-        // IUniversal
-        virtual Ulong addRef() = 0;
-        virtual Ulong release() = 0;
-        virtual Result queryInterface(const Uuid &, void **) = 0;
-
-        // IDraw
-        virtual Result addText(const Char* label,Boolean sameline) = 0;
-        virtual Result addButton(const Char* label,Boolean sameline, std::function<void()> onclick=nullptr ) = 0;
-        virtual Result addCheckBox(const Char* label,Boolean sameline, Boolean* value) = 0;
-        virtual Result addEdit(const Char* label, Boolean sameline, Char* buf, Size_t buf_size) = 0;
-        virtual Result addTreeNode(const Char *label, bool Sub, std::function<void()> onclick=nullptr) = 0;
-        // uuid
-        static const Uuid uuid()
-        {
-            return uuid_;
-        }
-
-    private:
-        inline static const Uuid uuid_ = IID_IDRAW;
-    }; // @class IDraw
-
 
     // {88fc8602-d006-443b-8562-6f337843b402}
     DEFINE_UUID(IID_ITEXTURE,
@@ -72,6 +40,44 @@ namespace uap
     private:
         inline static const Uuid uuid_ = IID_ITEXTURE;
     }; // @class ITexture
+
+
+
+
+    // {9bd9c561-5b9b-4ab5-a42c-faa5503172ca}
+    DEFINE_UUID(IID_IDRAW,
+                0x9bd9c561, 0x5b9b, 0x4ab5, 0xa4, 0x2c, 0xfa, 0xa5, 0x50, 0x31, 0x72, 0xca);
+
+
+
+
+
+    class IDraw : public IUniversal
+    {
+    public:
+        // IUniversal
+        virtual Ulong addRef() = 0;
+        virtual Ulong release() = 0;
+        virtual Result queryInterface(const Uuid &, void **) = 0;
+
+        // IDraw
+        virtual Result addText(const Char* label,Boolean sameline) = 0;
+        virtual Result addButton(const Char* label,Boolean sameline, std::function<void()> onclick=nullptr ) = 0;
+        virtual Result addCheckBox(const Char* label,Boolean sameline, Boolean* value) = 0;
+        virtual Result addEdit(const Char* label, Boolean sameline, Char* buf, Size_t buf_size) = 0;
+        virtual Result addTreeNode(const Char *label, bool Sub, std::function<void()> onclick=nullptr) = 0;
+        virtual Result addImage(ITexture *texture, bool sameline) = 0;
+        // uuid
+        static const Uuid uuid()
+        {
+            return uuid_;
+        }
+
+    private:
+        inline static const Uuid uuid_ = IID_IDRAW;
+    }; // @class IDraw
+
+
 
 
 

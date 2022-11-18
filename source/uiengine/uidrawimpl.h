@@ -81,6 +81,17 @@ namespace uap
             return r;
         }  
 
+        virtual Result addImage(ITexture *texture, bool sameline)
+        {
+            Result r = R_SUCCESS;
+
+            ImGui::Image((void*)texture->texture(),ImVec2(texture->width(), texture->height() ));
+
+            return r;
+
+        }
+
+
         static Result createInstance(IDraw **ppv)
         {
             DrawImpl *p = new DrawImpl();
