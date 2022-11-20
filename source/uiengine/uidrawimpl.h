@@ -85,7 +85,7 @@ namespace uap
         {
             Result r = R_SUCCESS;
 
-            ImGui::Image((void*)texture->texture(),ImVec2(texture->width(), texture->height() ));
+            ImGui::Image((void*)texture->texture(),ImVec2((float)texture->width(), (float)texture->height() ));
 
             return r;
 

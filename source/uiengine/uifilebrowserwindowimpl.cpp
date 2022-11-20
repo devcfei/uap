@@ -53,8 +53,8 @@ namespace uap
         const auto wall_points = {p3, p6, p8, p1};
 
         auto draw_list = ImGui::GetWindowDrawList();
-        draw_list->AddPolyline(roof_points.begin(), roof_points.size(), color, false, 1.0f);
-        draw_list->AddPolyline(wall_points.begin(), wall_points.size(), color, false, 1.0f);
+        draw_list->AddPolyline(roof_points.begin(), (int)roof_points.size(), color, false, 1.0f);
+        draw_list->AddPolyline(wall_points.begin(), (int)wall_points.size(), color, false, 1.0f);
 
         draw_list->AddRectFilled(p5, p7, color);
     }
@@ -112,7 +112,7 @@ namespace uap
 
         auto draw_list = ImGui::GetWindowDrawList();
         draw_list->AddCircle(p0, radius, color);
-        draw_list->AddPolyline(points.begin(), points.size(), color, false, 1.0f);
+        draw_list->AddPolyline(points.begin(), (int)points.size(), color, false, 1.0f);
     }
 
     void FileBrowserIcons::draw_trash_icon(float width, float height, uint32_t color) const noexcept
@@ -164,7 +164,7 @@ namespace uap
         draw_list->AddLine(p1, p3, color);
         draw_list->AddRect(p0, p2, color);
 
-        draw_list->AddPolyline(points.begin(), points.size(), color, false, 1.0f);
+        draw_list->AddPolyline(points.begin(), (int)points.size(), color, false, 1.0f);
         draw_list->AddLine(p6, p7, color);
         draw_list->AddLine(p8, p9, color);
     }
@@ -245,7 +245,7 @@ namespace uap
             {icon_min.x, icon_max.y}};
 
         auto draw_list = ImGui::GetWindowDrawList();
-        draw_list->AddPolyline(points.begin(), points.size(), color, true, 1.0f);
+        draw_list->AddPolyline(points.begin(), (int)points.size(), color, true, 1.0f);
     }
 
     void FileBrowserIcons::draw_file_icon(float width, float height, uint32_t color) const noexcept
@@ -285,7 +285,7 @@ namespace uap
             icon_max,
             p1};
 
-        draw_list->AddPolyline(points.begin(), points.size(), color, false, 1.0f);
+        draw_list->AddPolyline(points.begin(), (int)points.size(), color, false, 1.0f);
     }
 
     FileBrowserIcons::ButtonState FileBrowserIcons::draw_wide_button(bool selected,

@@ -111,7 +111,7 @@ namespace Style
             style.WindowBorderSize = 1;
             style.ChildBorderSize = 1;
             style.PopupBorderSize = 1;
-            style.FrameBorderSize = is3D;
+            style.FrameBorderSize = is3D?1.0f:0.0f;
 
             style.WindowRounding = 0;
             style.ChildRounding = 0;
@@ -124,7 +124,7 @@ namespace Style
             style.WindowMenuButtonPosition = ImGuiDir_Right;
 
 #ifdef IMGUI_HAS_DOCK 
-            style.TabBorderSize = is3D;
+            style.TabBorderSize = is3D?1.0f:0.0f;
             style.TabRounding = 0;
 
             colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.38f, 0.38f, 0.38f, 1.00f);
