@@ -60,10 +60,12 @@ namespace uap
     {
         Result r = R_SUCCESS;
         bool bMenuBegin = false;
-        bool bMenuOpen = false;
+        bool bMenuClicked = false;
 
         for (auto it : vecMenuItem_)
         {
+            bool bHasSubItem = false;
+
             if(it.separator)
             {
                 ImGui::Separator();
@@ -73,12 +75,15 @@ namespace uap
             if (it.submenu)
             {
                 bMenuBegin = ImGui::BeginMenu(it.name.c_str());
+                bHasSubItem = true;
 
             }
             else
-                bMenuOpen = ImGui::MenuItem(it.name.c_str(), NULL);
+                bMenuClicked = ImGui::MenuItem(it.name.c_str(), NULL);
 
-            if (bMenuBegin)
+            
+
+            if (bMenuBegin )
             {
                 ImGui::Indent( 16.0f );
 
@@ -89,11 +94,14 @@ namespace uap
 
                 ImGui::Unindent( 16.0f );
 
-
-                ImGui::EndMenu();
+                if(bHasSubItem==true)    
+                    ImGui::EndMenu();
             }
 
-            if(bMenuOpen)
+
+
+
+            if(bMenuClicked)
             {
                 spEvent_->postEvent(it.evtId, 0, 0);
             }

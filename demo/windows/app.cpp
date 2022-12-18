@@ -282,7 +282,20 @@ Result App::buildMenuBar()
     r = spMenuFile_->initialize(nullptr, spEvent_.get());
     VERIFY(r, "menu file, initalize");
 
+
+    // Menu File New..
+    r = spUiEngine_->createInstance(IID_IMENU, (void **)&spMenuFileNew_);
+    VERIFY(r, "spUiEngine_.createInstance(<IMenu>)");
+
+    r = spMenuFileNew_->initialize(nullptr, spEvent_.get());
+    VERIFY(r, "menu file new, initalize");
+
+    spMenuFileNew_->addItem("Project", false , NULL, 0);
+    spMenuFileNew_->addItem("Texture", false , NULL, 0);
+
+
     spMenuFile_->addItem("New", false, NULL, Event_FileNew);
+    spMenuFile_->addItem("New...", false, spMenuFileNew_.get(), 0);
     spMenuFile_->addItem("Open File...", false, NULL, Event_FileOpen);
     spMenuFile_->addItem("Open Folder...", false, NULL, Event_FolderOpen);
     spMenuFile_->addItem("Save as...", false, NULL, Event_SaveAs);

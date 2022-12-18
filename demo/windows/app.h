@@ -263,6 +263,7 @@ private:
     // menubar
     sptr<IMenu> spMenuTop_;
     sptr<IMenu> spMenuFile_;
+    sptr<IMenu> spMenuFileNew_;    
     sptr<IMenu> spMenuView_;
     sptr<IMenu> spMenuViewPanelWindow_;
     sptr<IMenu> spMenuHelp_;
