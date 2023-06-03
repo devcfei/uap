@@ -49,7 +49,8 @@ namespace uap
     {
         Result r = R_SUCCESS;
 
-        title_ = title;
+        if(title)
+            title_ = title;
         if(pAttributes)
         {
             Size_t len=0;
